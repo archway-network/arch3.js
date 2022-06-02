@@ -8,30 +8,31 @@ import * as fs from "fs";
 // TODO: add mainnet
 
 // Generate a wallet structure randomly 
-export function generateWallet() {
-    const wallet = Secp256k1HdWallet.generate(15, {prefix: "archway"});
+export async function generateWallet() {
+    const wallet: Secp256k1HdWallet = await Secp256k1HdWallet.generate(15, {prefix: "archway"});
     return wallet;
 }   
 
 // Generate the address from a certain wallet structure
-export function generateAddress(wallet) {
-    const [{address}] = wallet.getAccounts();
+export async function generateAddress(wallet: Secp256k1HdWallet) {
+    const [{address}] = await wallet.getAccounts();
     return address
 }
 
 // Import a wallet using the mnemonic key
-export async function importWallet(mnemonic) {
-    const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: "archway"});
+export async function importWallet(mnemonic: string) {
+    const wallet: Secp256k1HdWallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: "archway"});
     return wallet
 }
 
 // Create a signing client to be able to sign transactions
 // Solely for testnet
 // Create for mainnet
-export async function CreateSigningClientTestnet(wallet) {
+export async function CreateSigningClientTestnet(wallet: Secp256k1HdWallet) {
     const lcdApiTestnet = "https://...";
-    const address = await generateAddress(wallet);
-    const client = new SigningCosmosClient(lcdApiTestnet, address, wallet)
+    const address: string = await generateAddress(wallet);
+    const client: SigningCosmosClient = new SigningCosmosClient(lcdApiTestnet, address, wallet)
+    return client
 }
 
 
