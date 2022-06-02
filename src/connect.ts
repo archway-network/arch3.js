@@ -9,9 +9,9 @@ import * as fs from "fs";
 
 // Generate a wallet structure randomly 
 export function generateWallet() {
-    const wallet = Secp256k1HdWallet.generate();
+    const wallet = Secp256k1HdWallet.generate(15, {prefix: "archway"});
     return wallet;
-}
+}   
 
 // Generate the address from a certain wallet structure
 export function generateAddress(wallet) {
@@ -21,7 +21,7 @@ export function generateAddress(wallet) {
 
 // Import a wallet using the mnemonic key
 export async function importWallet(mnemonic) {
-    const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic);
+    const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: "archway"});
     return wallet
 }
 
@@ -33,6 +33,7 @@ export async function CreateSigningClientTestnet(wallet) {
     const address = await generateAddress(wallet);
     const client = new SigningCosmosClient(lcdApiTestnet, address, wallet)
 }
+
 
 
 
