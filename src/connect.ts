@@ -2,10 +2,15 @@ import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { calculateFee, GasPrice } from "@cosmjs/stargate";
 import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 
-import * as fs from "fs";
 // Wrapper for connecting to RPC client from COSM JS
 // Can either connect to testnet or mainnet
 // TODO: add mainnet
+
+// Interface that holds the Sign Client and Wallet Account
+export type ArchwayClient = {
+    client: SigningStargateClient,
+    wallet: DirectSecp256k1HdWallet
+}
 
 // Generate a wallet structure randomly 
 export async function generateWallet() {
@@ -41,6 +46,20 @@ export async function CreateSigningClientTestnet(wallet: DirectSecp256k1HdWallet
     const client: SigningStargateClient = await SigningStargateClient.connectWithSigner(lcdApiTestnet, wallet)
     return client
 }
+
+// Create an Archway Client Interface
+export async function CreateArchwayClient(wallet: DirectSecp256k1HdWallet) {
+    const client = await CreateSigningClientTestnet(wallet);
+    const archway_client: ArchwayClient = {client, wallet};
+    return archway_client
+}
+
+
+
+
+
+
+
 
 
 
