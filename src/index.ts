@@ -1,3 +1,3 @@
-import {ConnectWallet} from "./connect"
-
-export {ConnectWallet}
+import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet } from "./connect"
+import { getAccount } from "./balance"
+export {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, getAccount}

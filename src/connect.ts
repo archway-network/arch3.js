@@ -13,8 +13,8 @@ export async function generateWallet() {
     return wallet;
 }   
 
-// Generate the address from a certain wallet structure
-export async function generateAddress(wallet: Secp256k1HdWallet) {
+// Extract the address from a certain wallet structure
+export async function extractAddress(wallet: Secp256k1HdWallet) {
     const [{address}] = await wallet.getAccounts();
     return address
 }
@@ -29,8 +29,8 @@ export async function importWallet(mnemonic: string) {
 // Solely for testnet
 // Create for mainnet
 export async function CreateSigningClientTestnet(wallet: Secp256k1HdWallet) {
-    const lcdApiTestnet = "https://...";
-    const address: string = await generateAddress(wallet);
+    const lcdApiTestnet = "https://api.constantine-1.archway.tech";
+    const address: string = await extractAddress(wallet);
     const client: SigningCosmosClient = new SigningCosmosClient(lcdApiTestnet, address, wallet)
     return client
 }
