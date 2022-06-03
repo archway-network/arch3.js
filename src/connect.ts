@@ -1,6 +1,6 @@
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { calculateFee, GasPrice } from "@cosmjs/stargate";
-import { Secp256k1HdWallet, SigningCosmosClient } from "@cosmjs/launchpad";
+import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 
 import * as fs from "fs";
 // Wrapper for connecting to RPC client from COSM JS
@@ -9,29 +9,36 @@ import * as fs from "fs";
 
 // Generate a wallet structure randomly 
 export async function generateWallet() {
-    const wallet: Secp256k1HdWallet = await Secp256k1HdWallet.generate(15, {prefix: "archway"});
+    const wallet: DirectSecp256k1HdWallet = await DirectSecp256k1HdWallet.generate(15, {prefix: "archway"});
     return wallet;
 }   
 
+// Creates a new archway wallet and returns the mnemonic key
+// Usable for key storage generators
+export async function createMnemonic() {
+    const wallet: DirectSecp256k1HdWallet = await DirectSecp256k1HdWallet.generate(15, {prefix: "archway"});
+    return wallet.mnemonic;
+}
+
 // Extract the address from a certain wallet structure
-export async function extractAddress(wallet: Secp256k1HdWallet) {
+export async function extractAddress(wallet: DirectSecp256k1HdWallet) {
     const [{address}] = await wallet.getAccounts();
     return address
 }
 
 // Import a wallet using the mnemonic key
 export async function importWallet(mnemonic: string) {
-    const wallet: Secp256k1HdWallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: "archway"});
+    const wallet: DirectSecp256k1HdWallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {prefix: "archway"});
     return wallet
 }
 
 // Create a signing client to be able to sign transactions
 // Solely for testnet
 // Create for mainnet
-export async function CreateSigningClientTestnet(wallet: Secp256k1HdWallet) {
-    const lcdApiTestnet = "https://api.constantine-1.archway.tech";
+export async function CreateSigningClientTestnet(wallet: DirectSecp256k1HdWallet) {
+    const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
     const address: string = await extractAddress(wallet);
-    const client: SigningCosmosClient = new SigningCosmosClient(lcdApiTestnet, address, wallet)
+    const client: SigningStargateClient = await SigningStargateClient.connectWithSigner(lcdApiTestnet, wallet)
     return client
 }
 
