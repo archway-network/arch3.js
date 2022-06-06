@@ -9,8 +9,8 @@ ArchwayClient.prototype.getBalance = async function(address: string ) {
 }
 
 // Get the staked balance of an address
-export async function getStakedBalance(archway_client: ArchwayClient, address: string ) {
-    const balance = await archway_client.client.getBalanceStaked(address);
+ArchwayClient.prototype.getStakedBalance = async function(delegator_address: string ) {
+    const balance = await this.client.getBalanceStaked(delegator_address);
     return balance
 }
 

@@ -6,13 +6,25 @@ import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 // TODO: add mainnet
 
 // Interface that holds the Signing Client and Wallet Account
-export class ArchwaySigningClient {
+// Interface that holds the Read Client and Wallet Account
+export class ArchwayClient {
+    client: StargateClient
+
+    constructor(client: StargateClient) {
+        this.client = client
+    }
+
+    getBalance(address: string): any {};
+    getStakedBalance(delegator_address: string) {};
+    getBlock
+}
+
+export class ArchwaySigningClient extends ArchwayClient {
     wallet: DirectSecp256k1HdWallet;
-    client: SigningStargateClient;  
 
     constructor(wallet:DirectSecp256k1HdWallet, client: SigningStargateClient) {
+        super(client);
         this.wallet = wallet;
-        this.client = client;
     }
 
     getBalance() {};
@@ -23,18 +35,6 @@ export class ArchwaySigningClient {
 
 
 
-// Interface that holds the Read Client and Wallet Account
-export class ArchwayClient {
-    client: StargateClient
-
-    constructor(client: StargateClient) {
-        this.client = client
-    }
-
-    getBalance(address: string): any {};
-
-
-}
 
 
 
