@@ -1,3 +1,3 @@
-import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet } from "./connect"
-import { getAccount, getBalance } from "./account"
-export {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, getAccount, getBalance}
+import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, CreateArchwaySigningClient } from "./connect"
+import { getAccount, getBalance, sendTokens,delegateTokens } from "./account"
+export {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, getAccount, getBalance, CreateArchwaySigningClient, sendTokens, delegateTokens }

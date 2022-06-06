@@ -7,7 +7,7 @@ import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 // TODO: add mainnet
 
 // Interface that holds the Sign Client and Wallet Account
-export type ArchwayClient = {
+export type ArchwaySigningClient = {
     client: SigningStargateClient,
     wallet: DirectSecp256k1HdWallet
 }
@@ -48,9 +48,9 @@ export async function CreateSigningClientTestnet(wallet: DirectSecp256k1HdWallet
 }
 
 // Create an Archway Client Interface
-export async function CreateArchwayClient(wallet: DirectSecp256k1HdWallet) {
+export async function CreateArchwaySigningClient(wallet: DirectSecp256k1HdWallet) {
     const client = await CreateSigningClientTestnet(wallet);
-    const archway_client: ArchwayClient = {client, wallet};
+    const archway_client: ArchwaySigningClient = {client, wallet};
     return archway_client
 }
 
