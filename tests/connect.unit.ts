@@ -1,7 +1,7 @@
 import { Coin } from "@cosmjs/proto-signing";
 import { expect } from "chai";
 import { CreateArchwaySigningClient } from "../src/connect";
-import {generateWallet, extractAddress, importWallet, getBalance, CreateSigningClientTestnet, } from "../src/index"
+import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, } from "../src/index"
 
 // Testing that generateWallet function actually generates a wallet
 describe('generate a random wallet and check address', function() {
@@ -24,7 +24,7 @@ describe('import of wallet and check balance', function() {
   it('importAndCheck', async function() {
     let wallet = await importWallet("worth pencil mountain plug talk wink discover demise guess dish comic cloud alley trend game nurse era return canvas dry word primary turtle tattoo");
     let client = await CreateArchwaySigningClient(wallet);
-    let balance = await getBalance(client);
+    let balance = await client.getBalance();
     console.log(balance)
     let expected_balance: Coin = {denom: 'uconst', amount: '1000000'};
     expect(balance).eql(expected_balance);

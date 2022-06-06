@@ -1,16 +1,42 @@
-import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { calculateFee, GasPrice } from "@cosmjs/stargate";
 import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
-
 // Wrapper for connecting to RPC client from COSM JS
 // Can either connect to testnet or mainnet
 // TODO: add mainnet
 
-// Interface that holds the Sign Client and Wallet Account
-export type ArchwaySigningClient = {
-    client: SigningStargateClient,
-    wallet: DirectSecp256k1HdWallet
+// Interface that holds the Signing Client and Wallet Account
+export class ArchwaySigningClient {
+    wallet: DirectSecp256k1HdWallet;
+    client: SigningStargateClient;  
+
+    constructor(wallet:DirectSecp256k1HdWallet, client: SigningStargateClient) {
+        this.wallet = wallet;
+        this.client = client;
+    }
+
+    getBalance() {};
+    sendTokens(archway_recipient_address: string, amount: Coin[]): void {};
+    delegateTokens(archway_validator_address: string, amount: Coin): void {};
+
 }
+
+
+
+// Interface that holds the Read Client and Wallet Account
+export class ArchwayClient {
+    client: StargateClient
+
+    constructor(client: StargateClient) {
+        this.client = client
+    }
+
+    getBalance(address: string): any {};
+
+
+}
+
+
 
 // Generate a wallet structure randomly 
 export async function generateWallet() {
@@ -42,15 +68,23 @@ export async function importWallet(mnemonic: string) {
 // Create for mainnet
 export async function CreateSigningClientTestnet(wallet: DirectSecp256k1HdWallet) {
     const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
-    const address: string = await extractAddress(wallet);
+   // const address: string = await extractAddress(wallet);
     const client: SigningStargateClient = await SigningStargateClient.connectWithSigner(lcdApiTestnet, wallet)
     return client
 }
 
-// Create an Archway Client Interface
+// Create an Archway Signing Client Interface
 export async function CreateArchwaySigningClient(wallet: DirectSecp256k1HdWallet) {
     const client = await CreateSigningClientTestnet(wallet);
-    const archway_client: ArchwaySigningClient = {client, wallet};
+    const archway_client: ArchwaySigningClient = new ArchwaySigningClient(wallet,client);
+    return archway_client
+}
+
+// Create an Archway Read Client Interface
+export async function CreateArchwayClient(wallet: DirectSecp256k1HdWallet) {
+    const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
+    const client: StargateClient = await StargateClient.connect(lcdApiTestnet);
+    const archway_client: ArchwayClient = new ArchwayClient(client);
     return archway_client
 }
 

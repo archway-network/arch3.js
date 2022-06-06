@@ -9,17 +9,17 @@ export async function getAccount(wallet: DirectSecp256k1HdWallet) {
 }
 
 // Get balance of client wallet
-export async function getBalance(archway_client: ArchwaySigningClient ) {
-    const address = await extractAddress(archway_client.wallet);
-    const balance = await archway_client.client.getBalance(address, "uconst");
-    return balance
+ArchwaySigningClient.prototype.getBalance = async function() {
+  const address = await extractAddress(this.wallet);
+  const balance = await this.client.getBalance(address, "uconst");
+  return balance
 }
 
 // Send tokens to another Archway address
-export async function sendTokens(archway_client: ArchwaySigningClient,archway_recipient_address: string, amount: Coin[]) {
-    const wallet = archway_client.wallet;
+ArchwaySigningClient.prototype.sendTokens = async function(archway_recipient_address: string, amount: Coin[]) {
+    const wallet = this.wallet;
     const wallet_address = await wallet.getAccounts()
-    const testnet_client = archway_client.client;
+    const testnet_client = this.client;
     const fee = {
         amount: [
           {
@@ -36,10 +36,10 @@ export async function sendTokens(archway_client: ArchwaySigningClient,archway_re
 
 
 // Delegate tokens to an Archway validator
-export async function delegateTokens(archway_client: ArchwaySigningClient,archway_validator_address: string, amount: Coin) {
-  const wallet = archway_client.wallet;
+ArchwaySigningClient.prototype.delegateTokens = async function(archway_validator_address: string, amount: Coin) {
+  const wallet = this.wallet;
   const wallet_address = await wallet.getAccounts()
-  const testnet_client = archway_client.client;
+  const testnet_client = this.client;
   const fee = {
       amount: [
         {
