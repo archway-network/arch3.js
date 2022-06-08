@@ -3,10 +3,9 @@ import { importWallet, CreateArchwaySigningClient, extractAddress} from "../src/
 
 
 // Testing sending tokens from one account to another
-describe('send tokens from one account to another', function() {
-    it('sendTokens', async function() {
-        let wallet = await importWallet("worth pencil mountain plug talk wink discover demise guess dish comic cloud alley trend game nurse era return canvas dry word primary turtle tattoo");
-        let client = await CreateArchwaySigningClient(wallet);
+describe('query balance of user account', function() {
+    it('queryBalance', async function() {
+        let client = await CreateArchwayClient();
         let balance_initial = await client.getBalance();
         console.log(balance_initial)
         await client.sendTokens("archway1hymxhxrkyv933chdfwzkm450ytxcft33ekr8w9",[{denom: "uconst", amount: "20000"}])

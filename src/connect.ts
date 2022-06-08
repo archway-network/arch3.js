@@ -88,7 +88,7 @@ export async function CreateArchwaySigningClient(wallet: DirectSecp256k1HdWallet
 }
 
 // Create an Archway Read Client Interface
-export async function CreateArchwayClient(wallet: DirectSecp256k1HdWallet) {
+export async function CreateArchwayClient() {
     const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
     const client: StargateClient = await StargateClient.connect(lcdApiTestnet);
     const archway_client: ArchwayClient = new ArchwayClient(client);
