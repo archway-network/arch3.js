@@ -15,7 +15,7 @@ export class ArchwayClient {
         this.client = client
     }
 
-    getBalance(address: string): any {};
+    getBalance(address: string) {};
     getStakedBalance(delegator_address: string) {};
     getBlock(height: number) {};
     getChainID() {};
