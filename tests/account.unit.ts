@@ -20,8 +20,10 @@ describe('delegate tokens to a validator', function() {
     it('delegateTokens', async function() {
         let wallet = await importWallet("worth pencil mountain plug talk wink discover demise guess dish comic cloud alley trend game nurse era return canvas dry word primary turtle tattoo");
         let client = await CreateArchwaySigningClient(wallet);
-        let balance_initial = await client.getBalance();
+        let address = await extractAddress(wallet);
         await client.delegateTokens("archwayvaloper1t3zrk2vva33ajcut0rvjrtxchlynx7j5mmgj8m",{denom: "uconst", amount: "20000"})
         // Query balance staked
+        let amount = await client.getStakedBalance(address);
+        console.log("amount staked:",amount)
     }); 
   });
