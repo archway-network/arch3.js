@@ -8,11 +8,21 @@ import { ArchwayTxFilter, ArchwayTXSearch } from "./query";
 
 // Interface that holds the Signing Client and Wallet Account
 // Interface that holds the Read Client and Wallet Account
-export class ArchwayClient {
+
+abstract class Client {
+    client: StargateClient;
+
+    constructor(client: StargateClient) {
+        this.client = client;
+    }
+}
+
+
+export class ArchwayClient extends Client {
     public client: StargateClient
 
     constructor(client: StargateClient) {
-        this.client = client
+        super(client)
     }
 
     getBalance(address: string) {};
@@ -25,6 +35,8 @@ export class ArchwayClient {
     searchTx(search_tx_type: ArchwayTXSearch, filter: ArchwayTxFilter) {};
 
 }
+
+
 
 export class ArchwaySigningClient extends ArchwayClient {
     wallet: DirectSecp256k1HdWallet;
@@ -80,6 +92,13 @@ export async function CreateSigningClientTestnet(wallet: DirectSecp256k1HdWallet
     return client
 }
 
+ export async function CreateReadOnlyClientTestnet() {
+    const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
+   // const address: string = await extractAddress(wallet);
+    const client: StargateClient = await StargateClient.connect(lcdApiTestnet);
+    return client
+}
+
 // Create an Archway Signing Client Interface
 export async function CreateArchwaySigningClient(wallet: DirectSecp256k1HdWallet) {
     const client = await CreateSigningClientTestnet(wallet);
@@ -89,8 +108,7 @@ export async function CreateArchwaySigningClient(wallet: DirectSecp256k1HdWallet
 
 // Create an Archway Read Client Interface
 export async function CreateArchwayClient() {
-    const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
-    const client: StargateClient = await StargateClient.connect(lcdApiTestnet);
+    const client = await CreateReadOnlyClientTestnet();
     const archway_client: ArchwayClient = new ArchwayClient(client);
     return archway_client
 }

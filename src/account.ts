@@ -50,6 +50,9 @@ ArchwaySigningClient.prototype.delegateTokens = async function(archway_validator
       gas: "180000", // 180k
     };
   const result = await testnet_client.delegateTokens(wallet_address[0].address, archway_validator_address,amount, fee);
+  
   // Asserts that the TX was successful or creates an error
   assertIsDeliverTxSuccess(result)
 }
+
+
