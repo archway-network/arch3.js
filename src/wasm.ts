@@ -3,8 +3,8 @@ import { Coin } from "@cosmjs/proto-signing";
 import * as fs from "fs";
 import { ArchwaySigningClient, extractAddress } from "./connect";
 
-// Upload a contract to the  blockchain
-// Returns a receipt if contract successfully uploaded with Code ID
+/** Upload a contract to the  blockchain
+ Returns a receipt if contract successfully uploaded with Code ID */ 
 export async function uploadContract(this: ArchwaySigningClient, wasmPath: string ): Promise<UploadResult> {
     let wasm_file = fs.readFileSync(wasmPath);
     let address = await extractAddress(this.wallet);
@@ -21,8 +21,8 @@ export async function uploadContract(this: ArchwaySigningClient, wasmPath: strin
     return receipt
 }
 
-// Instantiates contract from Code ID and message
-// Returns contract address from instantiation with result
+/** Instantiates contract from Code ID and message
+ Returns contract address from instantiation with result */ 
 export async function instantiateContract(this: ArchwaySigningClient, code_id: number, msg: any, label = "", memo = ""): Promise<readonly [InstantiateResult,string]> {
     let address = await extractAddress(this.wallet);
     const fee = {
@@ -48,8 +48,8 @@ export async function instantiateContract(this: ArchwaySigningClient, code_id: n
 
 
 
-// Execute an exisiting smart contract on the blockchain
-// Returns the result of the execution (pass or fail)
+/** Execute an exisiting smart contract on the blockchain
+ Returns the result of the execution (pass or fail) */ 
 export async function executeContract(this:ArchwaySigningClient, contract_address: string, msg: any, memo = "", funds?: Coin[]): Promise<ExecuteResult> {
     let address = await extractAddress(this.wallet);
     const fee = {
