@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { CreateArchwayClient, CreateArchwaySigningClient, CreateReadOnlyClientTestnet } from "../src/connect";
 import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, ArchwayTXSearch , ArchwayTxFilter} from "../src/index"
 
-// Keep constant wallet with constant balance 
+/** Keep constant wallet with constant balance  */ 
 test('query read only client for balance', async () => {
     let client = await CreateArchwayClient();
     let balance_final = await client.getBalance("archway1eu6lzhe8hyt7yyd7ygyc7d5h2hpxwxt2ghaykk");
@@ -38,8 +38,6 @@ test('get tx hash', async () => {
   let tx = await client.getTX("9BF55B89E31B99DBA48CA05784A1F09FB007170CA3F95390AE7011946CF38C0F");
   let log = JSON.parse(tx.rawLog);
   let type = log[0].events[0].type;
-
-  console.log(type)
   expect(type).eql("coin_received")
  
 })
@@ -50,7 +48,7 @@ test('get tx from txsearch', async () => {
   let search: ArchwayTXSearch = {sentFromOrTo: "archway1hymxhxrkyv933chdfwzkm450ytxcft33ekr8w9"}
   let txs = await client.searchTx(search);
   // Need to create assumption that number of transactions for that address will remain constant
-  expect(txs.length).eql(24)
+  expect(txs.length).eql(25)
 
 })
 
