@@ -20,7 +20,7 @@ test('test', async () => {
 // (ordering tokens from testnet faucet)
 // Expected balance changes after each transaction so we should keep a constant testnet wallet for this case
 test('test', async () => {
-  let wallet = await importWallet("worth pencil mountain plug talk wink discover demise guess dish comic cloud alley trend game nurse era return canvas dry word primary turtle tattoo");
+  let wallet = await importWallet("change vocal student disorder quiz refuse fatigue busy deny evoke polar build grace add planet cinnamon axis matrix frequent glare dutch odor patch pair");
     let client = await CreateArchwaySigningClient(wallet);
     let balance = await client.getBalance();
     let expected_balance: Coin = {denom: 'uconst', amount: '1000000'};

@@ -23,7 +23,11 @@ export class ArchwaySigningClient extends ArchwayClient {
         this.wallet = wallet;
     }
 
-    getBalance() {};
+    async getBalance() {
+        const address = await extractAddress(this.wallet);
+        const balance = await this.client.getBalance(address, "uconst");
+        return balance
+    };
     sendTokens(archway_recipient_address: string, amount: Coin[]): void {};
     delegateTokens(archway_validator_address: string, amount: Coin): void {};
 

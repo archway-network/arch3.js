@@ -1,3 +1,4 @@
 import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, CreateArchwaySigningClient } from "./connect"
 import { getAccount} from "./account"
-export {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, getAccount, CreateArchwaySigningClient }
+import {ArchwayClient, ArchwayTXSearch, ArchwayTxFilter} from "./query"
+export {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, getAccount, CreateArchwaySigningClient, ArchwayClient, ArchwayTXSearch, ArchwayTxFilter }
