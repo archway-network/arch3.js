@@ -3,24 +3,20 @@ import { Block, calculateFee, GasPrice } from "@cosmjs/stargate";
 import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 import { ArchwayClient, ArchwayTxFilter, ArchwayTXSearch } from "./query";
 import { SigningCosmWasmClient, CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import {uploadContract} from "./wasm"
 // Wrapper for connecting to RPC client from COSM JS
 // Can either connect to testnet or mainnet
 // TODO: add mainnet
 
+
 // Interface that holds the Signing Client and Wallet Account
-// Interface that holds the Read Client and Wallet Account
-
-
-
-
-
-
-
-export class ArchwaySigningClient extends ArchwayClient {
+export class ArchwaySigningClient {
     wallet: DirectSecp256k1HdWallet;
+    client: SigningCosmWasmClient;
+    public uploadContract = uploadContract;
 
     constructor(wallet:DirectSecp256k1HdWallet, client: SigningCosmWasmClient) {
-        super(client);
+        this.client = client;
         this.wallet = wallet;
     }
 

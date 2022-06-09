@@ -3,6 +3,7 @@ import {SigningStargateClient, StargateClient, assertIsDeliverTxSuccess, Block, 
 import { extractAddress, ArchwaySigningClient } from "./connect";
 import {SigningCosmWasmClient, CosmWasmClient} from "@cosmjs/cosmwasm-stargate"
 
+// Interface that holds the Read Client and Wallet Account
 
 export class ArchwayClient {
     public client: CosmWasmClient
