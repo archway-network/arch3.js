@@ -90,7 +90,20 @@ export class ArchwayClient {
         return history
     }
 
-    // Get all contracts
+    /** Get all contract addresses instantiated from a certain code ID */
+    async getContractsFromCode(code_id: number): Promise<readonly string[]> {
+        let contracts = await this.client.getContracts(code_id);
+        return contracts
+    }
+
+    /** Makes a smart query on the contract, returns the parsed JSON document.
+     * Promise is rejected when contract does not exist or if invalid query format.
+     * If there is also no response format in the smart contract, promise will be rejected.
+     */
+    async queryContract(contract_address: string, query_msg: Record<string,unknown>): Promise<any> {
+        let response = await this.client.queryContractSmart(contract_address, query_msg);
+        return response
+    }
 
 
 }
