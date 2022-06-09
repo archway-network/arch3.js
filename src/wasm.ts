@@ -12,10 +12,10 @@ export async function uploadContract(this: ArchwaySigningClient, wasmPath: strin
         amount: [
           {
             denom: "uconst",
-            amount: "2000",
+            amount: "20000",
           },
         ],
-        gas: "180000", // 180k
+        gas: "200000", // 180k
       };
     let receipt = await this.client.upload(address,wasm_file,fee);
     return receipt
@@ -32,7 +32,7 @@ export async function instantiateContract(this: ArchwaySigningClient, code_id: n
             amount: "2000",
           },
         ],
-        gas: "180000", // 180k
+        gas: "200000", // 180k
       };
     let result = await this.client.instantiate(
         address,

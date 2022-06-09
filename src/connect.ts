@@ -3,6 +3,8 @@ import { Block, calculateFee, GasPrice } from "@cosmjs/stargate";
 import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 import { ArchwayClient, ArchwayTxFilter, ArchwayTXSearch } from "./query";
 import { SigningCosmWasmClient, CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { Decimal } from "@cosmjs/math";
+
 import {uploadContract} from "./wasm"
 // Wrapper for connecting to RPC client from COSM JS
 // Can either connect to testnet or mainnet
