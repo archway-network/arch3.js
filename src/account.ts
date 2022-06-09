@@ -8,12 +8,6 @@ export async function getAccount(wallet: DirectSecp256k1HdWallet) {
     return account
 }
 
-// Get balance of client wallet
-ArchwaySigningClient.prototype.getBalance = async function() {
-  const address = await extractAddress(this.wallet);
-  const balance = await this.client.getBalance(address, "uconst");
-  return balance
-}
 
 // Send tokens to another Archway address
 ArchwaySigningClient.prototype.sendTokens = async function(archway_recipient_address: string, amount: Coin[]) {

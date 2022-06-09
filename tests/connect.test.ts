@@ -6,8 +6,7 @@ import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet
 // Testing that generateWallet function actually generates a wallet
 test('test', async () => {
   let wallet = await generateWallet();
-      // Remove comments to be able to view what wallet structure returns
-      // console.log(wallet)
+
       let address_wallet = await extractAddress(wallet);
       // Remove comments to see Archway address
       // console.log(address_wallet)
