@@ -1,6 +1,26 @@
 import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import {SigningStargateClient, StargateClient, assertIsDeliverTxSuccess, Block, IndexedTx } from "@cosmjs/stargate";
-import { extractAddress, ArchwaySigningClient, ArchwayClient } from "./connect";
+import { extractAddress, ArchwaySigningClient } from "./connect";
+
+
+
+export class ArchwayClient {
+    public client: StargateClient
+
+    constructor(client: StargateClient) {
+        this.client = client
+    }
+
+    getBalance(address: string) {};
+    getStakedBalance(delegator_address: string) {};
+    getBlock(height: number) {};
+    getChainID() {};
+    getDelegations(delegator_address: string, validator_address: string) {};
+    getBlockHeight() {};
+    getTX(tx_hash: string) {};
+    searchTx(search_tx_type: ArchwayTXSearch, filter: ArchwayTxFilter) {};
+
+}
 
 // Option of Archway Transaction Search for searching by height
 export interface SearchByHeightQuery {
@@ -54,7 +74,7 @@ ArchwayClient.prototype.getDelegations= async function(delegator_address: string
 
 // Get current block height of the chain
 ArchwayClient.prototype.getBlockHeight= async function() {
-    const height: number = await this.client.getHeight();
+    const height = await this.client.getHeight();
     return height
 }
 

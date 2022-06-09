@@ -1,7 +1,7 @@
 import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Block, calculateFee, GasPrice } from "@cosmjs/stargate";
 import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
-import { ArchwayTxFilter, ArchwayTXSearch } from "./query";
+import { ArchwayClient, ArchwayTxFilter, ArchwayTXSearch } from "./query";
 // Wrapper for connecting to RPC client from COSM JS
 // Can either connect to testnet or mainnet
 // TODO: add mainnet
@@ -9,32 +9,9 @@ import { ArchwayTxFilter, ArchwayTXSearch } from "./query";
 // Interface that holds the Signing Client and Wallet Account
 // Interface that holds the Read Client and Wallet Account
 
-abstract class Client {
-    client: StargateClient;
-
-    constructor(client: StargateClient) {
-        this.client = client;
-    }
-}
 
 
-export class ArchwayClient extends Client {
-    public client: StargateClient
 
-    constructor(client: StargateClient) {
-        super(client)
-    }
-
-    getBalance(address: string) {};
-    getStakedBalance(delegator_address: string) {};
-    getBlock(height: number) {};
-    getChainID() {};
-    getDelegations(delegator_address: string, validator_address: string) {};
-    getBlockHeight() {};
-    getTX(tx_hash: string) {};
-    searchTx(search_tx_type: ArchwayTXSearch, filter: ArchwayTxFilter) {};
-
-}
 
 
 
