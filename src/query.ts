@@ -17,13 +17,6 @@ export class ArchwayClient {
         return balance
     };
 
-    // Get the staked balance of any address on the blockchain
-    /*
-    async getStakedBalance(delegator_address: string) {
-        const balance = await this.client.getBalanceStaked(delegator_address);
-        return balance
-    };
-    */
 
     /** Get the Block info at any height */ 
     async getBlock(height: number) {
@@ -37,13 +30,7 @@ export class ArchwayClient {
         return chain_id
     };
 
-    // Get all the delegations from any address to an Archway validator
-    /*
-    async getDelegations(delegator_address: string, validator_address: string) {
-        const balance = await this.client.getDelegation(delegator_address, validator_address);
-        return balance
-    };
-    */
+
 
     /** Get the latest block height of the chain */ 
     async getBlockHeight() {
