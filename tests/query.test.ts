@@ -51,8 +51,7 @@ test('get tx from txsearch', async () => {
   let txs = await client.searchTx(search);
   // Need to create assumption that number of transactions for that address will remain constant
   expect(txs.length).eql(24)
-  
- 
+
 })
 
 
