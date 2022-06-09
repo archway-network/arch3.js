@@ -6,10 +6,7 @@ import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet
 // Testing that generateWallet function actually generates a wallet
 test('test', async () => {
   let wallet = await generateWallet();
-
       let address_wallet = await extractAddress(wallet);
-      // Remove comments to see Archway address
-      // console.log(address_wallet)
       let [{address}] = await wallet.getAccounts();
       expect(address).equal(address_wallet)
 })
