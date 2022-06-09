@@ -1,7 +1,7 @@
 import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import {SigningStargateClient, StargateClient, assertIsDeliverTxSuccess, Block, IndexedTx } from "@cosmjs/stargate";
 import { extractAddress, ArchwaySigningClient } from "./connect";
-import {SigningCosmWasmClient, CosmWasmClient} from "@cosmjs/cosmwasm-stargate"
+import {SigningCosmWasmClient, CosmWasmClient, CodeDetails, Code, Contract, ContractCodeHistoryEntry} from "@cosmjs/cosmwasm-stargate"
 
 // Interface that holds the Read Client and Wallet Account
 
@@ -63,6 +63,33 @@ export class ArchwayClient {
         const indexed_txs = await this.client.searchTx(search_tx_type, filter);
         return indexed_txs
     };
+    
+    
+    // Returns Code Info from Code ID 
+    async getCodeInfo(code_id: number): Promise<CodeDetails> {
+        let details = this.client.getCodeDetails(code_id);
+        return details
+    }
+
+    // Returns creator of Code ID
+    async getCodeCreator(code_id: number): Promise<string> {
+        let details = await this.getCodeInfo(code_id);
+        return details.creator
+    }
+
+    // get Contract Info from address
+    // Contract returns address, admin, label, creator, code_id, and IBCPortID
+    async getContract(contract_address: string): Promise<Contract> {
+        let contract = await this.client.getContract(contract_address);
+        return contract
+    }
+
+    // get history of messages executed or instantiated on contract as readonly array
+    async getContractHistory(contract_address: string): Promise<readonly ContractCodeHistoryEntry[]> {
+        let history = await this.client.getContractCodeHistory(contract_address);
+        return history
+    }
+
 
 }
 
