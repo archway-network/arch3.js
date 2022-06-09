@@ -17,6 +17,7 @@ test('testing sending tokens and balance query', async () => {
 })
 
 // Testing delegating tokens to a validator
+/*
 test('testing delegation of tokens to validator', async () => {
   let wallet = await importWallet("worth pencil mountain plug talk wink discover demise guess dish comic cloud alley trend game nurse era return canvas dry word primary turtle tattoo");
         let client = await CreateArchwaySigningClient(wallet);
@@ -26,3 +27,4 @@ test('testing delegation of tokens to validator', async () => {
         let amount = await client.getStakedBalance(address);
         expect(amount.amount).eql("360000")
 })
+*/

@@ -2,6 +2,7 @@ import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Block, calculateFee, GasPrice } from "@cosmjs/stargate";
 import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 import { ArchwayClient, ArchwayTxFilter, ArchwayTXSearch } from "./query";
+import { SigningCosmWasmClient, CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 // Wrapper for connecting to RPC client from COSM JS
 // Can either connect to testnet or mainnet
 // TODO: add mainnet
@@ -18,12 +19,12 @@ import { ArchwayClient, ArchwayTxFilter, ArchwayTXSearch } from "./query";
 export class ArchwaySigningClient extends ArchwayClient {
     wallet: DirectSecp256k1HdWallet;
 
-    constructor(wallet:DirectSecp256k1HdWallet, client: SigningStargateClient) {
+    constructor(wallet:DirectSecp256k1HdWallet, client: SigningCosmWasmClient) {
         super(client);
         this.wallet = wallet;
     }
 
-    async getBalance() {
+    async getBalance(): Promise<Coin> {
         const address = await extractAddress(this.wallet);
         const balance = await this.client.getBalance(address, "uconst");
         return balance
@@ -69,14 +70,14 @@ export async function importWallet(mnemonic: string) {
 export async function CreateSigningClientTestnet(wallet: DirectSecp256k1HdWallet) {
     const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
    // const address: string = await extractAddress(wallet);
-    const client: SigningStargateClient = await SigningStargateClient.connectWithSigner(lcdApiTestnet, wallet)
+    const client: SigningCosmWasmClient = await SigningCosmWasmClient.connectWithSigner(lcdApiTestnet, wallet)
     return client
 }
 
  export async function CreateReadOnlyClientTestnet() {
     const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
    // const address: string = await extractAddress(wallet);
-    const client: StargateClient = await StargateClient.connect(lcdApiTestnet);
+    const client: CosmWasmClient = await CosmWasmClient.connect(lcdApiTestnet);
     return client
 }
 

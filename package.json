@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@cosmjs/cosmwasm-stargate": "^0.28.0",
     "@cosmjs/launchpad": "^0.26.0-rc1",
     "@cosmjs/proto-signing": "^0.28.4",
     "@cosmjs/stargate": "^0.28.4",
