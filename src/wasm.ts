@@ -15,17 +15,8 @@ export async function uploadContract(this: ArchwaySigningClient, wasmPath: strin
 
 /** Instantiates contract from Code ID and message
  Returns contract address from instantiation with result */ 
-export async function instantiateContract(this: ArchwaySigningClient, code_id: number, msg: any, label = "", memo = ""): Promise<readonly [InstantiateResult,string]> {
+export async function instantiateContract(this: ArchwaySigningClient, code_id: number, msg: any, fee : StdFee, label = "default", memo = ""): Promise<readonly [InstantiateResult,string]> {
     let address = await extractAddress(this.wallet);
-    const fee = {
-        amount: [
-          {
-            denom: "uconst",
-            amount: "2000",
-          },
-        ],
-        gas: "200000", // 180k
-      };
     let result = await this.client.instantiate(
         address,
         code_id,
@@ -42,23 +33,15 @@ export async function instantiateContract(this: ArchwaySigningClient, code_id: n
 
 /** Execute an exisiting smart contract on the blockchain
  Returns the result of the execution (pass or fail) */ 
-export async function executeContract(this:ArchwaySigningClient, contract_address: string, msg: any, memo = "", funds?: Coin[]): Promise<ExecuteResult> {
+export async function executeContract(this:ArchwaySigningClient, contract_address: string, msg: any, fee: StdFee, memo = "", funds?: Coin[]): Promise<ExecuteResult> {
     let address = await extractAddress(this.wallet);
-    const fee = {
-        amount: [
-          {
-            denom: "uconst",
-            amount: "2000",
-          },
-        ],
-        gas: "180000", // 180k
-      };
       // Check if funds were sent
-
     if (typeof funds !== 'undefined') {
+      // If no, then no need to dd to execute message
         let result = await this.client.execute(address, contract_address,msg,fee,memo);
         return result
     }
+    // Otherwise add to execute message
     let result = await this.client.execute(address, contract_address,msg,fee,memo, funds);
     return result
 }
