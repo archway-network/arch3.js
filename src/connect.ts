@@ -3,6 +3,7 @@ import { ArchwayClient, ArchwayTxFilter, ArchwayTXSearch } from "./query";
 import { SigningCosmWasmClient, CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 
 import {executeContract, instantiateContract, uploadContract} from "./wasm"
+import { StdFee } from "@cosmjs/stargate";
 // Wrapper for connecting to RPC client from COSM JS
 // Can either connect to testnet or mainnet
 // TODO: add mainnet
@@ -26,8 +27,8 @@ export class ArchwaySigningClient {
         const balance = await this.client.getBalance(address, "uconst");
         return balance
     };
-    sendTokens(archway_recipient_address: string, amount: Coin[]): void {};
-    delegateTokens(archway_validator_address: string, amount: Coin): void {};
+    sendTokens(archway_recipient_address: string, fee: StdFee, amount: Coin[]): void {};
+    delegateTokens(archway_validator_address: string, fee: StdFee, amount: Coin): void {};
 
 }
 
