@@ -1,5 +1,4 @@
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { SigningCosmosClient } from "@cosmjs/launchpad";
 import { ArchwaySigningClient } from "./connect";
 
 /** Connect to Keplr to create an ArchwaySigningClient Interface */

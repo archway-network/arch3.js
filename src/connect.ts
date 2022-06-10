@@ -1,9 +1,6 @@
 import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
-import { Block, calculateFee, GasPrice } from "@cosmjs/stargate";
-import {SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 import { ArchwayClient, ArchwayTxFilter, ArchwayTXSearch } from "./query";
 import { SigningCosmWasmClient, CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { Decimal } from "@cosmjs/math";
 
 import {executeContract, instantiateContract, uploadContract} from "./wasm"
 // Wrapper for connecting to RPC client from COSM JS
@@ -18,7 +15,7 @@ export class ArchwaySigningClient {
     public uploadContract = uploadContract;
     public instantiateContract = instantiateContract;
     public executeContract = executeContract;
-    
+
     constructor(wallet:DirectSecp256k1HdWallet, client: SigningCosmWasmClient) {
         this.client = client;
         this.wallet = wallet;
