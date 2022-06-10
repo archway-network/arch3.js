@@ -1,22 +1,14 @@
 import { ExecuteResult, InstantiateResult, UploadResult } from "@cosmjs/cosmwasm-stargate";
 import { Coin } from "@cosmjs/proto-signing";
+import { StdFee } from "@cosmjs/stargate";
 import * as fs from "fs";
 import { ArchwaySigningClient, extractAddress } from "./connect";
 
 /** Upload a contract to the  blockchain
  Returns a receipt if contract successfully uploaded with Code ID */ 
-export async function uploadContract(this: ArchwaySigningClient, wasmPath: string ): Promise<UploadResult> {
+export async function uploadContract(this: ArchwaySigningClient, wasmPath: string, fee: StdFee ): Promise<UploadResult> {
     let wasm_file = fs.readFileSync(wasmPath);
     let address = await extractAddress(this.wallet);
-    const fee = {
-        amount: [
-          {
-            denom: "uconst",
-            amount: "20000",
-          },
-        ],
-        gas: "200000", // 180k
-      };
     let receipt = await this.client.upload(address,wasm_file,fee);
     return receipt
 }
