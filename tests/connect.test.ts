@@ -1,7 +1,7 @@
 import { Coin } from "@cosmjs/proto-signing";
 import { expect } from "chai";
 import { CreateArchwaySigningClient } from "../src/connect";
-import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, } from "../src/index"
+import {generateWallet, extractAddress, importWallet } from "../src/index"
 
 // Testing that generateWallet function actually generates a wallet
 test('test', async () => {

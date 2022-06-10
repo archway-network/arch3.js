@@ -1,7 +1,6 @@
-import { Coin } from "@cosmjs/proto-signing";
 import { expect } from "chai";
-import { CreateArchwayClient, CreateArchwaySigningClient, CreateReadOnlyClientTestnet } from "../src/connect";
-import {generateWallet, extractAddress, importWallet, CreateSigningClientTestnet, ArchwayTXSearch , ArchwayTxFilter} from "../src/index"
+import { CreateArchwayClient} from "../src/connect";
+import {ArchwayTXSearch} from "../src/index"
 
 /** Keep constant wallet with constant balance  */ 
 test('query read only client for balance', async () => {
