@@ -1,11 +1,27 @@
 {
+  "name": "arch3.js",
+  "version": "0.0.1",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "main": "dist/index.js",
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "^0.28.0",
-    "@cosmjs/launchpad": "^0.26.0-rc1",
-    "@cosmjs/proto-signing": "^0.28.4",
-    "@cosmjs/stargate": "^0.28.4",
+    "@cosmjs/cosmwasm-stargate": "0.28.0",
+    "@cosmjs/proto-signing": "0.28.4",
+    "@cosmjs/stargate": "0.28.4",
     "@testdeck/mocha": "^0.2.0",
+    "react": "^18.1.0",
     "ts-mockito": "^2.6.1"
+  },
+  "browser": {
+    "crypto": false,
+    "fs": false,
+    "path": false,
+    "os": false,
+    "net": false,
+    "stream": false,
+    "tls": false
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
@@ -13,6 +29,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.1",
+    "@types/react": "^18.0.12",
     "babel-jest": "^28.1.1",
     "chai": "^4.3.6",
     "jest": "^28.1.1",
