@@ -1,11 +1,10 @@
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import {configs} from "./config";
 import { ArchwaySigningClient, CreateArchwayClient, CreateArchwaySigningClient } from "./connect";
 import { ArchwayClient } from "./query";
 import { useEffect, useState } from "react";
 
-export function ConnectArchwayKeplr() {
+export function useArchwayKeplr() {
 
     // state vars
     const [account, setAccount] = useState<string | undefined>('');

@@ -19,17 +19,17 @@ ArchwaySigningClient.prototype.sendTokens = async function(archway_recipient_add
     assertIsDeliverTxSuccess(result)
 }
 
-
 // Delegate tokens to an Archway validator
-ArchwaySigningClient.prototype.delegateTokens = async function(archway_validator_address: string, amount: Coin, fee: StdFee) {
-  const wallet = this.wallet;
-  const wallet_address = await wallet.getAccounts()
-  const testnet_client = this.client;
-  const result = await testnet_client.delegateTokens(wallet_address[0].address, archway_validator_address,amount, fee);
+ArchwaySigningClient.prototype.delegateTokens = async function(archway_validator_address: string,fee: StdFee, amount: Coin) {
+    const wallet = this.wallet;
+    const wallet_address = await wallet.getAccounts()
+    const testnet_client = this.client;
+    const result = await testnet_client.delegateTokens(wallet_address[0].address, archway_validator_address,amount, fee);
+    
+    // Asserts that the TX was successful or creates an error
+    assertIsDeliverTxSuccess(result)
+  }
   
-  // Asserts that the TX was successful or creates an error
-  assertIsDeliverTxSuccess(result)
-}
 
 
 
