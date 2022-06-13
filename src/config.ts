@@ -1,4 +1,4 @@
-
+/** Testnet configurations for constantine-1 chain */
 const testnet = {
   chainId: "constantine-1",
   chainName: "Archway",

@@ -62,7 +62,6 @@ export function useArchwayKeplr() {
         setClient(client);
         setActive(true);
   
-        console.log("keplr activated");
         return err;
       } else {
         err = "Please install Keplr wallet"
