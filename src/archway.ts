@@ -8,7 +8,6 @@ export interface MsgSetContractMetadataEncodeObject extends EncodeObject {
     readonly value: Partial<MsgSetContractMetadata>;
 }
 type MsgSetContractMetadata = {
-    type: string,
     sender: string,
     contract_address: string,
     metadata: ContractInstanceMetadata
@@ -23,8 +22,31 @@ type ContractInstanceMetadata = {
 }
 
 /** adds developer metadata to blockchain */ 
- export async function addMetadata(this: ArchwaySigningClient, fee: StdFee ): Promise<DeliverTxResponse> {
+ export async function addMetadata(
+    this: ArchwaySigningClient,
+    contract_address:string,
+    developer_address: string,
+    reward_address: string,
+    gas_rebate: boolean,
+    collect_premium: boolean,
+    premium_percentage_charged: number,
+    fee: StdFee ):
+     Promise<DeliverTxResponse> {
     let address = await extractAddress(this.wallet);
-    const message: MsgDelegateEncodeObject 
-    let tx_response = await this.client.signAndBroadcast(address,[message],fee)
+    const message : MsgSetContractMetadataEncodeObject = {
+        typeUrl:  "/cosmos.staking.v1beta1.MsgDelegate",
+        value:  {
+            sender: address,
+            contract_address: contract_address,
+            metadata: {
+                developer_address,
+                reward_address,
+                gas_rebate,
+                collect_premium,
+                premium_percentage_charged
+            }
+        }
+    }
+    let tx_response = await this.client.signAndBroadcast(address,[message],fee);
+    return tx_response
 }
