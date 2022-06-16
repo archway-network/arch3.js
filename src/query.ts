@@ -1,7 +1,7 @@
 import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import {Block, IndexedTx, QueryClient } from "@cosmjs/stargate";
 import {CosmWasmClient, CodeDetails, Contract, ContractCodeHistoryEntry} from "@cosmjs/cosmwasm-stargate"
-import { Tendermint34Client, tendermint34 } from "@cosmjs/tendermint-rpc";
+import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
 
 // Interface that holds the Read Client and Wallet Account
 
