@@ -4,6 +4,7 @@ import { SigningCosmWasmClient, CosmWasmClient } from "@cosmjs/cosmwasm-stargate
 
 import {executeContract, instantiateContract, uploadContract} from "./wasm"
 import { StdFee } from "@cosmjs/stargate";
+import { addMetadata } from "./archway";
 // Wrapper for connecting to RPC client from COSM JS
 // Can either connect to testnet or mainnet
 // TODO: add mainnet
@@ -16,6 +17,7 @@ export class ArchwaySigningClient {
     public uploadContract = uploadContract;
     public instantiateContract = instantiateContract;
     public executeContract = executeContract;
+    public addMetadata = addMetadata;
 
     constructor(wallet:DirectSecp256k1HdWallet, client: SigningCosmWasmClient) {
         this.client = client;

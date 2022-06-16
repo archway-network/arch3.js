@@ -4,7 +4,7 @@ import { DeliverTxResponse, MsgDelegateEncodeObject, StdFee } from "@cosmjs/star
 import { ArchwaySigningClient, extractAddress } from "./connect";
 
 export interface MsgSetContractMetadataEncodeObject extends EncodeObject {
-    readonly typeUrl: "/cosmos.staking.v1beta1.MsgDelegate";
+    readonly typeUrl: "/archway.gastracker.v1.MsgSetContractMetadata";
     readonly value: Partial<MsgSetContractMetadata>;
 }
 type MsgSetContractMetadata = {
@@ -34,7 +34,7 @@ type ContractInstanceMetadata = {
      Promise<DeliverTxResponse> {
     let address = await extractAddress(this.wallet);
     const message : MsgSetContractMetadataEncodeObject = {
-        typeUrl:  "/cosmos.staking.v1beta1.MsgDelegate",
+        typeUrl:  "/archway.gastracker.v1.MsgSetContractMetadata",
         value:  {
             sender: address,
             contract_address: contract_address,

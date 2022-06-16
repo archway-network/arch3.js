@@ -10,6 +10,7 @@
     "@cosmjs/cosmwasm-stargate": "0.28.0",
     "@cosmjs/proto-signing": "0.28.4",
     "@cosmjs/stargate": "0.28.4",
+    "@cosmjs/tendermint-rpc": "^0.28.7",
     "@testdeck/mocha": "^0.2.0",
     "react": "^18.1.0",
     "ts-mockito": "^2.6.1"
@@ -29,6 +30,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.1",
+    "@types/jest": "^28.1.1",
     "@types/react": "^18.0.12",
     "babel-jest": "^28.1.1",
     "chai": "^4.3.6",

@@ -1,6 +1,7 @@
 import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
-import {Block, IndexedTx } from "@cosmjs/stargate";
+import {Block, IndexedTx, QueryClient } from "@cosmjs/stargate";
 import {CosmWasmClient, CodeDetails, Contract, ContractCodeHistoryEntry} from "@cosmjs/cosmwasm-stargate"
+import { Tendermint34Client, tendermint34 } from "@cosmjs/tendermint-rpc";
 
 // Interface that holds the Read Client and Wallet Account
 
@@ -89,6 +90,13 @@ export class ArchwayClient {
     async queryContract(contract_address: string, query_msg: Record<string,unknown>): Promise<any> {
         let response = await this.client.queryContractSmart(contract_address, query_msg);
         return response
+    }
+    /** Query Archway smart contract developer metadata for rewards */
+    async queryDeveloperRewards(contract_address: string): Promise<any> {
+        const lcdApiTestnet = "https://rpc.constantine-1.archway.tech";
+        let tendermint_client = await Tendermint34Client.connect(lcdApiTestnet);
+        let query_client = new QueryClient(tendermint_client)
+
     }
 
 
