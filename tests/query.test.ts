@@ -51,4 +51,15 @@ test('get tx from txsearch', async () => {
 
 })
 
+// Search for a certain TX
+test('get tx from txsearch', async () => {
+  let client = await CreateArchwayClient();
+  let search: ArchwayTXSearch = {sentFromOrTo: "archway1hymxhxrkyv933chdfwzkm450ytxcft33ekr8w9"}
+  let txs = await client.searchTx(search);
+  // Need to create assumption that number of transactions for that address will remain constant
+  expect(txs.length).eql(25)
+
+})
+
+
 
