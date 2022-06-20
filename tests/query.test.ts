@@ -51,13 +51,12 @@ test('get tx from txsearch', async () => {
 
 })
 
-// Search for a certain TX
-test('get tx from txsearch', async () => {
+// 
+test('query metadata of smart contract', async () => {
   let client = await CreateArchwayClient();
-  let search: ArchwayTXSearch = {sentFromOrTo: "archway1hymxhxrkyv933chdfwzkm450ytxcft33ekr8w9"}
-  let txs = await client.searchTx(search);
-  // Need to create assumption that number of transactions for that address will remain constant
-  expect(txs.length).eql(25)
+  let contract_address = "archway13g8q904y2zlzw4svtqzruz5ajnsxlftkwznugkm8v2vgf4tw02zsugkp22"
+  let data = await client.queryDeveloperRewards(contract_address);
+  console.log(data)
 
 })
 

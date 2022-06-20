@@ -1,4 +1,5 @@
 import { Coin, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { toAscii } from "@cosmjs/encoding";
 import {Block, IndexedTx, QueryClient } from "@cosmjs/stargate";
 import {CosmWasmClient, CodeDetails, Contract, ContractCodeHistoryEntry} from "@cosmjs/cosmwasm-stargate"
 import { tendermint34, Tendermint34Client } from "@cosmjs/tendermint-rpc";
@@ -91,14 +92,23 @@ export class ArchwayClient {
         let response = await this.client.queryContractSmart(contract_address, query_msg);
         return response
     }
+
     /** Query Archway smart contract developer metadata for rewards */
     async queryDeveloperRewards(contract_address: string): Promise<any> {
         const rpcTestnet = "https://rpc.constantine-1.archway.tech";
         let tendermint_client = await Tendermint34Client.connect(rpcTestnet);
-        let query_client =  QueryClient.withExtensions(tendermint_client)
+        let query_client =  QueryClient.withExtensions(tendermint_client);
+        const PendingContractInstanceMetadataKeyPrefix = new Uint8Array([0x01]);
+        
+        const key = Uint8Array.from([
+            ...PendingContractInstanceMetadataKeyPrefix,
+            ...toAscii(contract_address),        
+          ]);
+        query_client.queryVerified(
+            "gastracker",
+            key
+        )
     }
-
-
 }
 
 /** Option of Archway Transaction Search for searching by height */ 
