@@ -29,8 +29,15 @@
   "workspaces": [
     "packages/*"
   ],
+  "files": [
+    "build/",
+    "*.md",
+    "!*.spec.*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
+    "build": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
+    "test": "yarn workspaces foreach --topological-dev --parallel --verbose run test"
   },
   "devDependencies": {
     "@types/node": "^18.0",
