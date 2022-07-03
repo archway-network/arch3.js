@@ -40,7 +40,10 @@
     "test": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
     "lint": "yarn workspaces foreach --topological-dev --parallel --verbose run lint",
     "lint:fix": "yarn workspaces foreach --topological-dev --parallel --verbose run lint:fix",
-    "lint:sarif": "yarn workspaces foreach --topological-dev --parallel --verbose run lint:sarif"
+    "lint:sarif": "yarn workspaces foreach --topological-dev --parallel --verbose run lint:sarif",
+    "postinstall": "husky install",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0",
@@ -54,7 +57,9 @@
     "eslint-plugin-jest": "^26.5",
     "eslint-plugin-node": "^11.1",
     "eslint-plugin-simple-import-sort": "^7.0",
+    "husky": "^8.0.0",
     "jest": "^28.1",
+    "pinst": "^3.0.0",
     "ts-jest": "^28.0",
     "ts-node": "^10.8",
     "typescript": "^4.7"
