@@ -7,6 +7,7 @@
   "keywords": [
     "archway",
     "cosmos",
+    "cosmjs",
     "cosmosjs",
     "cosmwasm",
     "tendermint",
@@ -30,6 +31,10 @@
     "*.md",
     "!*.spec.*"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {

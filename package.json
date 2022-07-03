@@ -1,12 +1,12 @@
 {
-  "name": "@archwayhq/arch3",
-  "version": "0.1.0",
+  "name": "arch3-root",
   "description": "The all-in-one library for your awesome Archway dApp",
   "homepage": "https://docs.archway.io",
   "repository": "github:archway-network/arch3.js",
   "keywords": [
     "archway",
     "cosmos",
+    "cosmjs",
     "cosmosjs",
     "cosmwasm",
     "tendermint",
@@ -26,6 +26,10 @@
     "url": "https://github.com/archway-network/arch3.js/issues"
   },
   "private": true,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "workspaces": [
     "packages/*"
   ],
@@ -35,15 +39,16 @@
     "!*.spec.*"
   ],
   "scripts": {
+    "postinstall": "husky install",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable",
     "clean": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
     "build": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
     "test": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
     "lint": "yarn workspaces foreach --topological-dev --parallel --verbose run lint",
     "lint:fix": "yarn workspaces foreach --topological-dev --parallel --verbose run lint:fix",
     "lint:sarif": "yarn workspaces foreach --topological-dev --parallel --verbose run lint:sarif",
-    "postinstall": "husky install",
-    "prepack": "pinst --disable",
-    "postpack": "pinst --enable"
+    "publish": "yarn workspaces foreach --no-private npm publish"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0",
