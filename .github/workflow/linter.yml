@@ -1,0 +1,32 @@
+name: Linter
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: ["*"]
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  eslint:
+    name: ESLint scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: yarn
+      - run: yarn install --immutable --immutable-cache --check-cache
+      - run: yarn lint:sarif
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: eslint-results.sarif
+          category: eslint
+          wait-for-processing: true

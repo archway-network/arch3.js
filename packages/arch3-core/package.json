@@ -36,13 +36,15 @@
     "clean": "rm -rf ./build",
     "build": "[ -z \"${SKIP_BUILD:-}\" ] && yarn clean && tsc",
     "test": "yarn build && yarn test",
-    "lint": "eslint \"./**/*.ts\" \"./*.cjs\"",
-    "lint:fix": "eslint --fix \"./**/*.ts\" \"./*.cjs\""
+    "lint": "eslint . --ext .js,.cjs,.ts",
+    "lint:fix": "yarn lint --fix",
+    "lint:sarif": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif"
   },
   "dependencies": {
     "@cosmjs/cosmwasm-stargate": "^0.28.10"
   },
   "devDependencies": {
+    "@microsoft/eslint-formatter-sarif": "^3.0",
     "@types/node": "^18.0",
     "@typescript-eslint/eslint-plugin": "^5.30",
     "@typescript-eslint/parser": "^5.28",
