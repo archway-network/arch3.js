@@ -4,7 +4,8 @@ module.exports = {
     es2021: true,
     browser: false,
     node: true,
-    worker: true
+    worker: true,
+    jest: true,
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -14,7 +15,7 @@ module.exports = {
   plugins: [
     '@typescript-eslint',
     'simple-import-sort',
-    'import'
+    'import',
   ],
   extends: [
     'eslint:recommended',
@@ -93,8 +94,10 @@ module.exports = {
     'template-curly-spacing': 'error',
     'template-tag-spacing': 'error',
     'yield-star-spacing': 'error',
-    'node/exports-style': ['error', 'module.exports'],
-    'node/file-extension-in-import': ['error', 'always'],
+    'node/exports-style': ['error', 'exports'],
+    'node/file-extension-in-import': ['error', 'never'],
+    'node/no-missing-import': 'off',
+    'node/no-unsupported-features/es-syntax': 'off',
     'node/prefer-global/buffer': ['error', 'always'],
     'node/prefer-global/console': ['error', 'always'],
     'node/prefer-global/process': ['error', 'always'],
@@ -151,7 +154,23 @@ module.exports = {
       files: '*.cjs',
       rules: {
         '@typescript-eslint/naming-convention': 'off',
+        'node/exports-style': 'off',
       },
+    },
+    {
+      files: '**/?(*.)+(spec|test).[tj]s?(x)',
+      plugins: ['jest'],
+      extends: ['plugin:jest/all'],
+      rules: {
+        'jest/consistent-test-it': 'error',
+        'jest/no-conditional-in-test': 'warn',
+        'jest/prefer-expect-assertions': 'off',
+        'jest/prefer-comparison-matcher': 'error',
+        'jest/prefer-equality-matcher': 'error',
+        'jest/prefer-spy-on': 'error',
+        'jest/prefer-todo': 'warn',
+        'jest/require-top-level-describe': 'error',
+      }
     },
   ],
 };

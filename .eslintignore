@@ -1,6 +1,7 @@
 node_modules/
 
 build/
+coverage/
 custom_types/
 dist/
 docs/
@@ -10,3 +11,5 @@ proto/
 types/
 
 *.d.ts
+
+jest.config.[jt]s
