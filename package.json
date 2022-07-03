@@ -37,10 +37,16 @@
   "scripts": {
     "clean": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
     "build": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
-    "test": "yarn workspaces foreach --topological-dev --parallel --verbose run test"
+    "test": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
+    "lint": "yarn workspaces foreach --topological-dev --parallel --verbose run lint",
+    "lint:fix": "yarn workspaces foreach --topological-dev --parallel --verbose run lint:fix"
   },
   "devDependencies": {
     "@types/node": "^18.0",
+    "@typescript-eslint/eslint-plugin": "^5.30",
+    "@typescript-eslint/parser": "^5.28",
+    "eslint": "^8.19",
+    "eslint-plugin-node": "^11.1",
     "ts-node": "^10.8",
     "typescript": "^4.7"
   },
