@@ -38,28 +38,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@archwayhq/arch3@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@archwayhq/arch3@workspace:."
-  dependencies:
-    "@microsoft/eslint-formatter-sarif": ^3.0
-    "@types/jest": ^28.1
-    "@types/node": ^18.0
-    "@typescript-eslint/eslint-plugin": ^5.30
-    "@typescript-eslint/parser": ^5.28
-    eslint: ^8.19
-    eslint-import-resolver-node: ^0.3.6
-    eslint-plugin-import: ^2.26
-    eslint-plugin-jest: ^26.5
-    eslint-plugin-node: ^11.1
-    eslint-plugin-simple-import-sort: ^7.0
-    jest: ^28.1
-    ts-jest: ^28.0
-    ts-node: ^10.8
-    typescript: ^4.7
-  languageName: unknown
-  linkType: soft
-
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.18.6":
   version: 7.18.6
   resolution: "@babel/code-frame@npm:7.18.6"
@@ -1562,6 +1540,30 @@ __metadata:
   checksum: 5615cadcfb45289eea63f8afd064ab656006361020e1735112e346593856f87435e02d8dcc7ff0d11928bc7d425f27bc7c2a84f6c0b35ab0ff659c814c138a24
   languageName: node
   linkType: hard
+
+"arch3-root@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "arch3-root@workspace:."
+  dependencies:
+    "@microsoft/eslint-formatter-sarif": ^3.0
+    "@types/jest": ^28.1
+    "@types/node": ^18.0
+    "@typescript-eslint/eslint-plugin": ^5.30
+    "@typescript-eslint/parser": ^5.28
+    eslint: ^8.19
+    eslint-import-resolver-node: ^0.3.6
+    eslint-plugin-import: ^2.26
+    eslint-plugin-jest: ^26.5
+    eslint-plugin-node: ^11.1
+    eslint-plugin-simple-import-sort: ^7.0
+    husky: ^8.0.0
+    jest: ^28.1
+    pinst: ^3.0.0
+    ts-jest: ^28.0
+    ts-node: ^10.8
+    typescript: ^4.7
+  languageName: unknown
+  linkType: soft
 
 "are-we-there-yet@npm:^3.0.0":
   version: 3.0.0
@@ -3103,6 +3105,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"husky@npm:^8.0.0":
+  version: 8.0.1
+  resolution: "husky@npm:8.0.1"
+  bin:
+    husky: lib/bin.js
+  checksum: 943a73a13d0201318fd30e83d299bb81d866bd245b69e6277804c3b462638dc1921694cb94c2b8c920a4a187060f7d6058d3365152865406352e934c5fff70dc
+  languageName: node
+  linkType: hard
+
 "iconv-lite@npm:^0.6.2":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
@@ -4580,6 +4591,15 @@ __metadata:
   version: 2.3.1
   resolution: "picomatch@npm:2.3.1"
   checksum: 050c865ce81119c4822c45d3c84f1ced46f93a0126febae20737bd05ca20589c564d6e9226977df859ed5e03dc73f02584a2b0faad36e896936238238b0446cf
+  languageName: node
+  linkType: hard
+
+"pinst@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "pinst@npm:3.0.0"
+  bin:
+    pinst: bin.js
+  checksum: 4ae48a6a60f79c37071233af51b4d91bfc85cfa3c12b66ccda60cdb642b4d14a4ab0cb3587afc55b1f6192cea1772a5e4822026a0d0d3528296edef00cc2d61f
   languageName: node
   linkType: hard
 
