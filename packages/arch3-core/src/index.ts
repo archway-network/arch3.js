@@ -1,3 +1,2 @@
-export default function main(): string {
-  return 'Hello from arch3.js';
-}
+export { ArchwayClient } from './archwayclient';
+export * from '@cosmjs/cosmwasm-stargate';
