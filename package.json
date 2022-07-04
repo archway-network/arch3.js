@@ -45,9 +45,9 @@
     "clean": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
     "build": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
     "test": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
-    "lint": "yarn workspaces foreach --topological-dev --parallel --verbose run lint",
-    "lint:fix": "yarn workspaces foreach --topological-dev --parallel --verbose run lint:fix",
-    "lint:sarif": "yarn workspaces foreach --topological-dev --parallel --verbose run lint:sarif",
+    "lint": "eslint . --ext .js,.cjs,.ts",
+    "lint:fix": "yarn lint --fix",
+    "lint:sarif": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "publish": "yarn workspaces foreach --no-private npm publish"
   },
   "devDependencies": {
