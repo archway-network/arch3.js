@@ -1,0 +1,39 @@
+{
+  "name": "@archwayhq/arch3",
+  "version": "0.1.0",
+  "description": "The all-in-one library for your awesome Archway dApp",
+  "homepage": "https://docs.archway.io",
+  "repository": "github:archway-network/arch3.js",
+  "keywords": [
+    "archway",
+    "cosmos",
+    "cosmosjs",
+    "cosmwasm",
+    "tendermint",
+    "atom",
+    "wasm",
+    "smart-contracts",
+    "blockchain",
+    "dapp",
+    "dapps",
+    "nft",
+    "tooling",
+    "web3"
+  ],
+  "author": "Archway Network (https://archway.io)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/archway-network/arch3.js/issues"
+  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "yarn@3.2.1"
+}

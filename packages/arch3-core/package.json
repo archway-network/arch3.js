@@ -1,0 +1,38 @@
+{
+  "name": "@archwayhq/arch3-core",
+  "version": "0.1.0",
+  "description": "Core library to interact with Archway Network",
+  "homepage": "https://docs.archway.io",
+  "repository": "github:archway-network/arch3.js",
+  "keywords": [
+    "archway",
+    "cosmos",
+    "cosmosjs",
+    "cosmwasm",
+    "tendermint",
+    "atom",
+    "wasm",
+    "smart-contracts",
+    "blockchain",
+    "dapp",
+    "dapps",
+    "nft",
+    "tooling",
+    "web3"
+  ],
+  "author": "Archway Network (https://archway.io)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/archway-network/arch3.js/issues"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@cosmjs/cosmwasm-stargate": "^0.28.10"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
