@@ -25,12 +25,25 @@
   "bugs": {
     "url": "https://github.com/archway-network/arch3.js/issues"
   },
-  "main": "src/index.js",
+  "files": [
+    "build/",
+    "*.md",
+    "!*.spec.*"
+  ],
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rm -rf ./build",
+    "build": "[ -z \"${SKIP_BUILD:-}\" ] && yarn clean && tsc",
+    "test": "yarn build && yarn test"
   },
   "dependencies": {
     "@cosmjs/cosmwasm-stargate": "^0.28.10"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0",
+    "ts-node": "^10.8",
+    "typescript": "^4.7"
   },
   "engines": {
     "node": ">=14.0.0"
