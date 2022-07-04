@@ -41,6 +41,9 @@ node_modules/
 # Optional eslint cache
 .eslintcache
 
+# SARIF log files (https://github.com/Microsoft/sarif-js-sdk)
+*.sarif
+
 # Optional REPL history
 .node_repl_history
 
