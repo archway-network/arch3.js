@@ -20,6 +20,9 @@ __metadata:
   resolution: "@archwayhq/arch3-core@workspace:packages/arch3-core"
   dependencies:
     "@cosmjs/cosmwasm-stargate": ^0.28.10
+    "@cosmjs/encoding": ^0.28.10
+    "@cosmjs/proto-signing": ^0.28.10
+    "@cosmjs/stargate": ^0.28.10
     "@cosmjs/tendermint-rpc": ^0.28.10
     "@microsoft/eslint-formatter-sarif": ^3.0
     "@types/jest": ^28.1
@@ -469,7 +472,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cosmjs/encoding@npm:0.28.10":
+"@cosmjs/encoding@npm:0.28.10, @cosmjs/encoding@npm:^0.28.10":
   version: 0.28.10
   resolution: "@cosmjs/encoding@npm:0.28.10"
   dependencies:
@@ -499,7 +502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cosmjs/proto-signing@npm:0.28.10":
+"@cosmjs/proto-signing@npm:0.28.10, @cosmjs/proto-signing@npm:^0.28.10":
   version: 0.28.10
   resolution: "@cosmjs/proto-signing@npm:0.28.10"
   dependencies:
@@ -526,7 +529,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cosmjs/stargate@npm:0.28.10":
+"@cosmjs/stargate@npm:0.28.10, @cosmjs/stargate@npm:^0.28.10":
   version: 0.28.10
   resolution: "@cosmjs/stargate@npm:0.28.10"
   dependencies:

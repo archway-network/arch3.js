@@ -27,6 +27,21 @@ export class ArchwayClient extends CosmWasmClient {
   protected constructor(tmClient: Tendermint34Client | undefined) {
     super(tmClient);
   }
+
+  public async queryDeveloperRewards(contractAddress: string): Promise<any> {
+    const queryClient = this.getQueryClient();
+    const pendingContractInstanceMetadataKeyPrefix = new Uint8Array([0x01]);
+
+    const key = Uint8Array.from([
+      ...pendingContractInstanceMetadataKeyPrefix,
+      ...toAscii(contractAddress),
+    ]);
+    const ans = await queryClient.queryVerified(
+      "gastracker",
+      key
+    );
+    return ans;
+  }
 }
 
 export class ArchwaySigningClient extends SigningCosmWasmClient {
@@ -62,18 +77,5 @@ export class ArchwaySigningClient extends SigningCosmWasmClient {
     return txResponse;
   }
 
-  public async queryDeveloperRewards(contractAddress: string): Promise<any> {
-    const queryClient = this.getQueryClient();
-    const pendingContractInstanceMetadataKeyPrefix = new Uint8Array([0x01]);
 
-    const key = Uint8Array.from([
-      ...pendingContractInstanceMetadataKeyPrefix,
-      ...toAscii(contractAddress),
-    ]);
-    const ans = await queryClient.queryVerified(
-      "gastracker",
-      key
-    );
-    return ans;
-  }
 }
