@@ -51,7 +51,14 @@ export class ArchwaySigningClient extends SigningCosmWasmClient {
   protected constructor(tmClient: Tendermint34Client | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions) {
     super(tmClient, signer, options);
   }
-
+  public static override async connectWithSigner(
+    endpoint: string | HttpEndpoint,
+    signer: OfflineSigner,
+    options: SigningCosmWasmClientOptions = {},
+  ): Promise<ArchwaySigningClient> {
+    const tmClient = await Tendermint34Client.connect(endpoint);
+    return new ArchwaySigningClient(tmClient, signer, options);
+  }
   public async addMetadata(
     userAddress: string,
     contractAddress:string,
