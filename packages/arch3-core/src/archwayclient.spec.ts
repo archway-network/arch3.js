@@ -1,14 +1,11 @@
-import { ArchwaySigningClient } from "./archwayclient";
-
 describe('archwayClient', () => {
   describe('metadata', () => {
     describe('set', () => {
-      const client = ArchwaySigningClient.connectWithSigner("https://rpc.constantine-1.archway.tech",);
-
+      it.todo('can set a contract metadata');
     });
 
     describe('get', () => {
-      it.todo('can read a contract metadata');
+      it.todo('can get a contract metadata');
     });
   });
 });

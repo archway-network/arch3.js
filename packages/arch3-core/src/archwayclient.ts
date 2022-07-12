@@ -2,7 +2,7 @@ import { CosmWasmClient, SigningCosmWasmClient, SigningCosmWasmClientOptions } f
 import { toAscii } from "@cosmjs/encoding";
 import { EncodeObject, OfflineSigner } from '@cosmjs/proto-signing';
 import { DeliverTxResponse, StdFee } from "@cosmjs/stargate";
-import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
+import { HttpEndpoint, Tendermint34Client } from '@cosmjs/tendermint-rpc';
 
 type ContractInstanceMetadata = {
   developerAddress: string,
@@ -27,7 +27,10 @@ export class ArchwayClient extends CosmWasmClient {
   protected constructor(tmClient: Tendermint34Client | undefined) {
     super(tmClient);
   }
-
+  public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
+    const tmClient = await Tendermint34Client.connect(endpoint);
+    return new ArchwayClient(tmClient);
+  }
   public async queryDeveloperRewards(contractAddress: string): Promise<any> {
     const queryClient = this.getQueryClient();
     const pendingContractInstanceMetadataKeyPrefix = new Uint8Array([0x01]);
@@ -76,6 +79,4 @@ export class ArchwaySigningClient extends SigningCosmWasmClient {
     const txResponse = await this.signAndBroadcast(userAddress, [message], fee);
     return txResponse;
   }
-
-
 }
