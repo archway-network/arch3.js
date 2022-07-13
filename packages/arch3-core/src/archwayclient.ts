@@ -31,6 +31,11 @@ export class ArchwayClient extends CosmWasmClient {
     const tmClient = await Tendermint34Client.connect(endpoint);
     return new ArchwayClient(tmClient);
   }
+
+  public async queryclient(): Promise<any> {
+    const queryClient = this.getQueryClient();
+    console.log(queryClient);
+  }
   public async queryDeveloperRewards(contractAddress: string): Promise<any> {
     const queryClient = this.getQueryClient();
     const pendingContractInstanceMetadataKeyPrefix = new Uint8Array([0x01]);
