@@ -28,6 +28,7 @@ export class ArchwayClient extends CosmWasmClient {
     super(tmClient);
   }
   public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
+    
     const tmClient = await Tendermint34Client.connect(endpoint);
     return new ArchwayClient(tmClient);
   }
