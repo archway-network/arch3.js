@@ -1,1 +1,1 @@
-# @archwayhq/arch3-core
+# arch3-core

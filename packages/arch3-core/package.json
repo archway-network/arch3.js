@@ -1,76 +1,91 @@
 {
-  "name": "@archwayhq/arch3-core",
-  "version": "0.1.0",
-  "description": "Core library to interact with Archway Network",
-  "homepage": "https://docs.archway.io",
-  "repository": "github:archway-network/arch3.js",
-  "keywords": [
-    "archway",
-    "cosmos",
-    "cosmjs",
-    "cosmosjs",
-    "cosmwasm",
-    "tendermint",
-    "atom",
-    "wasm",
-    "smart-contracts",
-    "blockchain",
-    "dapp",
-    "dapps",
-    "nft",
-    "tooling",
-    "web3"
-  ],
-  "author": "Archway Network (https://archway.io)",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/archway-network/arch3.js/issues"
+  "name": "@gachouchani1999/arch3-core",
+  "version": "0.0.1",
+  "description": "Archway Core Client",
+  "author": "Archway <.>",
+  "homepage": "https://github.com/gachouchani1999/arch3-core#readme",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "main/index.js",
+  "module": "module/index.js",
+  "typings": "types/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
   },
   "files": [
-    "build/",
-    "*.md",
-    "!*.spec.*"
+    "types",
+    "main",
+    "module"
   ],
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org"
-  },
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
   "scripts": {
-    "clean": "rm -rf ./build",
-    "build": "[ -z \"${SKIP_BUILD:-}\" ] && yarn clean && tsc",
+    "build:main": "cross-env BABEL_ENV=production babel src --out-dir main --delete-dir-on-start --extensions \".tsx,.ts,.js\"",
+    "build:module": "cross-env MODULE=true babel src --out-dir module --delete-dir-on-start  --extensions \".tsx,.ts,.js\"",
+    "build": "npm run build:module && npm run build:main",
+    "build:ts": "tsc --project ./tsconfig.json",
+    "buidl": "npm run build && npm run build:ts",
+    "proto": "cross-env NODE_ENV=development babel-node scripts/gen-proto.js",
+    "prepublish": "npm run build",
+    "dev": "cross-env NODE_ENV=development babel-node src/index --extensions \".tsx,.ts,.js\"",
+    "watch": "cross-env NODE_ENV=development babel-watch src/index --extensions \".tsx,.ts,.js\"",
+    "lint": "eslint src --fix",
     "test": "jest",
-    "test:watch": "yarn test --watch",
-    "lint": "eslint . --ext .js,.cjs,.ts",
-    "lint:fix": "yarn lint --fix",
-    "lint:sarif": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif"
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
   },
-  "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "^0.28.10",
-    "@cosmjs/encoding": "^0.28.10",
-    "@cosmjs/proto-signing": "^0.28.10",
-    "@cosmjs/stargate": "^0.28.10",
-    "@cosmjs/tendermint-rpc": "^0.28.10"
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gachouchani1999/arch3-core"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/gachouchani1999/arch3-core/issues"
   },
   "devDependencies": {
-    "@microsoft/eslint-formatter-sarif": "^3.0",
-    "@types/jest": "^28.1",
-    "@types/node": "^18.0",
-    "@typescript-eslint/eslint-plugin": "^5.30",
-    "@typescript-eslint/parser": "^5.28",
-    "eslint": "^8.19",
-    "eslint-import-resolver-node": "^0.3.6",
-    "eslint-plugin-import": "^2.26",
-    "eslint-plugin-jest": "^26.5",
-    "eslint-plugin-node": "^11.1",
-    "eslint-plugin-simple-import-sort": "^7.0",
-    "jest": "^28.1",
-    "ts-jest": "^28.0",
-    "ts-node": "^10.8",
-    "typescript": "^4.7"
+    "@babel/cli": "7.18.9",
+    "@babel/core": "7.18.9",
+    "@babel/eslint-parser": "^7.18.9",
+    "@babel/node": "^7.18.9",
+    "@babel/plugin-proposal-class-properties": "7.18.6",
+    "@babel/plugin-proposal-export-default-from": "7.18.9",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "7.18.6",
+    "@babel/plugin-proposal-numeric-separator": "7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "7.18.9",
+    "@babel/plugin-proposal-optional-chaining": "7.18.9",
+    "@babel/plugin-transform-runtime": "7.18.5",
+    "@babel/preset-env": "7.18.9",
+    "@babel/preset-typescript": "^7.18.6",
+    "@protobufs/cosmos": "^0.0.10",
+    "@protobufs/cosmwasm": "^0.0.10",
+    "@protobufs/ibc": "^0.0.10",
+    "@types/jest": "^28.1.6",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "28.1.3",
+    "babel-watch": "^7.0.0",
+    "cross-env": "^7.0.2",
+    "eslint": "8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^28.1.3",
+    "jest-in-case": "^1.0.2",
+    "long": "^5.2.0",
+    "prettier": "^2.7.1",
+    "regenerator-runtime": "^0.13.7",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^28.0.7",
+    "typescript": "^4.7.4"
   },
-  "engines": {
-    "node": ">=14.0.0"
+  "dependencies": {
+    "@babel/runtime": "^7.18.9",
+    "@cosmjs/amino": "0.28.11",
+    "@cosmjs/cosmwasm-stargate": "^0.28.11",
+    "@cosmjs/proto-signing": "0.28.11",
+    "@cosmjs/stargate": "0.28.11",
+    "@cosmjs/tendermint-rpc": "^0.28.11",
+    "@osmonauts/helpers": "^0.3.10",
+    "@osmonauts/telescope": "^0.7.0",
+    "protobufjs": "^6.11.2"
   }
 }

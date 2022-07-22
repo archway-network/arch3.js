@@ -72,5 +72,8 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.1",
+  "dependencies": {
+    "ts-proto": "^1.117.0"
+  }
 }
