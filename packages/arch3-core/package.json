@@ -48,7 +48,8 @@
   },
   "dependencies": {
     "@cosmjs/cosmwasm-stargate": "^0.28.10",
-    "@cosmjs/tendermint-rpc": "^0.28.10"
+    "@cosmjs/tendermint-rpc": "^0.28.10",
+    "@cosmjs/proto-signing": "^0.28.10"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0",

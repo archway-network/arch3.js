@@ -1,6 +1,6 @@
-import { CosmWasmClient, SigningCosmWasmClient, SigningCosmWasmClientOptions} from '@cosmjs/cosmwasm-stargate';
+import { CosmWasmClient, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
+import { OfflineSigner } from "@cosmjs/proto-signing";
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
-import {OfflineSigner } from "@cosmjs/proto-signing";
 
 export class ArchwayClient extends CosmWasmClient {
   protected constructor(tmClient: Tendermint34Client | undefined) {

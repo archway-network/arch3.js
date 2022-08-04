@@ -1,2 +1,2 @@
-export { ArchwayClient } from './archwayclient';
+export { ArchwayClient, SigningArchwayClient } from './archwayclient';
 export * from '@cosmjs/cosmwasm-stargate';
