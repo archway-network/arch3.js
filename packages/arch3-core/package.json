@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@cosmjs/cosmwasm-stargate": "^0.28.10",
+    "@cosmjs/proto-signing": "^0.28.10",
     "@cosmjs/tendermint-rpc": "^0.28.10"
   },
   "devDependencies": {
