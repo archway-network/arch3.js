@@ -1,5 +1,6 @@
 {
-  "name": "arch3-root",
+  "name": "@archwayhq/arch3.js",
+  "version": "0.1.0",
   "description": "The all-in-one library for your awesome Archway dApp",
   "homepage": "https://docs.archway.io",
   "repository": "github:archway-network/arch3.js",
@@ -25,7 +26,6 @@
   "bugs": {
     "url": "https://github.com/archway-network/arch3.js/issues"
   },
-  "private": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
@@ -38,17 +38,24 @@
     "*.md",
     "!*.spec.*"
   ],
+  "main": "build/index.js",
+  "types": "build/index.d.js",
   "scripts": {
     "postinstall": "husky install",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable",
-    "clean": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
-    "build": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
-    "test": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
+    "clean": "rm -rf ./build",
+    "build": "[ -z \"${SKIP_BUILD:-}\" ] && yarn clean && tsc",
+    "clean:all": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
+    "build:all": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
+    "test:all": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
     "lint": "eslint . --ext .js,.cjs,.ts",
-    "lint:fix": "yarn lint --fix",
-    "lint:sarif": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
-    "publish": "yarn workspaces foreach --no-private npm publish"
+    "lint:fix": "yarn run lint --fix",
+    "lint:sarif": "yarn run lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
+    "publish:all": "yarn workspaces foreach --topological --no-private --verbose npm publish"
+  },
+  "dependencies": {
+    "@archwayhq/arch3-core": "workspace:packages/arch3-core"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0",
