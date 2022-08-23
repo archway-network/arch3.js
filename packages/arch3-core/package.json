@@ -32,8 +32,7 @@
   },
   "files": [
     "build/",
-    "*.md",
-    "!*.spec.*"
+    "*.md"
   ],
   "main": "build/index.js",
   "types": "build/index.d.ts",

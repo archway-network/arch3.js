@@ -28,10 +28,11 @@
     "pretty": true,
     "newLine": "LF",
   },
-  "exclude": [
-    "node_modules"
-  ],
   "include": [
-    "src/**/*"
+    "src"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/__mocks__",
   ]
 }
