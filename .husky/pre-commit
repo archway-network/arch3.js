@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "Running eslint..."
-yarn run lint:fix --cache --cache-strategy content
+yarn lint-staged

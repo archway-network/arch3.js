@@ -56,6 +56,11 @@
     "lint:sarif": "yarn run lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "publish:all": "yarn workspaces foreach --topological --no-private --verbose npm publish"
   },
+  "lint-staged": {
+    "*.ts": [
+      "yarn run lint:fix --cache --cache-strategy content"
+    ]
+  },
   "dependencies": {
     "@archwayhq/arch3-core": "workspace:packages/arch3-core"
   },
@@ -74,6 +79,7 @@
     "eslint-plugin-simple-import-sort": "^7.0",
     "husky": "^8.0.0",
     "jest": "^28.1",
+    "lint-staged": "^13.0.3",
     "pinst": "^3.0.0",
     "ts-jest": "^28.0",
     "ts-node": "^10.8",
