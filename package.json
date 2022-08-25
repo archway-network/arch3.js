@@ -63,6 +63,7 @@
     "@types/node": "^18.0",
     "@typescript-eslint/eslint-plugin": "^5.30",
     "@typescript-eslint/parser": "^5.28",
+    "@yarnpkg/sdks": "^2.6.3",
     "eslint": "^8.19",
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-plugin-import": "^2.26",
