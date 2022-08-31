@@ -2,6 +2,8 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "outDir": "build",
+    "rootDir": "src",
     "declaration": true,
     "lib": [
       "dom",
@@ -26,7 +28,11 @@
     "pretty": true,
     "newLine": "LF",
   },
-  "exclude": [
-    "node_modules"
+  "include": [
+    "src"
   ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/__mocks__",
+  ]
 }

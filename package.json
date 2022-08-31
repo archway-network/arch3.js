@@ -1,5 +1,6 @@
 {
-  "name": "arch3-root",
+  "name": "@archwayhq/arch3.js",
+  "version": "0.1.0",
   "description": "The all-in-one library for your awesome Archway dApp",
   "homepage": "https://docs.archway.io",
   "repository": "github:archway-network/arch3.js",
@@ -25,7 +26,6 @@
   "bugs": {
     "url": "https://github.com/archway-network/arch3.js/issues"
   },
-  "private": true,
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
@@ -35,20 +35,33 @@
   ],
   "files": [
     "build/",
-    "*.md",
-    "!*.spec.*"
+    "*.md"
   ],
+  "main": "build/index.js",
+  "types": "build/index.d.js",
   "scripts": {
     "postinstall": "husky install",
-    "prepack": "pinst --disable",
+    "prepack": "pinst --disable && yarn run build:all",
     "postpack": "pinst --enable",
-    "clean": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
-    "build": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
-    "test": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
+    "clean": "rm -rf ./build",
+    "clean:all": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
+    "build": "[ -z \"${SKIP_BUILD:-}\" ] && yarn clean && tsc",
+    "build:all": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
+    "test": "jest",
+    "test:watch": "yarn test --watch",
+    "test:all": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
     "lint": "eslint . --ext .js,.cjs,.ts",
-    "lint:fix": "yarn lint --fix",
-    "lint:sarif": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
-    "publish": "yarn workspaces foreach --no-private npm publish"
+    "lint:fix": "yarn run lint --fix",
+    "lint:sarif": "yarn run lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
+    "publish:all": "yarn workspaces foreach --topological --no-private --verbose npm publish"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "yarn run lint:fix --cache --cache-strategy content"
+    ]
+  },
+  "dependencies": {
+    "@archwayhq/arch3-core": "workspace:packages/arch3-core"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0",
@@ -56,6 +69,7 @@
     "@types/node": "^18.0",
     "@typescript-eslint/eslint-plugin": "^5.30",
     "@typescript-eslint/parser": "^5.28",
+    "@yarnpkg/sdks": "^2.6.3",
     "eslint": "^8.19",
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-plugin-import": "^2.26",
@@ -64,6 +78,7 @@
     "eslint-plugin-simple-import-sort": "^7.0",
     "husky": "^8.0.0",
     "jest": "^28.1",
+    "lint-staged": "^13.0.3",
     "pinst": "^3.0.0",
     "ts-jest": "^28.0",
     "ts-node": "^10.8",

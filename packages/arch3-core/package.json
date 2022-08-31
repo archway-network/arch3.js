@@ -26,15 +26,14 @@
   "bugs": {
     "url": "https://github.com/archway-network/arch3.js/issues"
   },
-  "files": [
-    "build/",
-    "*.md",
-    "!*.spec.*"
-  ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
+  "files": [
+    "build/",
+    "*.md"
+  ],
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {

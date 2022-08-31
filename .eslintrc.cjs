@@ -165,11 +165,13 @@ module.exports = {
         'jest/consistent-test-it': 'error',
         'jest/no-conditional-in-test': 'warn',
         'jest/prefer-expect-assertions': 'off',
+        'jest/prefer-expect-resolves': 'error',
         'jest/prefer-comparison-matcher': 'error',
         'jest/prefer-equality-matcher': 'error',
         'jest/prefer-spy-on': 'error',
         'jest/prefer-todo': 'warn',
         'jest/require-top-level-describe': 'error',
+        'jest/prefer-lowercase-title': 'off',
       }
     },
   ],
