@@ -14,6 +14,7 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
+    'eslint-plugin-tsdoc',
     'simple-import-sort',
     'import',
   ],
@@ -77,7 +78,6 @@ module.exports = {
     'prefer-const': 'error',
     'require-atomic-updates': 'error',
     'rest-spread-spacing': 'error',
-    'require-await': 'warn',
     'semi': 'error',
     'semi-style': 'error',
     'semi-spacing': 'error',
@@ -146,6 +146,7 @@ module.exports = {
     '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
     '@typescript-eslint/no-use-before-define': 'warn',
     '@typescript-eslint/prefer-readonly': 'warn',
+    'tsdoc/syntax': ['warn'],
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
   },
