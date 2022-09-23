@@ -35,7 +35,8 @@
   ],
   "files": [
     "build/",
-    "*.md"
+    "./*.md",
+    "LICENSE"
   ],
   "main": "build/index.js",
   "types": "build/index.d.js",
@@ -53,6 +54,8 @@
     "lint": "eslint . --ext .js,.cjs,.ts",
     "lint:fix": "yarn run lint --fix",
     "lint:sarif": "yarn run lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
+    "docs": "typedoc --options typedoc.cjs .",
+    "docs:all": "yarn workspaces foreach --topological-dev --parallel --verbose run docs",
     "publish:all": "yarn workspaces foreach --topological --no-private --verbose npm publish"
   },
   "lint-staged": {
@@ -76,12 +79,14 @@
     "eslint-plugin-jest": "^26.5",
     "eslint-plugin-node": "^11.1",
     "eslint-plugin-simple-import-sort": "^7.0",
+    "eslint-plugin-tsdoc": "^0.2.16",
     "husky": "^8.0.0",
     "jest": "^28.1",
     "lint-staged": "^13.0.3",
     "pinst": "^3.0.0",
     "ts-jest": "^28.0",
     "ts-node": "^10.8",
+    "typedoc": "^0.23.14",
     "typescript": "^4.7"
   },
   "engines": {
