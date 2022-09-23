@@ -36,7 +36,7 @@
   "files": [
     "build/",
     "./*.md",
-    "LICENSE"
+    "./LICENSE"
   ],
   "main": "build/index.js",
   "types": "build/index.d.js",
