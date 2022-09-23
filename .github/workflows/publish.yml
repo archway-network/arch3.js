@@ -2,7 +2,7 @@ name: Publish package to npmjs
 
 on:
   release:
-    types: [released]
+    types: [published]
 
 jobs:
   build:
@@ -16,4 +16,4 @@ jobs:
       - run: yarn install --immutable
       - run: yarn run publish:all
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
