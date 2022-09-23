@@ -155,6 +155,7 @@ module.exports = {
       files: '*.cjs',
       rules: {
         '@typescript-eslint/naming-convention': 'off',
+        '@typescript-eslint/no-var-requires': 'off',
         'node/exports-style': 'off',
       },
     },
