@@ -36,8 +36,10 @@ jobs:
           cache: yarn
       - name: Install dependencies
         run: yarn install --immutable
+      - name: Build code
+        run: yarn build:all
       - name: Build docs
-        run: yarn run docs
+        run: yarn docs
       - name: Upload docs folder
         uses: actions/upload-pages-artifact@v1
         with:
