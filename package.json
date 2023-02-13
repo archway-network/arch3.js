@@ -64,7 +64,8 @@
     ]
   },
   "dependencies": {
-    "@archwayhq/arch3-core": "workspace:packages/arch3-core"
+    "@archwayhq/arch3-core": "workspace:packages/arch3-core",
+    "@archwayhq/archway-proto": "workspace:packages/archway-proto"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0",

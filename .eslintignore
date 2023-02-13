@@ -13,3 +13,6 @@ types/
 *.d.ts
 
 jest.config.[jt]s
+
+src
+types
