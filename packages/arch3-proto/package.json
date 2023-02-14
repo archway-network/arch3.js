@@ -2,15 +2,33 @@
   "name": "@archwayhq/arch3-proto",
   "version": "0.0.1",
   "description": "Typescript protobuf client generator",
-  "author": "David Choi <david.choi@philabs.xyz>",
   "homepage": "https://github.com/jsoneaday/arch3-proto#readme",
+  "repository": "https://github.com/jsoneaday/arch3-proto",
+  "keywords": [
+    "archway",
+    "cosmos",
+    "cosmjs",
+    "cosmosjs",
+    "cosmwasm",
+    "tendermint",
+    "atom",
+    "wasm",
+    "smart-contracts",
+    "blockchain",
+    "dapp",
+    "dapps",
+    "nft",
+    "tooling",
+    "web3"
+  ],
+  "author": "Archway Network (https://archway.io)",
   "license": "Apache-2.0",
-  "main": "main/index.js",
-  "module": "module/index.js",
-  "typings": "types/index.d.ts",
-  "directories": {
-    "lib": "src",
-    "test": "__tests__"
+  "bugs": {
+    "url": "https://github.com/archway-network/arch3.js/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "files": [
     "types",
@@ -18,6 +36,9 @@
     "main",
     "module"
   ],
+  "main": "main/index.js",
+  "module": "module/index.js",
+  "typings": "types/index.d.ts",
   "scripts": {
     "arch:dev:gen": "cross-env NODE_ENV=development babel-node src/codeGenRunner.js",
     "arch:prod:gen": "cross-env NODE_ENV=production babel-node src/codeGenRunner.js",
@@ -38,16 +59,13 @@
     "test:watch": "jest --watch",
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jsoneaday/arch3-proto"
-  },
-  "keywords": [],
-  "bugs": {
-    "url": "https://github.com/jsoneaday/arch3-proto/issues"
+  "dependencies": {
+    "@babel/runtime": "^7.19.4",
+    "@cosmjs/amino": "0.29.4",
+    "@cosmjs/proto-signing": "0.29.4",
+    "@cosmjs/stargate": "0.29.4",
+    "@cosmjs/tendermint-rpc": "^0.29.4",
+    "protobufjs": "^6.11.2"
   },
   "devDependencies": {
     "@babel/cli": "7.19.3",
@@ -82,12 +100,7 @@
     "ts-jest": "^29.0.3",
     "typescript": "^4.7"
   },
-  "dependencies": {
-    "@babel/runtime": "^7.19.4",
-    "@cosmjs/amino": "0.29.4",
-    "@cosmjs/proto-signing": "0.29.4",
-    "@cosmjs/stargate": "0.29.4",
-    "@cosmjs/tendermint-rpc": "^0.29.4",
-    "protobufjs": "^6.11.2"
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
