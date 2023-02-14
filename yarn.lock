@@ -52,39 +52,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@archwayhq/arch3.js@workspace:.":
+"@archwayhq/arch3-proto@workspace:packages/arch3-proto":
   version: 0.0.0-use.local
-  resolution: "@archwayhq/arch3.js@workspace:."
-  dependencies:
-    "@archwayhq/arch3-core": "workspace:packages/arch3-core"
-    "@archwayhq/archway-proto": "workspace:packages/archway-proto"
-    "@microsoft/eslint-formatter-sarif": ^3.0
-    "@types/jest": ^28.1
-    "@types/node": ^18.0
-    "@typescript-eslint/eslint-plugin": ^5.30
-    "@typescript-eslint/parser": ^5.28
-    "@yarnpkg/sdks": ^2.6.3
-    eslint: ^8.19
-    eslint-import-resolver-node: ^0.3.6
-    eslint-plugin-import: ^2.26
-    eslint-plugin-jest: ^26.5
-    eslint-plugin-node: ^11.1
-    eslint-plugin-simple-import-sort: ^7.0
-    eslint-plugin-tsdoc: ^0.2.16
-    husky: ^8.0.0
-    jest: ^28.1
-    lint-staged: ^13.0.3
-    pinst: ^3.0.0
-    ts-jest: ^28.0
-    ts-node: ^10.8
-    typedoc: ^0.23.14
-    typescript: ^4.7
-  languageName: unknown
-  linkType: soft
-
-"@archwayhq/archway-proto@workspace:packages/archway-proto":
-  version: 0.0.0-use.local
-  resolution: "@archwayhq/archway-proto@workspace:packages/archway-proto"
+  resolution: "@archwayhq/arch3-proto@workspace:packages/arch3-proto"
   dependencies:
     "@babel/cli": 7.19.3
     "@babel/core": 7.19.3
@@ -122,6 +92,36 @@ __metadata:
     regenerator-runtime: ^0.13.7
     rimraf: ^3.0.2
     ts-jest: ^29.0.3
+    typescript: ^4.7
+  languageName: unknown
+  linkType: soft
+
+"@archwayhq/arch3.js@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@archwayhq/arch3.js@workspace:."
+  dependencies:
+    "@archwayhq/arch3-core": "workspace:packages/arch3-core"
+    "@archwayhq/arch3-proto": "workspace:packages/arch3-proto"
+    "@microsoft/eslint-formatter-sarif": ^3.0
+    "@types/jest": ^28.1
+    "@types/node": ^18.0
+    "@typescript-eslint/eslint-plugin": ^5.30
+    "@typescript-eslint/parser": ^5.28
+    "@yarnpkg/sdks": ^2.6.3
+    eslint: ^8.19
+    eslint-import-resolver-node: ^0.3.6
+    eslint-plugin-import: ^2.26
+    eslint-plugin-jest: ^26.5
+    eslint-plugin-node: ^11.1
+    eslint-plugin-simple-import-sort: ^7.0
+    eslint-plugin-tsdoc: ^0.2.16
+    husky: ^8.0.0
+    jest: ^28.1
+    lint-staged: ^13.0.3
+    pinst: ^3.0.0
+    ts-jest: ^28.0
+    ts-node: ^10.8
+    typedoc: ^0.23.14
     typescript: ^4.7
   languageName: unknown
   linkType: soft

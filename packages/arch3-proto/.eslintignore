@@ -1,0 +1,9 @@
+node_modules/
+dist/
+main/
+module/
+coverage/
+
+src
+types
+module

@@ -1,0 +1,93 @@
+{
+  "name": "@archwayhq/arch3-proto",
+  "version": "0.0.1",
+  "description": "Typescript protobuf client generator",
+  "author": "David Choi <david.choi@philabs.xyz>",
+  "homepage": "https://github.com/jsoneaday/arch3-proto#readme",
+  "license": "Apache-2.0",
+  "main": "main/index.js",
+  "module": "module/index.js",
+  "typings": "types/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "types",
+    "src",
+    "main",
+    "module"
+  ],
+  "scripts": {
+    "arch:dev:gen": "cross-env NODE_ENV=development babel-node src/codeGenRunner.js",
+    "arch:prod:gen": "cross-env NODE_ENV=production babel-node src/codeGenRunner.js",
+    "arch:main": "npm run build:main && cross-env NODE_ENV=production babel-node main/codeGenRunner.js",
+    "arch:module": "npm run build:module && cross-env NODE_ENV=production babel-node module/codeGenRunner.js",
+    "arch:ts": "tsc --project ./tsconfig.json",
+    "build:main": "cross-env BABEL_ENV=production babel src --out-dir main --delete-dir-on-start --extensions \".tsx,.ts,.js\"",
+    "build:module": "cross-env MODULE=true babel src --out-dir module --delete-dir-on-start  --extensions \".tsx,.ts,.js\"",
+    "build:ts": "tsc --project ./tsconfig.json",
+    "build": "npm run build:module && npm run build:main",
+    "buidl": "npm run build && npm run build:ts",
+    "codegen": "cross-env NODE_ENV=development babel-node scripts/codegen.js",
+    "prepare": "npm run build",
+    "dev": "cross-env NODE_ENV=development babel-node src/index --extensions \".tsx,.ts,.js\"",
+    "watch": "cross-env NODE_ENV=development babel-watch src/index --extensions \".tsx,.ts,.js\"",
+    "lint": "eslint src --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsoneaday/arch3-proto"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/jsoneaday/arch3-proto/issues"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.19.3",
+    "@babel/core": "7.19.3",
+    "@babel/eslint-parser": "^7.19.1",
+    "@babel/node": "^7.19.1",
+    "@babel/plugin-proposal-class-properties": "7.18.6",
+    "@babel/plugin-proposal-export-default-from": "7.18.10",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "7.18.6",
+    "@babel/plugin-proposal-numeric-separator": "7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "7.19.4",
+    "@babel/plugin-proposal-optional-chaining": "7.18.9",
+    "@babel/plugin-transform-runtime": "7.19.1",
+    "@babel/preset-env": "7.19.4",
+    "@babel/preset-typescript": "^7.18.6",
+    "@osmonauts/telescope": "^0.78.0",
+    "@types/jest": "^29.1.2",
+    "@types/webgl2": "^0.0.7",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "29.1.2",
+    "babel-watch": "^7.0.0",
+    "cross-env": "^7.0.2",
+    "eslint": "8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.1.2",
+    "jest-in-case": "^1.0.2",
+    "long": "^5.2.0",
+    "prettier": "^2.7.1",
+    "regenerator-runtime": "^0.13.7",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.7"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.19.4",
+    "@cosmjs/amino": "0.29.4",
+    "@cosmjs/proto-signing": "0.29.4",
+    "@cosmjs/stargate": "0.29.4",
+    "@cosmjs/tendermint-rpc": "^0.29.4",
+    "protobufjs": "^6.11.2"
+  }
+}
