@@ -16,7 +16,6 @@
 
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/545047/188804067-28e67e5e-0214-4449-ab04-2e0c564a6885.svg" width="80"><br />
     Typescript protobuf client generator
 </p>
 
@@ -136,12 +135,6 @@ const {
 } = cosmos.gov.v1beta1.MessageComposer.fromPartial;
 ```
 
-## Connecting with Wallets and Signing Messages
-
-⚡️ For web interfaces, we recommend using [cosmos-kit](https://github.com/cosmology-tech/cosmos-kit). Continue below to see how to manually construct signers and clients.
-
-Here are the docs on [creating signers](https://github.com/cosmology-tech/cosmos-kit/tree/main/packages/react#signing-clients) in cosmos-kit that can be used with Keplr and other wallets.
-
 ### Initializing the Stargate Client
 
 Use `getSigningarchwayClient` to get your `SigningStargateClient`, with the proto/amino messages full-loaded. No need to manually add amino types, just require and initialize the client:
@@ -158,16 +151,9 @@ const stargateClient = await getSigningarchwayClient({
 
 To broadcast messages, you can create signers with a variety of options:
 
-* [cosmos-kit](https://github.com/cosmology-tech/cosmos-kit/tree/main/packages/react#signing-clients) (recommended)
 * [keplr](https://docs.keplr.app/api/cosmjs.html)
 * [cosmjs](https://gist.github.com/webmaster128/8444d42a7eceeda2544c8a59fbd7e1d9)
-### Amino Signer
 
-Likely you'll want to use the Amino, so unless you need proto, you should use this one:
-
-```js
-import { getOfflineSignerAmino as getOfflineSigner } from 'cosmjs-utils';
-```
 ### Proto Signer
 
 ```js
@@ -262,41 +248,6 @@ const stargateClient = await SigningStargateClient.connectWithSigner(rpcEndpoint
     aminoTypes
 });
 ```
-
-## Developing
-
-When first cloning the repo:
-
-```
-yarn
-yarn build
-```
-
-### Codegen
-
-Contract schemas live in `./contracts`, and protos in `./proto`. Look inside of `scripts/codegen.js` and configure the settings for bundling your SDK and contracts into `arch3-proto`:
-
-```
-yarn codegen
-```
-
-### Publishing
-
-Build the types and then publish:
-
-```
-yarn build:ts
-yarn publish
-```
-## Credits
-
-🛠 Built by Cosmology — if you like our tools, please consider delegating to [our validator ⚛️](https://cosmology.tech/validator)
-
-Code built with the help of these related projects:
-
-* [@cosmwasm/ts-codegen](https://github.com/CosmWasm/ts-codegen) for generated CosmWasm contract Typescript classes
-* [@osmonauts/telescope](https://github.com/osmosis-labs/telescope) a "babel for the Cosmos", Telescope is a TypeScript Transpiler for Cosmos Protobufs.
-* [cosmos-kit](https://github.com/cosmology-tech/cosmos-kit) A wallet connector for the Cosmos ⚛️
 
 ## Disclaimer
 
