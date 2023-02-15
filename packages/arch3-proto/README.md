@@ -23,7 +23,7 @@
 ## install
 
 ```sh
-npm install arch3-proto
+yarn install arch3-proto
 ```
 ## Table of contents
 
