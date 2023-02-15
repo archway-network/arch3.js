@@ -20,11 +20,6 @@
 </p>
 
 
-## install
-
-```sh
-yarn install arch3-proto
-```
 ## Table of contents
 
 - [arch3-proto](#arch3-proto)
