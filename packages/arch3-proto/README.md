@@ -14,6 +14,8 @@
 - arch:ts can then be run after to generate the d.ts typescript files inside of the types folder
 - arch:main and arch:module will generate the codegen files as raw js
 
+# testing
+- When testing you must first have src/codegen generated, use yarn run arch:dev:gen, and types folder, use yarn run arch:ts.
 
 <p align="center">
     Typescript protobuf client generator
@@ -44,7 +46,7 @@
 ### RPC Clients
 
 ```js
-import { archway } from 'arch3-proto';
+import { archway } from '@archwayhq/arch3-proto' ;
 
 const { createRPCQueryClient } = archway.ClientFactory; 
 const client = await createRPCQueryClient({ rpcEndpoint: RPC_ENDPOINT });
@@ -63,7 +65,7 @@ const balances = await client.archway.exchange.v1beta1
 Import the `archway` object from `arch3-proto`. 
 
 ```js
-import { archway } from 'arch3-proto';
+import { archway } from '@archwayhq/arch3-proto' ;
 
 const {
     createSpotLimitOrder,
@@ -75,7 +77,7 @@ const {
 #### CosmWasm Messages
 
 ```js
-import { cosmwasm } from "arch3-proto";
+import { cosmwasm } from '@archwayhq/arch3-proto';
 
 const {
     clearAdmin,
@@ -90,7 +92,7 @@ const {
 #### IBC Messages
 
 ```js
-import { ibc } from 'arch3-proto';
+import { ibc } from '@archwayhq/arch3-proto' ;
 
 const {
     transfer
@@ -100,7 +102,7 @@ const {
 #### Cosmos Messages
 
 ```js
-import { cosmos } from 'arch3-proto';
+import { cosmos } from '@archwayhq/arch3-proto' ;
 
 const {
     fundCommunityPool,
@@ -135,7 +137,7 @@ const {
 Use `getSigningarchwayClient` to get your `SigningStargateClient`, with the proto/amino messages full-loaded. No need to manually add amino types, just require and initialize the client:
 
 ```js
-import { getSigningarchwayClient } from 'arch3-proto';
+import { getSigningarchwayClient } from '@archwayhq/arch3-proto' ;
 
 const stargateClient = await getSigningarchwayClient({
   rpcEndpoint,
@@ -216,7 +218,7 @@ import {
     ibcAminoConverters,
     archwayAminoConverters,
     archwayProtoRegistry
-} from 'arch3-proto';
+} from '@archwayhq/arch3-proto' ;
 
 const signer: OfflineSigner = /* create your signer (see above)  */
 const rpcEndpint = 'https://rpc.cosmos.directory/archway'; // or another URL

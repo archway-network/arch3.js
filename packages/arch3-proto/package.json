@@ -60,6 +60,7 @@
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
+    "@archwayhq/arch3-core": "0.1.0",
     "@babel/runtime": "^7.19.4",
     "@cosmjs/amino": "0.29.4",
     "@cosmjs/proto-signing": "0.29.4",
