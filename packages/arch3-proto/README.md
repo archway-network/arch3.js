@@ -8,6 +8,54 @@
     - for example proto/archway/rewards/v1beta1/events.proto does an import of gogoproto/gogo.proto, so this file was added into proto/gogoproto/gogo.proto
     - use the scripts/import-proto-and-deps.sh script to get both all protos and their dependencies
 
+# current list of protobuf dependencies (use yarn run proto:imports to update)
+- archway/rewards/v1beta1/rewards.proto
+- archway/tracking/v1beta1/tracking.proto
+- confio/proofs.proto
+- cosmos/auth/v1beta1/auth.proto
+- cosmos/bank/v1beta1/bank.proto
+- cosmos/base/abci/v1beta1/abci.proto
+- cosmos/base/query/v1beta1/pagination.proto
+- cosmos/base/v1beta1/coin.proto
+- cosmos/capability/v1beta1/capability.proto
+- cosmos/crypto/multisig/v1beta1/multisig.proto
+- cosmos/distribution/v1beta1/distribution.proto
+- cosmos/gov/v1beta1/gov.proto
+- cosmos/mint/v1beta1/mint.proto
+- cosmos/params/v1beta1/params.proto
+- cosmos/slashing/v1beta1/slashing.proto
+- cosmos/staking/v1beta1/staking.proto
+- cosmos/tx/signing/v1beta1/signing.proto
+- cosmos/tx/v1beta1/tx.proto
+- cosmos/upgrade/v1beta1/upgrade.proto
+- cosmos_proto/cosmos.proto
+- gogoproto/gogo.proto
+- google/api/annotations.proto
+- google/api/http.proto
+- google/protobuf/any.proto
+- google/protobuf/descriptor.proto
+- google/protobuf/duration.proto
+- google/protobuf/timestamp.proto
+- ibc/applications/transfer/v1/transfer.proto
+- ibc/core/channel/v1/channel.proto
+- ibc/core/channel/v1/genesis.proto
+- ibc/core/client/v1/client.proto
+- ibc/core/client/v1/genesis.proto
+- ibc/core/commitment/v1/commitment.proto
+- ibc/core/connection/v1/connection.proto
+- ibc/core/connection/v1/genesis.proto
+- tendermint/abci/types.proto
+- tendermint/crypto/keys.proto
+- tendermint/crypto/proof.proto
+- tendermint/p2p/types.proto
+- tendermint/types/block.proto
+- tendermint/types/evidence.proto
+- tendermint/types/params.proto
+- tendermint/types/types.proto
+- tendermint/types/validator.proto
+- tendermint/version/types.proto
+
+
 # scripts
 - arch:dev:gen and arch:prod:gen generate the ts codegen files in root of src folder
     - make certain all proto files and their imports exist already in proto folder

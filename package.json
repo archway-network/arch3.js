@@ -56,7 +56,8 @@
     "lint:sarif": "yarn run lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "docs": "typedoc --options typedoc.cjs .",
     "docs:all": "yarn workspaces foreach --topological-dev --parallel --verbose run docs",
-    "publish:all": "yarn workspaces foreach --topological --no-private --verbose npm publish"
+    "publish:all": "yarn workspaces foreach --topological --no-private --verbose npm publish",
+    "proto:imports": "cd ./packages/arch3-proto/src && ts-node getProtoImports.ts"
   },
   "lint-staged": {
     "*.ts": [
