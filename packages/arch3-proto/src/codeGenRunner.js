@@ -34,11 +34,8 @@ telescope({
     rpcClients: {
       enabled: true,
       camelCase: true
-    },
+    }
   }
-}).then(() => {
-  console.log('✨ all done!');
-}).catch(e => {
-  console.error(e);
+}).catch((e) => {
   process.exit(1);
 });
