@@ -69,6 +69,10 @@ node_modules/
 .vscode/
 .idea/
 
+# others
+.DS_Store
+packages/.DS_Store
+
 # Logs
 packages/arch3-proto/logs
 packages/arch3-proto/*.log
