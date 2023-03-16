@@ -7,8 +7,5 @@ describe('Archway Rewards', () => {
     const response = await ArchwayClient.getBlockRewardsTracking(undefined);
 
     expect(response.block).toBeDefined();
-    console.log("height", response.block?.inflationRewards?.height);
-    console.log("inflationRewards", response.block?.inflationRewards?.inflationRewards);
-    console.log("maxGas", response.block?.inflationRewards?.maxGas);
   });
 });
