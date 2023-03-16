@@ -46,6 +46,11 @@ service Query {
   rpc OutstandingRewards(QueryOutstandingRewardsRequest) returns (QueryOutstandingRewardsResponse) {
     option (google.api.http).get = "/archway/rewards/v1/outstanding_rewards";
   }
+
+  // FlatFee returns the flat fee set by the contract owner for the provided contract_address
+  rpc FlatFee(QueryFlatFeeRequest) returns (QueryFlatFeeResponse) {
+    option (google.api.http).get = "/archway/rewards/v1/flat_fee";
+  }
 }
 
 // QueryParamsRequest is the request for Query.Params.
@@ -101,6 +106,8 @@ message QueryRewardsPoolResponse {
 message QueryEstimateTxFeesRequest {
   // gas_limit is the transaction gas limit.
   uint64 gas_limit = 1;
+  // contract_address whose flat fee is considered when estimating tx fees.
+  string contract_address = 2;
 }
 
 // QueryEstimateTxFeesResponse is the response for Query.EstimateTxFees.
@@ -110,7 +117,7 @@ message QueryEstimateTxFeesResponse {
     (gogoproto.nullable) = false
   ];
   // estimated_fee is the estimated transaction fee for a given gas limit.
-  cosmos.base.v1beta1.Coin estimated_fee = 2 [
+  repeated cosmos.base.v1beta1.Coin estimated_fee = 2 [
     (gogoproto.nullable) = false
   ];
 }
@@ -161,4 +168,18 @@ message QueryOutstandingRewardsResponse {
   ];
   // records_num is the total number of RewardsRecord objects stored for the rewards_address.
   uint64 records_num = 2;
+}
+
+// QueryFlatFeeRequest is the request for Query.FlatFeet
+message QueryFlatFeeRequest {
+  // contract_address is the contract address (bech32 encoded).
+  string contract_address = 1;
+}
+
+// QueryFlatFeeResponse is the response for Query.FlatFee
+message QueryFlatFeeResponse {
+  // flat_fee_amount defines the minimum flat fee set by the contract_owner per contract execution.
+  cosmos.base.v1beta1.Coin flat_fee_amount = 1 [
+    (gogoproto.nullable) = false
+  ];
 }
