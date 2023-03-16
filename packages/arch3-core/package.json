@@ -48,6 +48,7 @@
     "docs": "typedoc --options typedoc.cjs ."
   },
   "dependencies": {
+    "@archwayhq/arch3-proto": "workspace:packages/arch3-proto",
     "@cosmjs/cosmwasm-stargate": "^0.28.13",
     "@cosmjs/proto-signing": "^0.28.13",
     "@cosmjs/stargate": "^0.28.13",

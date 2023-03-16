@@ -24,10 +24,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@archwayhq/arch3-core@0.1.0, @archwayhq/arch3-core@workspace:packages/arch3-core":
+"@archwayhq/arch3-core@workspace:packages/arch3-core":
   version: 0.0.0-use.local
   resolution: "@archwayhq/arch3-core@workspace:packages/arch3-core"
   dependencies:
+    "@archwayhq/arch3-proto": "workspace:packages/arch3-proto"
     "@cosmjs/cosmwasm-stargate": ^0.28.13
     "@cosmjs/proto-signing": ^0.28.13
     "@cosmjs/stargate": ^0.28.13
@@ -56,7 +57,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@archwayhq/arch3-proto@workspace:packages/arch3-proto"
   dependencies:
-    "@archwayhq/arch3-core": 0.1.0
     "@babel/cli": 7.19.3
     "@babel/core": 7.19.3
     "@babel/eslint-parser": ^7.19.1
