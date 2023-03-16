@@ -1,6 +1,6 @@
 
 import { archway } from '@archwayhq/arch3-proto';
-import { QueryBlockRewardsTrackingRequest, QueryBlockRewardsTrackingResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
+import { QueryBlockRewardsTrackingRequest, QueryBlockRewardsTrackingResponse, QueryContractMetadataRequest, QueryContractMetadataResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
@@ -40,6 +40,15 @@ export class ArchwayClient extends CosmWasmClient {
 
   public static async getBlockRewardsTracking(request: QueryBlockRewardsTrackingRequest): Promise<QueryBlockRewardsTrackingResponse> {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.blockRewardsTracking(request);
+  }
+
+  public static async getContractMetadata(request: QueryContractMetadataRequest): Promise<QueryContractMetadataResponse | undefined> {
+    try {
+      return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.contractMetadata(request);
+    } catch (e) {
+      console.log("error", e);
+      return undefined;
+    }
   }
 }
 
