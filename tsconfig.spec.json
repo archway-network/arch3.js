@@ -1,6 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "outDir": "build",
   "include": [
     "src/**/*.spec.ts",
   ]
