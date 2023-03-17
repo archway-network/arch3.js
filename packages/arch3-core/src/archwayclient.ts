@@ -41,7 +41,7 @@ export class ArchwayClient extends CosmWasmClient {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.blockRewardsTracking(request);
   }
 
-  public static async getContractMetadata(request: QueryContractMetadataRequest | undefined): Promise<QueryContractMetadataResponse | undefined> {
+  public static async getContractMetadata(request: QueryContractMetadataRequest): Promise<QueryContractMetadataResponse | undefined> {
     try {
       return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.contractMetadata(request);
     } catch (e) {
@@ -56,7 +56,7 @@ export class ArchwayClient extends CosmWasmClient {
  * @public
  */
 export class SigningArchwayClient extends SigningCosmWasmClient {
-  protected constructor(tmClient: Tendermint34Client | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions | undefined) {
+  protected constructor(tmClient: Tendermint34Client | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions) {
     super(tmClient, signer, options);
   }
 
