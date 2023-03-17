@@ -42,8 +42,7 @@ describe('SigningArchwayClient', () => {
     it("can be constructed", async () => {
       const wallet = await DirectSecp256k1HdWallet.fromMnemonic(alice.mnemonic, { prefix: wasmd.prefix });
       const client = await SigningArchwayClient.connectWithSigner(wasmd.endpoint, wallet, {
-        ...defaultSigningClientOptions,
-        prefix: wasmd.prefix,
+        ...defaultSigningClientOptions
       });
       expect(client).toBeTruthy();
       client.disconnect();
