@@ -1,6 +1,13 @@
 
 import { archway } from '@archwayhq/arch3-proto';
-import { QueryBlockRewardsTrackingRequest, QueryBlockRewardsTrackingResponse, QueryContractMetadataRequest, QueryContractMetadataResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
+import {
+  QueryBlockRewardsTrackingRequest,
+  QueryBlockRewardsTrackingResponse,
+  QueryContractMetadataRequest,
+  QueryContractMetadataResponse,
+  QueryEstimateTxFeesRequest,
+  QueryEstimateTxFeesResponse
+} from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
@@ -49,6 +56,10 @@ export class ArchwayClient extends CosmWasmClient {
       console.log("error", e);
       return undefined;
     }
+  }
+
+  public static async getEstimateFees(request: QueryEstimateTxFeesRequest): Promise<QueryEstimateTxFeesResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.estimateTxFees(request);
   }
 }
 
