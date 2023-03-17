@@ -28,7 +28,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@archwayhq/arch3-core@workspace:packages/arch3-core"
   dependencies:
-    "@archwayhq/arch3-proto": "workspace:packages/arch3-proto"
+    "@archwayhq/arch3-proto": "workspace:^"
     "@cosmjs/cosmwasm-stargate": ^0.28.13
     "@cosmjs/proto-signing": ^0.28.13
     "@cosmjs/stargate": ^0.28.13
@@ -53,7 +53,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@archwayhq/arch3-proto@workspace:packages/arch3-proto":
+"@archwayhq/arch3-proto@workspace:^, @archwayhq/arch3-proto@workspace:packages/arch3-proto":
   version: 0.0.0-use.local
   resolution: "@archwayhq/arch3-proto@workspace:packages/arch3-proto"
   dependencies:
