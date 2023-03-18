@@ -77,4 +77,14 @@ describe('Archway Rewards', () => {
 
     expect(response.records.length).toBeGreaterThan(0);
   });
+
+  it('check flat fee are coming back', async () => {
+    await ArchwayClient.connect(rpcUrl);
+
+    const response = await ArchwayClient.getFlatFee({
+      contractAddress: airdropContract
+    });
+
+    expect(typeof Number(response.flatFeeAmount)).toBe('number');
+  });
 });

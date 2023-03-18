@@ -6,6 +6,8 @@ import {
   QueryContractMetadataResponse,
   QueryEstimateTxFeesRequest,
   QueryEstimateTxFeesResponse,
+  QueryFlatFeeRequest,
+  QueryFlatFeeResponse,
   QueryOutstandingRewardsRequest,
   QueryOutstandingRewardsResponse,
   QueryParamsRequest,
@@ -83,6 +85,10 @@ export class ArchwayClient extends CosmWasmClient {
 
   public static async getRewardsRecords(request: QueryRewardsRecordsRequest): Promise<QueryRewardsRecordsResponse> {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.rewardsRecords(request);
+  }
+
+  public static async getFlatFee(request: QueryFlatFeeRequest): Promise<QueryFlatFeeResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.flatFee(request);
   }
 }
 
