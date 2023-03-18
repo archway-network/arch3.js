@@ -51,4 +51,12 @@ describe('Archway Rewards', () => {
 
     expect(typeof Number(response.totalRewards[0].amount)).toBe('number');
   });
+
+  it('check params are coming back', async () => {
+    await ArchwayClient.connect(rpcUrl);
+
+    const response = await ArchwayClient.getParams(undefined);
+
+    expect(response.params).toBeDefined();
+  });
 });
