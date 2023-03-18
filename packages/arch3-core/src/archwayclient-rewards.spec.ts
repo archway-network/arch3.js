@@ -67,4 +67,14 @@ describe('Archway Rewards', () => {
 
     expect(response.undistributedFunds).toBeDefined();
   });
+
+  it('check rewards records are coming back', async () => {
+    await ArchwayClient.connect(rpcUrl);
+
+    const response = await ArchwayClient.getRewardsRecords({
+      rewardsAddress
+    });
+
+    expect(response.records.length).toBeGreaterThan(0);
+  });
 });

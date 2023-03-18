@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased - 2023-03-17
  
+This change adds a getter function for rewards-records.
+ 
+### Added
+- *arch3-proto*: added getter function for rewards-records [#47](https://github.com/archway-network/arch3.js)
+ 
+### Changed
+ 
+### Fixed
+
+
+## Unreleased - 2023-03-17
+ 
 This change adds a getter function for rewards pool.
  
 ### Added
