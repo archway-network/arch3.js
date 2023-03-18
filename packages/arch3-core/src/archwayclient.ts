@@ -12,7 +12,9 @@ import {
   QueryParamsRequest,
   QueryParamsResponse,
   QueryRewardsPoolRequest,
-  QueryRewardsPoolResponse
+  QueryRewardsPoolResponse,
+  QueryRewardsRecordsRequest,
+  QueryRewardsRecordsResponse
 } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
@@ -78,6 +80,10 @@ export class ArchwayClient extends CosmWasmClient {
 
   public static async getPool(request: QueryRewardsPoolRequest | undefined): Promise<QueryRewardsPoolResponse> {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.rewardsPool(request);
+  }
+
+  public static async getRewardsRecords(request: QueryRewardsRecordsRequest): Promise<QueryRewardsRecordsResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.rewardsRecords(request);
   }
 }
 
