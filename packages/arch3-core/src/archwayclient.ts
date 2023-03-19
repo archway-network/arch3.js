@@ -9,12 +9,15 @@ import {
   QueryOutstandingRewardsRequest,
   QueryOutstandingRewardsResponse
 } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
+import { MsgSetFlatFee, MsgSetFlatFeeResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
+import { createProtobufRpcClient, QueryClient } from '@cosmjs/stargate';
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
 
 
 type RpcQueryClient = Awaited<ReturnType<typeof archway.ClientFactory.createRPCQueryClient>>;
+type RpcMsgClient = Awaited<ReturnType<typeof archway.ClientFactory.createRPCMsgClient>>;
 
 /**
  * Extension to the {@link CosmWasmClient }.
@@ -73,8 +76,20 @@ export class ArchwayClient extends CosmWasmClient {
  * @public
  */
 export class SigningArchwayClient extends SigningCosmWasmClient {
+  private static rpcMsgClient: RpcMsgClient;
+
   protected constructor(tmClient: Tendermint34Client | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions) {
     super(tmClient, signer, options);
+  }
+
+  /**
+   * @param tmClient - Tendermint client that will be used for the generation of the Msg Client.
+   * @returns void
+   */
+  private static async init(tmClient: Tendermint34Client): Promise<void> {
+    const client = new QueryClient(tmClient);
+    const rpc = createProtobufRpcClient(client);
+    SigningArchwayClient.rpcMsgClient = await archway.ClientFactory.createRPCMsgClient({ rpc });
   }
 
   /**
@@ -89,6 +104,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
     options: SigningCosmWasmClientOptions = {},
   ): Promise<SigningArchwayClient> {
     const tmClient = await Tendermint34Client.connect(endpoint);
+    await SigningArchwayClient.init(tmClient);
     return new SigningArchwayClient(tmClient, signer, options);
   }
 
@@ -110,5 +126,15 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
     options: SigningCosmWasmClientOptions = {},
   ): Promise<SigningArchwayClient> {
     return new SigningArchwayClient(undefined, signer, options);
+  }
+
+  /**
+   * @param message - Data for 'Set flat fee' transaction parameters.
+   * @returns The transaction response `MsgSetFlatFeeResponse`.
+   */
+  public async setFlatFee(message: MsgSetFlatFee): Promise<MsgSetFlatFeeResponse> {
+    return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.setFlatFee(
+      message
+    );
   }
 }
