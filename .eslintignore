@@ -14,6 +14,9 @@ types/
 
 jest.config.[jt]s
 
+packages/arch3-core/src/archwayclient-rewards.spec.ts
+packages/arch3-core/src/archwayclient.spec.ts
+
 packages/arch3-proto/main/
 packages/arch3-proto/types/
 packages/arch3-proto/module/
