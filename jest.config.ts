@@ -76,9 +76,10 @@ export default {
   // maxWorkers: '50%',
 
   // An array of directory names to be searched recursively up from the requiring module's location
-  // moduleDirectories: [
-  //   'node_modules'
-  // ],
+  moduleDirectories: [
+    'node_modules',
+    '<rootDir>/src'
+  ],
 
   // An array of file extensions your modules use
   // moduleFileExtensions: [
@@ -93,7 +94,9 @@ export default {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+    "^@archwayhq/arch3-proto/(.*)": "<rootDir>/../arch3-proto/$1"
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -185,10 +188,9 @@ export default {
   // transform: undefined,
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
-  //   '/node_modules/',
-  //   '\\.pnp\\.[^\\/]+$'
-  // ],
+  transformIgnorePatterns: [
+    "<rootDir>/../(?!.arch3-proto)"
+  ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

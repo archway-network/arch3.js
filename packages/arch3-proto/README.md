@@ -57,13 +57,16 @@
 
 
 # scripts
-- arch:dev:gen and arch:prod:gen generate the ts codegen files in root of src folder
-    - make certain all proto files and their imports exist already in proto folder
-- arch:ts can then be run after to generate the d.ts typescript files inside of the types folder
-- arch:main and arch:module will generate the codegen files as raw js
+- If you look at package.json you can see the main exposed file is "main": "main/index.js"
+  - You can think of this module as two parts: main and ts
+    - The core codegen files are in the main/codegen folder (these are js files)
+    - The typescript d.ts files are in the types/codegen folder
+      - run the script build to update both the main and ts files (internally runs arch:main and arch:ts)
+- other scripts can be used for testing purposes 
+
 
 # testing
-- When testing you must first have src/codegen generated, use yarn run arch:dev:gen, and types folder, use yarn run arch:ts.
+- When testing you must first have main/codegen and types/codegen generated, see scripts section above for more details.
 
 <p align="center">
     Typescript protobuf client generator
