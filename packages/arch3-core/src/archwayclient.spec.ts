@@ -1,3 +1,4 @@
+import { expect, it, describe } from 'vitest';
 import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 import { GasPrice } from "@cosmjs/stargate";
