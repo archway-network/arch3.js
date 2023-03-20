@@ -22,4 +22,5 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - run: yarn build:all
+      - run: pwd
       - run: yarn test:core
