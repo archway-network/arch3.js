@@ -9,7 +9,7 @@ import {
   QueryOutstandingRewardsRequest,
   QueryOutstandingRewardsResponse
 } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
-import { MsgSetFlatFee, MsgSetFlatFeeResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx';
+import { MsgSetContractMetadata, MsgSetContractMetadataResponse, MsgSetFlatFee, MsgSetFlatFeeResponse, MsgWithdrawRewards, MsgWithdrawRewardsResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { createProtobufRpcClient, QueryClient } from '@cosmjs/stargate';
@@ -129,10 +129,30 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
   }
 
   /**
-   * @param message - Data for 'Set flat fee' transaction parameters.
+   * @param message - Data for 'Set Contract Metadata' transaction in Rewards Module.
+   * @returns The transaction response `MsgSetContractMetadataResponse`.
+   */
+  public async rewardsSetContractMetadata(message: MsgSetContractMetadata): Promise<MsgSetContractMetadataResponse> {
+    return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.setContractMetadata(
+      message
+    );
+  }
+
+  /**
+   * @param message - Data for 'Withdraw Rewards' transaction in Rewards Module.
+   * @returns The transaction response `MsgWithdrawRewardsResponse`.
+   */
+  public async rewardsWithdrawRewards(message: MsgWithdrawRewards): Promise<MsgWithdrawRewardsResponse> {
+    return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.withdrawRewards(
+      message
+    );
+  }
+
+  /**
+   * @param message - Data for 'Set Flat Fee' transaction in Rewards Module.
    * @returns The transaction response `MsgSetFlatFeeResponse`.
    */
-  public async setFlatFee(message: MsgSetFlatFee): Promise<MsgSetFlatFeeResponse> {
+  public async rewardsSetFlatFee(message: MsgSetFlatFee): Promise<MsgSetFlatFeeResponse> {
     return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.setFlatFee(
       message
     );
