@@ -23,4 +23,5 @@ jobs:
       - run: yarn install --immutable
       - run: yarn build:all
       - run: pwd
+      - run: ls -la
       - run: yarn test:core
