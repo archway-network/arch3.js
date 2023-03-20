@@ -1,7 +1,6 @@
 module.exports = {
   root: true,
-  plugins: ['prettier'],
-  extends: ['eslint:recommended', 'prettier'],
+  extends: ['eslint:recommended'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 11,
@@ -59,14 +58,6 @@ module.exports = {
       {
         avoidEscape: true,
         allowTemplateLiterals: true
-      }
-    ],
-    'prettier/prettier': [
-      'error',
-      {
-        trailingComma: 'none',
-        singleQuote: true,
-        printWidth: 80
       }
     ]
   }
