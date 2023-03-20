@@ -3,7 +3,9 @@ import { Long } from '@archwayhq/arch3-proto/src/codegen/helpers';
 import { ArchwayClient } from './archwayclient';
 
 const rpcUrlConstantine = 'https://rpc.constantine-1.archway.tech';
+const rpcUrlTitus = 'https://rpc.titus-1.archway.tech';
 const airdropContractConstantine = 'archway16fpjs4u9pq7px3h3zaawegtfp63dnerm83rjywjn7j9t8g0vtu9qhvgvsr';
+const airdropContractTitus = 'archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u';
 
 const rewardsAddress = 'archway1u4rmd5z78smu0tmtw45mran0pz4umzvxaf3g56';
 const denom = 'uconst';
@@ -76,5 +78,15 @@ describe('Archway Rewards', () => {
     });
 
     expect(response.records.length).toBeGreaterThan(0);
+  });
+
+  it('check flat fee are coming back', async () => {
+    await ArchwayClient.connect(rpcUrlTitus);
+
+    const response = await ArchwayClient.getFlatFee({
+      contractAddress: airdropContractTitus
+    });
+
+    expect(typeof Number(response.flatFeeAmount)).toBe('number');
   });
 });
