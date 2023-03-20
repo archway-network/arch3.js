@@ -62,7 +62,8 @@
     - The core codegen files are in the main/codegen folder (these are js files)
     - The typescript d.ts files are in the types/codegen folder
       - run the script build to update both the main and ts files (internally runs arch:main and arch:ts)
-- other scripts can be used for testing purposes 
+- other scripts can be used for testing purposes
+- note some kind of an issue doing yarn workspace foreach for running tests, just use test:core project root package.json
 
 
 # testing
