@@ -36,9 +36,8 @@
     "main",
     "module"
   ],
-  "main": "main/index.js",
-  "module": "module/index.js",
-  "typings": "types/index.d.ts",
+  "main": "build/index.js",
+  "typings": "maibuildn/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./build",
     "arch:dev:gen": "cross-env NODE_ENV=development babel-node src/codeGenRunner.js",
@@ -49,7 +48,7 @@
     "build:main": "cross-env BABEL_ENV=production babel src --out-dir main --delete-dir-on-start --extensions \".tsx,.ts,.js\"",
     "build:module": "cross-env MODULE=true babel src --out-dir module --delete-dir-on-start  --extensions \".tsx,.ts,.js\"",
     "build:ts": "tsc --project ./tsconfig.json",
-    "build": "yarn arch:main && yarn arch:ts",
+    "build": "yarn arch:ts",
     "buidl": "yarn run build && yarn run build:ts",
     "codegen": "cross-env NODE_ENV=development babel-node scripts/codegen.js",
     "prepare": "yarn run build",

@@ -10,7 +10,7 @@
       "es2021"
     ],
     "target": "es2018",
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "noEmitOnError": true,

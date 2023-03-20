@@ -62,7 +62,7 @@ export class ArchwayClient extends CosmWasmClient {
     try {
       return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.contractMetadata(request);
     } catch (e) {
-      console.log("error", e);
+      console.log("getContractMetadata error", e);
       return undefined;
     }
   }
