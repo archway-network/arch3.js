@@ -37,7 +37,7 @@
     "module"
   ],
   "main": "build/index.js",
-  "typings": "maibuildn/index.d.ts",
+  "typings": "build/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./build",
     "arch:dev:gen": "cross-env NODE_ENV=development babel-node src/codeGenRunner.js",

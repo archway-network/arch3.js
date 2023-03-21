@@ -80,6 +80,7 @@ describe('Archway Rewards', () => {
     expect(response.records.length).toBeGreaterThan(0);
   });
 
+  // note: test failing as matching airdrop not yet deployed to titus
   it('check flat fee are coming back', async () => {
     await ArchwayClient.connect(rpcUrlTitus);
 

@@ -57,17 +57,15 @@
 
 
 # scripts
-- If you look at package.json you can see the main exposed file is "main": "main/index.js"
+- If you look at package.json you can see the main exposed file is "main": "build/index.js"
   - You can think of this module as two parts: main and ts
-    - The core codegen files are in the main/codegen folder (these are js files)
-    - The typescript d.ts files are in the types/codegen folder
-      - run the script build to update both the main and ts files (internally runs arch:main and arch:ts)
+    - run the script build to update both the main and ts files
 - other scripts can be used for testing purposes
-- note some kind of an issue doing yarn workspace foreach for running tests, just use test:core project root package.json
+- note for testing use script test:core at project root package.json
 
 
 # testing
-- When testing you must first have main/codegen and types/codegen generated, see scripts section above for more details.
+- When testing you must first have build/codegen generated, see scripts section above for more details.
 
 <p align="center">
     Typescript protobuf client generator
