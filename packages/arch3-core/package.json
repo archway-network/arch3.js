@@ -68,6 +68,7 @@
     "eslint-plugin-simple-import-sort": "^7.0",
     "eslint-plugin-tsdoc": "^0.2.16",
     "jest": "^28.1",
+    "long": "^5.2.1",
     "ts-jest": "^28.0",
     "ts-node": "^10.8",
     "typedoc": "^0.23.14",

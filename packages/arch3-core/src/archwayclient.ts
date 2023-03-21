@@ -9,11 +9,12 @@ import {
   QueryOutstandingRewardsRequest,
   QueryOutstandingRewardsResponse
 } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
-import { MsgSetContractMetadata, MsgSetContractMetadataResponse, MsgSetFlatFee, MsgSetFlatFeeResponse, MsgWithdrawRewards, MsgWithdrawRewardsResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx';
+import { MsgSetContractMetadataResponse, MsgSetFlatFeeResponse, MsgWithdrawRewardsResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { createProtobufRpcClient, QueryClient } from '@cosmjs/stargate';
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
+import Long from "long";
 
 
 type RpcQueryClient = Awaited<ReturnType<typeof archway.ClientFactory.createRPCQueryClient>>;
@@ -129,32 +130,82 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
   }
 
   /**
-   * @param message - Data for 'Set Contract Metadata' transaction in Rewards Module.
-   * @returns The transaction response `MsgSetContractMetadataResponse`.
+   * Updates the rewards metadata of a contract.
+   *
+   * @param senderAddress - Address of the message sender.
+   * @param contractAddress - Address of the deployed contract for which rewards metadata will be updated.
+   * @param ownerAddress - Optional. Address that will be the contract owner. Defaults to senderAddress.
+   * @param rewardsAddress - Optional. Address that will receive the rewards. Defaults to ownerAddress, or to senderAddress.
+   * @returns The transaction response `MsgSetContractMetadataResponse` which is empty \{\}.
    */
-  public async rewardsSetContractMetadata(message: MsgSetContractMetadata): Promise<MsgSetContractMetadataResponse> {
+  public async setContractRewardsMetadata(
+    senderAddress: string,
+    contractAddress: string,
+    ownerAddress?: string,
+    rewardsAddress?: string
+  ): Promise<MsgSetContractMetadataResponse> {
     return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.setContractMetadata(
-      message
+      {
+        senderAddress,
+        metadata: {
+          contractAddress: contractAddress,
+          ownerAddress: ownerAddress || senderAddress,
+          rewardsAddress: rewardsAddress || ownerAddress || senderAddress,
+        },
+      }
     );
   }
 
   /**
-   * @param message - Data for 'Withdraw Rewards' transaction in Rewards Module.
-   * @returns The transaction response `MsgWithdrawRewardsResponse`.
+   * Withdraws the rewards of a contract.
+   *
+   * @param rewardsAddress - Address where the rewards will be distributed to.
+   * @param recordsLimit - Optional. Maximum number of RewardsRecord to be processed. Either this parameter or recordIds has to be set.
+   * @param recordIds - Optional. List of specific RewardsRecord IDs to be processed. Either this parameter or recordsLimit has to be set.
+   * @returns The transaction response `MsgWithdrawRewardsResponse` which contains the number of RewardsRecord processed and total rewards transferred.
    */
-  public async rewardsWithdrawRewards(message: MsgWithdrawRewards): Promise<MsgWithdrawRewardsResponse> {
+  public async withdrawContractRewards(
+    rewardsAddress: string,
+    recordsLimit?: Long | number | string,
+    recordIds?: Array<Long | number | string>
+  ): Promise<MsgWithdrawRewardsResponse> {
     return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.withdrawRewards(
-      message
+      {
+        rewardsAddress,
+        recordsLimit: {
+          limit: Long.fromValue(recordsLimit || 0),
+        },
+        recordIds: {
+          ids: recordIds?.map(item => Long.fromValue(item)) || [],
+        },
+      }
     );
   }
 
   /**
-   * @param message - Data for 'Set Flat Fee' transaction in Rewards Module.
-   * @returns The transaction response `MsgSetFlatFeeResponse`.
+   * Updates the flat fee config of a contract.
+   *
+   * @param senderAddress - Address of the message sender.
+   * @param contractAddress - Address of the deployed contract for which flat fees will be updated.
+   * @param feeDenom - Denomination of fee.
+   * @param feeAmount - Amount of fee.
+   * @returns The transaction response `MsgSetFlatFeeResponse` which is empty \{\}.
    */
-  public async rewardsSetFlatFee(message: MsgSetFlatFee): Promise<MsgSetFlatFeeResponse> {
+  public async setContractRewardsFlatFee(
+    senderAddress: string,
+    contractAddress: string,
+    feeDenom: string,
+    feeAmount: string
+  ): Promise<MsgSetFlatFeeResponse> {
     return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.setFlatFee(
-      message
+      {
+        senderAddress,
+        contractAddress,
+        flatFeeAmount: {
+          denom: feeDenom,
+          amount: feeAmount,
+        },
+      }
     );
   }
 }
