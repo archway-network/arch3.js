@@ -1,4 +1,4 @@
-import { archway } from '@archwayhq/arch3-proto';
+import { archway, getRpcClient } from '@archwayhq/arch3-proto';
 import {
   QueryBlockRewardsTrackingRequest,
   QueryBlockRewardsTrackingResponse,
@@ -20,7 +20,6 @@ import {
 import { MsgSetContractMetadataResponse, MsgSetFlatFeeResponse, MsgWithdrawRewardsResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
-import { createProtobufRpcClient, QueryClient } from '@cosmjs/stargate';
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
 import Long from "long";
 
@@ -111,9 +110,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
    * @param tmClient - Tendermint client that will be used for the generation of the Msg Client.
    * @returns void
    */
-  private static async init(tmClient: Tendermint34Client): Promise<void> {
-    const client = new QueryClient(tmClient);
-    const rpc = createProtobufRpcClient(client);
+  private static async init(endpoint: string | HttpEndpoint): Promise<void> {
+    const rpc = await getRpcClient(endpoint);
     SigningArchwayClient.rpcMsgClient = await archway.ClientFactory.createRPCMsgClient({ rpc });
   }
 
@@ -129,7 +127,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
     options: SigningCosmWasmClientOptions = {},
   ): Promise<SigningArchwayClient> {
     const tmClient = await Tendermint34Client.connect(endpoint);
-    await SigningArchwayClient.init(tmClient);
+    await SigningArchwayClient.init(endpoint);
     return new SigningArchwayClient(tmClient, signer, options);
   }
 

@@ -34,6 +34,8 @@ const defaultSigningClientOptions: SigningCosmWasmClientOptions = {
 };
 
 describe("Archway Rewards Tx", () => {
+  jest.setTimeout(10000);
+
   let wallet: DirectSecp256k1HdWallet;
   let client: SigningArchwayClient;
 
@@ -65,7 +67,7 @@ describe("Archway Rewards Tx", () => {
   it("can withdraw contract rewards", async () => {
     const response = await client.withdrawContractRewards(alice.address0, 1);
     expect(response).toBeTruthy();
-    expect(response.recordsNum.toNumber()).toBe(1);
+    expect(response?.recordsNum?.toNumber()).toBe(1);
   });
 
   it("can set flat fee", async () => {
