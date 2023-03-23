@@ -2,14 +2,17 @@ import { Long } from '@archwayhq/arch3-proto/src/codegen/helpers';
 
 import { ArchwayClient } from './archwayclient';
 
-const rpcUrl = 'https://rpc.constantine-1.archway.tech';
-const airdropContract = 'archway16fpjs4u9pq7px3h3zaawegtfp63dnerm83rjywjn7j9t8g0vtu9qhvgvsr';
+const rpcUrlConstantine = 'https://rpc.constantine-1.archway.tech';
+const rpcUrlTitus = 'https://rpc.titus-1.archway.tech';
+const airdropContractConstantine = 'archway16fpjs4u9pq7px3h3zaawegtfp63dnerm83rjywjn7j9t8g0vtu9qhvgvsr';
+const airdropContractTitus = 'archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u';
+
 const rewardsAddress = 'archway1u4rmd5z78smu0tmtw45mran0pz4umzvxaf3g56';
 const denom = 'uconst';
 
 describe('Archway Rewards', () => {
   it('check block rewards is coming back', async () => {
-    await ArchwayClient.connect(rpcUrl);
+    await ArchwayClient.connect(rpcUrlConstantine);
 
     const response = await ArchwayClient.getBlockRewardsTracking(undefined);
 
@@ -17,10 +20,10 @@ describe('Archway Rewards', () => {
   });
 
   it('check contract metadata is coming back', async () => {
-    await ArchwayClient.connect(rpcUrl);
+    await ArchwayClient.connect(rpcUrlConstantine);
 
     const response = await ArchwayClient.getContractMetadata({
-      contractAddress: airdropContract
+      contractAddress: airdropContractConstantine
     });
 
     // note: some contracts have no metadata defined
@@ -28,14 +31,13 @@ describe('Archway Rewards', () => {
   });
 
   it('check estimate fees is coming back', async () => {
-    await ArchwayClient.connect(rpcUrl);
+    await ArchwayClient.connect(rpcUrlConstantine);
 
     const response = await ArchwayClient.getEstimateFees({
       gasLimit: new Long(100000),
-      contractAddress: airdropContract
+      contractAddress: airdropContractConstantine
     });
 
-    // note: some contracts have no metadata defined
     expect(response.estimatedFee[0].denom).toBe(denom);
     expect(typeof Number(response.estimatedFee[0].amount)).toBe('number');
     expect(response.gasUnitPrice?.denom).toBe(denom);
@@ -43,12 +45,49 @@ describe('Archway Rewards', () => {
   });
 
   it('check outstanding rewards are coming back', async () => {
-    await ArchwayClient.connect(rpcUrl);
+    await ArchwayClient.connect(rpcUrlConstantine);
 
     const response = await ArchwayClient.getOutstandingRewards({
       rewardsAddress
     });
 
     expect(typeof Number(response.totalRewards[0].amount)).toBe('number');
+  });
+
+  it('check params are coming back', async () => {
+    await ArchwayClient.connect(rpcUrlConstantine);
+
+    const response = await ArchwayClient.getParams(undefined);
+
+    expect(response.params).toBeDefined();
+  });
+
+  it('check pool are coming back', async () => {
+    await ArchwayClient.connect(rpcUrlConstantine);
+
+    const response = await ArchwayClient.getPool(undefined);
+
+    expect(response.undistributedFunds).toBeDefined();
+  });
+
+  it('check rewards records are coming back', async () => {
+    await ArchwayClient.connect(rpcUrlConstantine);
+
+    const response = await ArchwayClient.getRewardsRecords({
+      rewardsAddress
+    });
+
+    expect(response.records.length).toBeGreaterThan(0);
+  });
+
+  // note: test failing as matching airdrop not yet deployed to titus
+  it('check flat fee are coming back', async () => {
+    await ArchwayClient.connect(rpcUrlTitus);
+
+    const response = await ArchwayClient.getFlatFee({
+      contractAddress: airdropContractTitus
+    });
+
+    expect(typeof Number(response.flatFeeAmount)).toBe('number');
   });
 });

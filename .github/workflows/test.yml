@@ -21,4 +21,7 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn install --immutable
-      - run: yarn test:all --passWithNoTests
+      - run: yarn build:all
+      - run: pwd
+      - run: ls -la
+      - run: yarn test:core

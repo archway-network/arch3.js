@@ -51,6 +51,7 @@
     "test": "jest",
     "test:watch": "yarn test --watch",
     "test:all": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
+    "test:core": "cd packages/arch3-core && yarn test",
     "lint": "eslint . --ext .js,.cjs,.ts",
     "lint:fix": "yarn run lint --fix",
     "lint:sarif": "yarn run lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",

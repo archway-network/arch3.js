@@ -6,8 +6,16 @@ import {
   QueryContractMetadataResponse,
   QueryEstimateTxFeesRequest,
   QueryEstimateTxFeesResponse,
+  QueryFlatFeeRequest,
+  QueryFlatFeeResponse,
   QueryOutstandingRewardsRequest,
-  QueryOutstandingRewardsResponse
+  QueryOutstandingRewardsResponse,
+  QueryParamsRequest,
+  QueryParamsResponse,
+  QueryRewardsPoolRequest,
+  QueryRewardsPoolResponse,
+  QueryRewardsRecordsRequest,
+  QueryRewardsRecordsResponse
 } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
 import { MsgSetContractMetadataResponse, MsgSetFlatFeeResponse, MsgWithdrawRewardsResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
@@ -58,7 +66,7 @@ export class ArchwayClient extends CosmWasmClient {
     try {
       return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.contractMetadata(request);
     } catch (e) {
-      console.log("error", e);
+      console.log("getContractMetadata error", e);
       return undefined;
     }
   }
@@ -69,6 +77,22 @@ export class ArchwayClient extends CosmWasmClient {
 
   public static async getOutstandingRewards(request: QueryOutstandingRewardsRequest): Promise<QueryOutstandingRewardsResponse> {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.outstandingRewards(request);
+  }
+
+  public static async getParams(request: QueryParamsRequest | undefined): Promise<QueryParamsResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.params(request);
+  }
+
+  public static async getPool(request: QueryRewardsPoolRequest | undefined): Promise<QueryRewardsPoolResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.rewardsPool(request);
+  }
+
+  public static async getRewardsRecords(request: QueryRewardsRecordsRequest): Promise<QueryRewardsRecordsResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.rewardsRecords(request);
+  }
+
+  public static async getFlatFee(request: QueryFlatFeeRequest): Promise<QueryFlatFeeResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.flatFee(request);
   }
 }
 
