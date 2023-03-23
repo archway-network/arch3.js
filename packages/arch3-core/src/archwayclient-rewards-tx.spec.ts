@@ -23,7 +23,7 @@ const alice = {
 };
 
 const contractAddress =
-  "archway10y9tftwm03g6r6v28x7dlj3d0hrxkuwxaxrdsgtu5xyhvwcffvyq48n795";
+  "archway1u3qhecg2sa8snm49cscg8azsmajyzx2lgp5r7awz5mdumkgsy0xquj4dfs";
 
 const defaultGasPrice = GasPrice.fromString("0.02uarch");
 
