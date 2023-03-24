@@ -1,14 +1,16 @@
 /* eslint jest/no-hooks: ["error", { "allow": ["afterAll", "beforeAll"] }] */
+import { MsgClientImpl } from "@archwayhq/arch3-proto/build/codegen/archway/rewards/v1beta1/tx.rpc.msg";
 import { SigningCosmWasmClientOptions } from "@cosmjs/cosmwasm-stargate";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
-import { GasPrice } from "@cosmjs/stargate";
+import { createProtobufRpcClient, GasPrice, QueryClient } from "@cosmjs/stargate";
+import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
 
 import { SigningArchwayClient } from "./archwayclient";
 
 const wasmd = {
   blockTime: 1_000, // ms
-  chainId: "archway-1",
-  endpoint: "https://rpc.constantine-1.archway.tech",
+  chainId: "titus-1",
+  endpoint: "https://rpc.titus-1.archway.tech",
   prefix: "arch",
 };
 
@@ -23,7 +25,7 @@ const alice = {
 };
 
 const contractAddress =
-  "archway1u3qhecg2sa8snm49cscg8azsmajyzx2lgp5r7awz5mdumkgsy0xquj4dfs";
+  "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u";
 
 const defaultGasPrice = GasPrice.fromString("0.02uarch");
 
@@ -51,7 +53,28 @@ describe("Archway Rewards Tx", () => {
   });
 
   afterAll(() => {
-    client.disconnect();
+    client?.disconnect();
+  });
+
+  it("standalone test for set metadata", async () => {
+    jest.setTimeout(30000);
+    const tmClient = await Tendermint34Client.connect(wasmd.endpoint);
+    const rewardsClient = MsgClientImpl;
+    const auxClient = new QueryClient(tmClient);
+    const rpc = createProtobufRpcClient(auxClient);
+    const queryService = new rewardsClient(rpc);
+    const response = await queryService.setContractMetadata(
+      {
+        senderAddress: alice.address0,
+        metadata: {
+          contractAddress: contractAddress,
+          ownerAddress: alice.address0,
+          rewardsAddress: alice.address0,
+        },
+      }
+    );
+    console.log(response);
+    expect(response).toBeTruthy();
   });
 
   it("can update metadata", async () => {

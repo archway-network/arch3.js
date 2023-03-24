@@ -1,4 +1,4 @@
-import { archway, getRpcClient } from '@archwayhq/arch3-proto';
+import { archway, getRpcClient } from "@archwayhq/arch3-proto";
 import {
   QueryBlockRewardsTrackingRequest,
   QueryBlockRewardsTrackingResponse,
@@ -15,12 +15,24 @@ import {
   QueryRewardsPoolRequest,
   QueryRewardsPoolResponse,
   QueryRewardsRecordsRequest,
-  QueryRewardsRecordsResponse
-} from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
-import { MsgSetContractMetadataResponse, MsgSetFlatFeeResponse, MsgWithdrawRewardsResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx';
-import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
+  QueryRewardsRecordsResponse,
+} from "@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query";
+import {
+  MsgSetContractMetadata,
+  MsgSetContractMetadataResponse,
+  MsgSetFlatFee,
+  MsgSetFlatFeeResponse,
+  MsgWithdrawRewards,
+  MsgWithdrawRewardsResponse,
+} from "@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx";
+import {
+  CosmWasmClient,
+  HttpEndpoint,
+  SigningCosmWasmClient,
+  SigningCosmWasmClientOptions,
+} from "@cosmjs/cosmwasm-stargate";
 import { OfflineSigner } from "@cosmjs/proto-signing";
-import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
+import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
 import Long from "long";
 
 
@@ -100,9 +112,13 @@ export class ArchwayClient extends CosmWasmClient {
  * @public
  */
 export class SigningArchwayClient extends SigningCosmWasmClient {
-  private static rpcMsgClient: RpcMsgClient;
+  private rpcMsgClient: RpcMsgClient;
 
-  protected constructor(tmClient: Tendermint34Client | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions) {
+  protected constructor(
+    tmClient: Tendermint34Client | undefined,
+    signer: OfflineSigner,
+    options: SigningCosmWasmClientOptions
+  ) {
     super(tmClient, signer, options);
   }
 
@@ -110,9 +126,9 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
    * @param tmClient - Tendermint client that will be used for the generation of the Msg Client.
    * @returns void
    */
-  private static async init(endpoint: string | HttpEndpoint): Promise<void> {
+  private async init(endpoint: string | HttpEndpoint): Promise<void> {
     const rpc = await getRpcClient(endpoint);
-    SigningArchwayClient.rpcMsgClient = await archway.ClientFactory.createRPCMsgClient({ rpc });
+    this.rpcMsgClient = await archway.ClientFactory.createRPCMsgClient({ rpc });
   }
 
   /**
@@ -124,11 +140,13 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
   public static override async connectWithSigner(
     endpoint: string | HttpEndpoint,
     signer: OfflineSigner,
-    options: SigningCosmWasmClientOptions = {},
+    options: SigningCosmWasmClientOptions = {}
   ): Promise<SigningArchwayClient> {
     const tmClient = await Tendermint34Client.connect(endpoint);
-    await SigningArchwayClient.init(endpoint);
-    return new SigningArchwayClient(tmClient, signer, options);
+    const signingClient = new SigningArchwayClient(tmClient, signer, options);
+    await signingClient.init(endpoint);
+
+    return signingClient;
   }
 
   /**
@@ -146,7 +164,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
    */
   public static override async offline(
     signer: OfflineSigner,
-    options: SigningCosmWasmClientOptions = {},
+    options: SigningCosmWasmClientOptions = {}
   ): Promise<SigningArchwayClient> {
     return new SigningArchwayClient(undefined, signer, options);
   }
@@ -166,16 +184,14 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
     ownerAddress?: string,
     rewardsAddress?: string
   ): Promise<MsgSetContractMetadataResponse> {
-    return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.setContractMetadata(
-      {
-        senderAddress,
-        metadata: {
-          contractAddress: contractAddress,
-          ownerAddress: ownerAddress || senderAddress,
-          rewardsAddress: rewardsAddress || ownerAddress || senderAddress,
-        },
-      }
-    );
+    return await this.rpcMsgClient.archway.rewards.v1beta1.setContractMetadata({
+      senderAddress,
+      metadata: {
+        contractAddress: contractAddress,
+        ownerAddress: ownerAddress || senderAddress,
+        rewardsAddress: rewardsAddress || ownerAddress || senderAddress,
+      },
+    } as MsgSetContractMetadata);
   }
 
   /**
@@ -191,17 +207,15 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
     recordsLimit?: Long | number | string,
     recordIds?: Array<Long | number | string>
   ): Promise<MsgWithdrawRewardsResponse> {
-    return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.withdrawRewards(
-      {
-        rewardsAddress,
-        recordsLimit: {
-          limit: Long.fromValue(recordsLimit || 0),
-        },
-        recordIds: {
-          ids: recordIds?.map(item => Long.fromValue(item)) || [],
-        },
-      }
-    );
+    return await this.rpcMsgClient.archway.rewards.v1beta1.withdrawRewards({
+      rewardsAddress,
+      recordsLimit: {
+        limit: Long.fromValue(recordsLimit || 0),
+      },
+      recordIds: {
+        ids: recordIds?.map(item => Long.fromValue(item)) || [],
+      },
+    } as MsgWithdrawRewards);
   }
 
   /**
@@ -219,15 +233,13 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
     feeDenom: string,
     feeAmount: string
   ): Promise<MsgSetFlatFeeResponse> {
-    return await SigningArchwayClient.rpcMsgClient.archway.rewards.v1beta1.setFlatFee(
-      {
-        senderAddress,
-        contractAddress,
-        flatFeeAmount: {
-          denom: feeDenom,
-          amount: feeAmount,
-        },
-      }
-    );
+    return await this.rpcMsgClient.archway.rewards.v1beta1.setFlatFee({
+      senderAddress,
+      contractAddress,
+      flatFeeAmount: {
+        denom: feeDenom,
+        amount: feeAmount,
+      },
+    } as MsgSetFlatFee);
   }
 }

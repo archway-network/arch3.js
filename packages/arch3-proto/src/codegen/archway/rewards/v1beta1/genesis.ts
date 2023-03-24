@@ -1,4 +1,4 @@
-import { Params, ParamsSDKType, ContractMetadata, ContractMetadataSDKType, BlockRewards, BlockRewardsSDKType, TxRewards, TxRewardsSDKType, RewardsRecord, RewardsRecordSDKType } from "./rewards";
+import { Params, ParamsSDKType, ContractMetadata, ContractMetadataSDKType, BlockRewards, BlockRewardsSDKType, TxRewards, TxRewardsSDKType, RewardsRecord, RewardsRecordSDKType, FlatFee, FlatFeeSDKType } from "./rewards";
 import { DecCoin, DecCoinSDKType } from "../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
 import { Long } from "../../../helpers";
@@ -25,6 +25,9 @@ export interface GenesisState {
   /** rewards_records defines a list of all active (undistributed) rewards records. */
 
   rewardsRecords: RewardsRecord[];
+  /** flat_fees defines a list of contract flat fee. */
+
+  flatFees: FlatFee[];
 }
 /** GenesisState defines the initial state of the tracking module. */
 
@@ -49,6 +52,9 @@ export interface GenesisStateSDKType {
   /** rewards_records defines a list of all active (undistributed) rewards records. */
 
   rewards_records: RewardsRecordSDKType[];
+  /** flat_fees defines a list of contract flat fee. */
+
+  flat_fees: FlatFeeSDKType[];
 }
 
 function createBaseGenesisState(): GenesisState {
@@ -59,7 +65,8 @@ function createBaseGenesisState(): GenesisState {
     txRewards: [],
     minConsensusFee: undefined,
     rewardsRecordLastId: Long.UZERO,
-    rewardsRecords: []
+    rewardsRecords: [],
+    flatFees: []
   };
 }
 
@@ -91,6 +98,10 @@ export const GenesisState = {
 
     for (const v of message.rewardsRecords) {
       RewardsRecord.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
+
+    for (const v of message.flatFees) {
+      FlatFee.encode(v!, writer.uint32(66).fork()).ldelim();
     }
 
     return writer;
@@ -133,6 +144,10 @@ export const GenesisState = {
           message.rewardsRecords.push(RewardsRecord.decode(reader, reader.uint32()));
           break;
 
+        case 8:
+          message.flatFees.push(FlatFee.decode(reader, reader.uint32()));
+          break;
+
         default:
           reader.skipType(tag & 7);
           break;
@@ -151,6 +166,7 @@ export const GenesisState = {
     message.minConsensusFee = object.minConsensusFee !== undefined && object.minConsensusFee !== null ? DecCoin.fromPartial(object.minConsensusFee) : undefined;
     message.rewardsRecordLastId = object.rewardsRecordLastId !== undefined && object.rewardsRecordLastId !== null ? Long.fromValue(object.rewardsRecordLastId) : Long.UZERO;
     message.rewardsRecords = object.rewardsRecords?.map(e => RewardsRecord.fromPartial(e)) || [];
+    message.flatFees = object.flatFees?.map(e => FlatFee.fromPartial(e)) || [];
     return message;
   }
 

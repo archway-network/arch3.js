@@ -172,6 +172,24 @@ export interface RewardsRecordSDKType {
 
   calculated_time?: TimestampSDKType;
 }
+/** FlatFee defines the flat fee for a particular contract. */
+
+export interface FlatFee {
+  /** contract_address defines the contract address (bech32 encoded). */
+  contractAddress: string;
+  /** flat_fee defines the minimum flat fee set by the contract_owner */
+
+  flatFee?: Coin;
+}
+/** FlatFee defines the flat fee for a particular contract. */
+
+export interface FlatFeeSDKType {
+  /** contract_address defines the contract address (bech32 encoded). */
+  contract_address: string;
+  /** flat_fee defines the minimum flat fee set by the contract_owner */
+
+  flat_fee?: CoinSDKType;
+}
 
 function createBaseParams(): Params {
   return {
@@ -513,6 +531,61 @@ export const RewardsRecord = {
     message.rewards = object.rewards?.map(e => Coin.fromPartial(e)) || [];
     message.calculatedHeight = object.calculatedHeight !== undefined && object.calculatedHeight !== null ? Long.fromValue(object.calculatedHeight) : Long.ZERO;
     message.calculatedTime = object.calculatedTime !== undefined && object.calculatedTime !== null ? Timestamp.fromPartial(object.calculatedTime) : undefined;
+    return message;
+  }
+
+};
+
+function createBaseFlatFee(): FlatFee {
+  return {
+    contractAddress: "",
+    flatFee: undefined
+  };
+}
+
+export const FlatFee = {
+  encode(message: FlatFee, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.contractAddress !== "") {
+      writer.uint32(10).string(message.contractAddress);
+    }
+
+    if (message.flatFee !== undefined) {
+      Coin.encode(message.flatFee, writer.uint32(18).fork()).ldelim();
+    }
+
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FlatFee {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFlatFee();
+
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+
+      switch (tag >>> 3) {
+        case 1:
+          message.contractAddress = reader.string();
+          break;
+
+        case 2:
+          message.flatFee = Coin.decode(reader, reader.uint32());
+          break;
+
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+
+    return message;
+  },
+
+  fromPartial(object: Partial<FlatFee>): FlatFee {
+    const message = createBaseFlatFee();
+    message.contractAddress = object.contractAddress ?? "";
+    message.flatFee = object.flatFee !== undefined && object.flatFee !== null ? Coin.fromPartial(object.flatFee) : undefined;
     return message;
   }
 
