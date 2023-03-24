@@ -9,9 +9,9 @@ import { SigningArchwayClient } from "./archwayclient";
 
 const wasmd = {
   blockTime: 1_000, // ms
-  chainId: "titus-1",
-  endpoint: "https://rpc.titus-1.archway.tech",
-  prefix: "arch",
+  chainId: "constantine-1",
+  endpoint: "https://rpc.constantine-1.archway.tech",
+  prefix: "archway1",
 };
 
 const alice = {
@@ -25,7 +25,7 @@ const alice = {
 };
 
 const contractAddress =
-  "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u";
+  "archway1u3qhecg2sa8snm49cscg8azsmajyzx2lgp5r7awz5mdumkgsy0xquj4dfs";
 
 const defaultGasPrice = GasPrice.fromString("0.02uarch");
 
@@ -42,6 +42,7 @@ describe("Archway Rewards Tx", () => {
   let client: SigningArchwayClient;
 
   beforeAll(async () => {
+    jest.setTimeout(10000);
     wallet = await DirectSecp256k1HdWallet.fromMnemonic(alice.mnemonic, {
       prefix: wasmd.prefix,
     });
