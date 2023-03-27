@@ -5,7 +5,7 @@
 #
 
 set -euo pipefail
-echo "1"
+
 ARCHWAY_HOME="${ARCHWAY_HOME:-$HOME/.archway}"
 
 CHAIN_ID="${CHAIN_ID:-local-1}"
@@ -18,7 +18,6 @@ GENESIS_ACCOUNTS="${GENESIS_ACCOUNTS:-}"
 
 alias archwayd="archwayd --home ${ARCHWAY_HOME}"
 
-echo "2"
 # Check if required tools are installed
 command -v curl > /dev/null 2>&1 && command -v jq > /dev/null 2>&1 && command -v sponge > /dev/null 2>&1 || {
   apk add --no-cache ca-certificates curl jq moreutils
@@ -28,7 +27,6 @@ command -v dasel > /dev/null 2>&1 || {
   curl -sSLf "${bin_url}" -L -o /usr/local/bin/dasel && chmod +x /usr/local/bin/dasel
 }
 
-echo "3"
 if [[ ! -f "${ARCHWAY_HOME}/config/genesis.json" ]]; then
   echo "Initializing the node ${MONIKER} on chain ${CHAIN_ID}..."
   archwayd init --chain-id "${CHAIN_ID}" "${MONIKER}" | jq .
@@ -111,5 +109,4 @@ if [[ ! -f "${ARCHWAY_HOME}/config/genesis.json" ]]; then
     sponge ${ARCHWAY_HOME}/config/config.toml
 fi
 
-echo "4"
 archwayd "$@"

@@ -7,7 +7,7 @@ import { ArchwayClient, SigningArchwayClient } from './archwayclient';
 const wasmd = {
   blockTime: 1_000, // ms
   chainId: "local-1",
-  endpoint: "localhost:26657",
+  endpoint: "http://localhost:26657",
   prefix: "archway1",
 };
 
@@ -33,6 +33,7 @@ describe('ArchwayClient', () => {
     it("can be constructed", async () => {
       const client = await ArchwayClient.connect(wasmd.endpoint);
       expect(client).toBeTruthy();
+      client.disconnect();
     });
   });
 });
@@ -46,6 +47,7 @@ describe('SigningArchwayClient', () => {
         prefix: wasmd.prefix,
       });
       expect(client).toBeTruthy();
+      client.disconnect();
     });
   });
 });
