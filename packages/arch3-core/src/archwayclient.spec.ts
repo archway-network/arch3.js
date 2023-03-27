@@ -33,7 +33,6 @@ describe('ArchwayClient', () => {
     it("can be constructed", async () => {
       const client = await ArchwayClient.connect(wasmd.endpoint);
       expect(client).toBeTruthy();
-      client.disconnect();
     });
   });
 });
@@ -47,7 +46,6 @@ describe('SigningArchwayClient', () => {
         prefix: wasmd.prefix,
       });
       expect(client).toBeTruthy();
-      client.disconnect();
     });
   });
 });
