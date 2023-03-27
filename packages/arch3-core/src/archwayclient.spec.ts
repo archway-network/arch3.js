@@ -6,9 +6,9 @@ import { ArchwayClient, SigningArchwayClient } from './archwayclient';
 
 const wasmd = {
   blockTime: 1_000, // ms
-  chainId: "archway-1",
-  endpoint: "https://rpc.constantine-1.archway.tech",
-  prefix: "arch",
+  chainId: "local-1",
+  endpoint: "localhost:26657",
+  prefix: "archway1",
 };
 
 const alice = {
@@ -33,6 +33,7 @@ describe('ArchwayClient', () => {
     it("can be constructed", async () => {
       const client = await ArchwayClient.connect(wasmd.endpoint);
       expect(client).toBeTruthy();
+      client.disconnect();
     });
   });
 });
