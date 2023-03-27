@@ -21,4 +21,10 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn install --immutable
+      - name: Docker Compose Up
+        run: docker-compose -f docker-compose.yaml -d --build
+      - name: Wait for local chain on docker container to start
+        run: wget -qO- https://raw.githubusercontent.com/eficode/wait-for/$WAIT_FOR_VERSION/wait-for | sh -s -- http://localhost:26657/block?height=1 -- echo "Chain is up"
+        env:
+          WAIT_FOR_VERSION: 4df3f9262d84cab0039c07bf861045fbb3c20ab7 # v2.2.3
       - run: yarn test:all --passWithNoTests
