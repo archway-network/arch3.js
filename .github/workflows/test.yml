@@ -21,12 +21,15 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn install --immutable
-      - name: Copy env file for docker
-        run: cp ./local-node.env.example ./local-node.env
       - name: Start local chain on docker
         run: docker compose -f "docker-compose.yaml" up -d --build
       - name: Wait for local chain to start
-        run: wget -qO- https://raw.githubusercontent.com/eficode/wait-for/$WAIT_FOR_VERSION/wait-for | sh -s -- http://localhost:26657/block?height=1 -- echo "Chain is up"
-        env:
-          WAIT_FOR_VERSION: 4df3f9262d84cab0039c07bf861045fbb3c20ab7 # v2.2.3
+        run: >
+          set -euo pipefail &&
+          curl --retry 1 -f --retry-all-errors --retry-delay 1 -s "http://localhost:26657/block?height=1" |
+            jq '.error == null' && 
+            echo "Node started" || {
+              echo "Node failed to start."
+              exit 1
+          }
       - run: yarn test:all --passWithNoTests
