@@ -31,5 +31,5 @@ jobs:
             echo "Node started" || {
               echo "Node failed to start."
               exit 1
-          }
+            }
       - run: yarn test:all --passWithNoTests
