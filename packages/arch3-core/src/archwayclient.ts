@@ -16,22 +16,22 @@ import {
   QueryRewardsPoolResponse,
   QueryRewardsRecordsRequest,
   QueryRewardsRecordsResponse,
-} from "@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query";
+} from "@archwayhq/arch3-proto/build/codegen/archway/rewards/v1beta1/query";
 import {
   MsgSetContractMetadata,
   MsgSetContractMetadataResponse,
   MsgSetFlatFee,
   MsgSetFlatFeeResponse,
-  MsgWithdrawRewards,
-  MsgWithdrawRewardsResponse,
-} from "@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/tx";
+  MsgWithdrawRewards
+} from "@archwayhq/arch3-proto/build/codegen/archway/rewards/v1beta1/tx";
 import {
   CosmWasmClient,
+  DeliverTxResponse,
   HttpEndpoint,
   SigningCosmWasmClient,
   SigningCosmWasmClientOptions,
 } from "@cosmjs/cosmwasm-stargate";
-import { OfflineSigner } from "@cosmjs/proto-signing";
+import { EncodeObject, GeneratedType, OfflineSigner, Registry } from "@cosmjs/proto-signing";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
 import Long from "long";
 
@@ -107,12 +107,29 @@ export class ArchwayClient extends CosmWasmClient {
   }
 }
 
+export interface MsgSetContractMetadataEncodeObject extends EncodeObject {
+  readonly typeUrl: "/archway.rewards.v1beta1.MsgSetContractMetadata";
+  readonly value: Partial<MsgSetContractMetadata>;
+}
+
+export interface MsgWithdrawRewardsEncodeObject extends EncodeObject {
+  readonly typeUrl: "/archway.rewards.v1beta1.MsgWithdrawRewards";
+  readonly value: Partial<MsgWithdrawRewards>;
+}
+
+const defaultRegistryTypes: ReadonlyArray<[string, GeneratedType]> = [
+  ["/archway.rewards.v1beta1.MsgSetContractMetadata", MsgSetContractMetadata],
+  ["/archway.rewards.v1beta1.MsgWithdrawRewards", MsgWithdrawRewards]
+];
+
 /**
  * Extension to the {@link SigningCosmWasmClient }.
  * @public
  */
 export class SigningArchwayClient extends SigningCosmWasmClient {
   private rpcMsgClient: RpcMsgClient;
+  private readonly currentSigner: OfflineSigner;
+  public override readonly registry: Registry;
 
   protected constructor(
     tmClient: Tendermint34Client | undefined,
@@ -120,6 +137,12 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
     options: SigningCosmWasmClientOptions
   ) {
     super(tmClient, signer, options);
+    this.currentSigner = signer;
+
+    const {
+      registry = new Registry(defaultRegistryTypes)
+    } = options;
+    this.registry = registry;
   }
 
   /**
@@ -184,14 +207,20 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
     ownerAddress?: string,
     rewardsAddress?: string
   ): Promise<MsgSetContractMetadataResponse> {
-    return await this.rpcMsgClient.archway.rewards.v1beta1.setContractMetadata({
-      senderAddress,
-      metadata: {
-        contractAddress: contractAddress,
-        ownerAddress: ownerAddress || senderAddress,
-        rewardsAddress: rewardsAddress || ownerAddress || senderAddress,
+    const signerAddr = (await this.currentSigner.getAccounts())[0];
+
+    const message: MsgSetContractMetadataEncodeObject = {
+      typeUrl: "/archway.rewards.v1beta1.MsgSetContractMetadata",
+      value: {
+        senderAddress,
+        metadata: {
+          contractAddress: contractAddress,
+          ownerAddress: ownerAddress || senderAddress,
+          rewardsAddress: rewardsAddress || ownerAddress || senderAddress,
+        }
       },
-    } as MsgSetContractMetadata);
+    };
+    return this.signAndBroadcast(signerAddr.address, [message], "auto");
   }
 
   /**
@@ -204,18 +233,24 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
    */
   public async withdrawContractRewards(
     rewardsAddress: string,
-    recordsLimit?: Long | number | string,
+    recordsLimit: Long | number | string,
     recordIds?: Array<Long | number | string>
-  ): Promise<MsgWithdrawRewardsResponse> {
-    return await this.rpcMsgClient.archway.rewards.v1beta1.withdrawRewards({
-      rewardsAddress,
-      recordsLimit: {
-        limit: Long.fromValue(recordsLimit || 0),
-      },
-      recordIds: {
-        ids: recordIds?.map(item => Long.fromValue(item)) || [],
-      },
-    } as MsgWithdrawRewards);
+  ): Promise<DeliverTxResponse> {
+    const signerAddr = (await this.currentSigner.getAccounts())[0];
+
+    const message: MsgWithdrawRewardsEncodeObject = {
+      typeUrl: "/archway.rewards.v1beta1.MsgWithdrawRewards",
+      value: {
+        rewardsAddress,
+        recordsLimit: {
+          limit: Long.fromValue(recordsLimit || 0),
+        },
+        recordIds: {
+          ids: recordIds?.map(item => Long.fromValue(item)) || [],
+        },
+      }
+    };
+    return this.signAndBroadcast(signerAddr.address, [message], "auto");
   }
 
   /**
