@@ -1,4 +1,4 @@
-import { Long } from '@archwayhq/arch3-proto/src/codegen/helpers';
+import { Long } from '@archwayhq/arch3-proto/build/codegen/helpers';
 
 import { ArchwayClient } from './archwayclient';
 

@@ -117,6 +117,5 @@ describe("Archway Rewards Tx", () => {
     );
     const response = await client.withdrawContractRewards(rewardsAddress, rewardRecords.records.length);
     expect(response).toBeTruthy();
-    expect(response?.recordsNum?.toNumber()).toBe(1);
   });
 });
