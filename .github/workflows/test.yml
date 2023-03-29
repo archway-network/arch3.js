@@ -21,4 +21,15 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn install --immutable
+      - name: Start local chain on docker
+        run: docker compose -f "docker-compose.yaml" up -d --build
+      - name: Wait for local chain to start
+        run: >
+          set -euo pipefail &&
+          curl --retry 20 -f --retry-all-errors --retry-delay 1 -s "http://localhost:26657/block?height=1" |
+            jq '.error == null' && 
+            echo "Node started" || {
+              echo "Node failed to start."
+              exit 1
+            }
       - run: yarn test:all --passWithNoTests

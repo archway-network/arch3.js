@@ -118,6 +118,12 @@ packages/arch3-proto/lib
 packages/arch3-proto/package-lock.json
 packages/arch3-proto/yarn.lock
 
+# macOS
+.DS_Store
+
+# env files
+*.env
+
 # others
 packages/arch3-proto/.DS_Store
 packages/arch3-proto/types
