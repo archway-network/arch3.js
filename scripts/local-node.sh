@@ -26,7 +26,7 @@ docker compose down --remove-orphans --volumes
 docker compose up -d
 
 echo "Waiting for node to start and generate first block..."
-curl --retry 15 -f --retry-all-errors --retry-delay 6 -s "http://localhost:26657/block?height=1" | \
+curl --retry 20 -f --retry-all-errors --retry-delay 10 -s "http://localhost:26657/block?height=1" | \
   jq '.error == null' && \
   echo "Node started" || {
     echo "Node failed to start."
