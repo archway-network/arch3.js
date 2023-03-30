@@ -7,9 +7,7 @@ services:
     command: > 
       start --x-crisis-skip-assert-invariants
       && apt-get update
-      && apt-get install -y curl
-    tty: true
-    entrypoint: /docker-entrypoint.sh
+      && apt-get install -y curl    
     ports:
       - 1317:1317   # API
       - 9090:9090   # gRPC
