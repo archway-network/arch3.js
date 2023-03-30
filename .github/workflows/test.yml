@@ -30,9 +30,9 @@ jobs:
       - run: mkdir scripts/tmp
       - run: cd scripts/tmp
       - run: git clone https://github.com/archway-network/archway.git
-      - run: cd archway
+      - run: cd archway && pwd
       - run: make install
-      - run: cd ../../.. && echo pwd
+      - run: cd ../../.. && pwd
       - run: npm install -g @archwayhq/cli
       - run: yarn install --immutable      
       - name: Start local chain on docker

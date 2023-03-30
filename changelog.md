@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 This change adds a setter functions.
  
 ### Added
-- *arch3-proto*: added setter functions [#49](https://github.com/archway-network/arch3.js)
+- *arch3-proto*: added setter functions [#51](https://github.com/archway-network/arch3.js)
  
 ### Changed
  
