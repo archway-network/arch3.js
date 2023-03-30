@@ -233,7 +233,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
   }
 
   /**
-   * Withdraws the rewards of a contract.
+   * Withdraws the developer incentives rewards. This is NOT the users' claims rewards.
    *
    * @param rewardsAddress - Address where the rewards will be distributed to.
    * @param recordsLimit - Optional. Maximum number of RewardsRecord to be processed. Either this parameter or recordIds has to be set.
