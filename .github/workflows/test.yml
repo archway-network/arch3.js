@@ -40,7 +40,7 @@ jobs:
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
-          curl --retry 20 -f --retry-all-errors --retry-delay 5 -s "http://localhost:26657/block?height=1" |
+          curl --retry 20 -f --retry-all-errors --retry-delay 5 -s "http://0.0.0.0:26657/block?height=1" |
             jq '.error == null' && 
             echo "Node started" || {
               echo "Node failed to start."
