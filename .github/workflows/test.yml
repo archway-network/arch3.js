@@ -36,9 +36,8 @@ jobs:
       - run: npm install -g @archwayhq/cli
       - run: yarn install --immutable      
       - name: Start local node
-        run: docker compose -f "docker-compose.yaml" up -d --build
+        run: VALIDATOR_MNEMONIC='${{ secrets.VALIDATOR_MNEMONIC }}' GENESIS_ACCOUNTS='${{ secrets.GENESIS_ACCOUNTS }}' docker compose -f "docker-compose.yaml" up -d --build
       - run: docker ps
-      - run: docker exec -i arch3js-node-1 /bin/sh && curl -v -s "http://127.0.0.1:26657/block?height=1"
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
@@ -48,6 +47,7 @@ jobs:
               echo "Node failed to start."
               exit 1
             }
+      - run: docker exec -i arch3js-node-1 /bin/sh && curl -v -s "http://localhost:26657/block?height=1"
       - name: Deploy airdrop contract
         run: scripts/deploy-airdrop.sh
       - run: yarn test:all --passWithNoTests
