@@ -27,8 +27,9 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '1.20.1' 
-      - run: mkdir scripts/tmp
-      - run: cd scripts/tmp
+      - run: pwd
+      - run: mkdir -p scripts/tmp
+      - run: cd scripts/tmp && pwd
       - run: git clone https://github.com/archway-network/archway.git
       - run: cd archway && pwd
       - run: make install
