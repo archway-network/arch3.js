@@ -38,7 +38,7 @@ jobs:
       - name: Start local node
         run: docker compose -f "docker-compose.yaml" up -d --build
       - run: docker ps
-      - run: docker exec -it arch3js-node-1 /bin/bash && curl -v -s "http://127.0.0.1:26657/block?height=1"
+      - run: docker exec -i arch3js-node-1 /bin/bash && curl -v -s "http://127.0.0.1:26657/block?height=1"
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
