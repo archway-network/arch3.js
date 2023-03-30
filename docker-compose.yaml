@@ -4,14 +4,9 @@ services:
   node:
     platform: linux/amd64
     image: archwaynetwork/archwayd:v0.2.0
+    network_mode: "host"
     command: start --x-crisis-skip-assert-invariants
     entrypoint: /docker-entrypoint.sh
-    ports:
-      - 1317:1317   # API
-      - 9090:9090   # gRPC
-      - 9091:9091   # gRPC-web
-      - 26656:26656 # p2p
-      - 26657:26657 # RPC
     volumes:
       - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh
       - data:/root/.archway
