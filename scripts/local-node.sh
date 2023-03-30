@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 
-# set -euo pipefail
+set -euo pipefail
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-[[ -f ${SCRIPT_DIR}/../local-node.env ]] && source ${SCRIPT_DIR}/../local-node.env || true
+source ${SCRIPT_DIR}/../local-node.env
 
 CHAIN_ID="${CHAIN_ID:-local-1}"
 
@@ -26,7 +26,7 @@ docker compose down --remove-orphans --volumes
 docker compose up -d
 
 echo "Waiting for node to start and generate first block..."
-curl --retry 15 -f --retry-all-errors --retry-delay 2 -s "http://0.0.0.0:26657/block?height=1" | \
+curl --retry 15 -f --retry-all-errors --retry-delay 2 -s "http://localhost:26657/block?height=1" | \
   jq '.error == null' && \
   echo "Node started" || {
     echo "Node failed to start."
