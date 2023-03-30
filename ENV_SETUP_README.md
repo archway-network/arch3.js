@@ -28,8 +28,7 @@ scripts/local-node.sh
 
 #### Deploying the contract
 
-You'll need the latest version of the `archway-cli` installed. Before running the script, make sure that the local
-network is selected:
+config.json is already set to run local, but if needed run this to set to local
 
 ```bash
 archway network -m -e local

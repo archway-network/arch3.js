@@ -27,6 +27,7 @@ jobs:
       - run: yarn install --immutable
       - name: Start local chain on docker
         run: scripts/local-node.sh
+        shell: bash
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
@@ -37,4 +38,5 @@ jobs:
               exit 1
             }
       - run: scripts/deploy-airdrop.sh
+        shell: bash
       - run: yarn test:all --passWithNoTests
