@@ -1,6 +1,20 @@
 # This Readme shows how to setup the environment so that tests run successfully
 - Note required scripts are in the scripts folder
 - The testing system uses a local node instance and the airdrop contract
+- It is assumed you've already installed archwayd and archway cli
+- Note: For the withdrawRewards tests you cannot run them more than once!
+
+
+# A necessary explaner for MsgWithdrawRewards
+- WithdrawRewards are the rewards developers receive for participating on the Archway network. These are not user rewards
+- These rewards are per contract and there can only be one rewardsAddress at any given time
+- RewardsRecords are needed to be able to withdrawRewards, and RewardsRecords are only created once tx are executed for the contract.
+Again these RewardRecords are given only to the owner of the rewardsAddress of the contract metadata
+- In order for withdrawRewards to succeed, the rewardsAddress and the tx signer must be the same account
+- A rewardsAddress will only accrue RewardsRecords once the contract processes some tx
+- A rewardsAddress can be changed, however prior rewards do not move to the new address
+- Since some tx can only be done once, for example the action claims transactions for airdrops, the test for withdrawRewards can only be run once
+  - if you need to run it multiple times you must reset the local node and contract!
 
 
 ### Integration testing

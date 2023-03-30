@@ -64,6 +64,7 @@ describe("Archway Rewards Tx", () => {
     expect(response.code).toBe(0);
   });
 
+  // this test can only be run once per local node deploy, see ENV_SETUP_README for more info
   it("can withdraw contract rewards", async () => {
     // first reset rewardsAddress to signing account, alice.address0, since signer and rewardsAddress must be same
     await client.setContractRewardsMetadata(
