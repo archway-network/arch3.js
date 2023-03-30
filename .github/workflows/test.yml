@@ -35,8 +35,17 @@ jobs:
         working-directory: ./scripts/tmp/archway      
       - run: npm install -g @archwayhq/cli
       - run: yarn install --immutable      
-      - name: Start local chain on docker
-        run: scripts/local-node.sh
+      - name: Start local node
+        run: docker compose up -d
+      - name: Wait for local chain to start
+        run: >
+          set -euo pipefail &&
+          curl --retry 20 -f --retry-all-errors --retry-delay 5 -s "http://localhost:26657/block?height=1" |
+            jq '.error == null' && 
+            echo "Node started" || {
+              echo "Node failed to start."
+              exit 1
+            }
       - name: Deploy airdrop contract
         run: scripts/deploy-airdrop.sh
       - run: yarn test:all --passWithNoTests
