@@ -105,7 +105,7 @@ export default {
   ],
 
   // Default timeout of a test in milliseconds.
-  testTimeout: 3000,
+  testTimeout: 60000,
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: [

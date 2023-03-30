@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## Unreleased - 2023-03-29
+ 
+This change adds a setter functions.
+ 
+### Added
+- *arch3-proto*: added setter functions [#49](https://github.com/archway-network/arch3.js)
+ 
+### Changed
+ 
+### Fixed
+- resolved jest issue where test fails on first run
+
+
 ## Unreleased - 2023-03-17
  
 This change adds a getter function for flat-fee.

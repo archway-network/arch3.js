@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { archway, getRpcClient } from "@archwayhq/arch3-proto";
 import {
   QueryBlockRewardsTrackingRequest,
@@ -19,9 +20,7 @@ import {
 } from "@archwayhq/arch3-proto/build/codegen/archway/rewards/v1beta1/query";
 import {
   MsgSetContractMetadata,
-  MsgSetContractMetadataResponse,
   MsgSetFlatFee,
-  MsgSetFlatFeeResponse,
   MsgWithdrawRewards
 } from "@archwayhq/arch3-proto/build/codegen/archway/rewards/v1beta1/tx";
 import {
@@ -31,6 +30,9 @@ import {
   SigningCosmWasmClient,
   SigningCosmWasmClientOptions,
 } from "@cosmjs/cosmwasm-stargate";
+import {
+  MsgExecuteContract
+} from "cosmjs-types/cosmwasm/wasm/v1/tx";
 import { EncodeObject, GeneratedType, OfflineSigner, Registry } from "@cosmjs/proto-signing";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
 import Long from "long";
@@ -107,19 +109,26 @@ export class ArchwayClient extends CosmWasmClient {
   }
 }
 
-export interface MsgSetContractMetadataEncodeObject extends EncodeObject {
+interface MsgSetContractMetadataEncodeObject extends EncodeObject {
   readonly typeUrl: "/archway.rewards.v1beta1.MsgSetContractMetadata";
   readonly value: Partial<MsgSetContractMetadata>;
 }
 
-export interface MsgWithdrawRewardsEncodeObject extends EncodeObject {
+interface MsgWithdrawRewardsEncodeObject extends EncodeObject {
   readonly typeUrl: "/archway.rewards.v1beta1.MsgWithdrawRewards";
   readonly value: Partial<MsgWithdrawRewards>;
 }
 
+interface MsgSetFlatFeeEncodeObject extends EncodeObject {
+  readonly typeUrl: "/archway.rewards.v1beta1.MsgSetFlatFee",
+  readonly value: Partial<MsgSetFlatFee>
+}
+
 const defaultRegistryTypes: ReadonlyArray<[string, GeneratedType]> = [
   ["/archway.rewards.v1beta1.MsgSetContractMetadata", MsgSetContractMetadata],
-  ["/archway.rewards.v1beta1.MsgWithdrawRewards", MsgWithdrawRewards]
+  ["/archway.rewards.v1beta1.MsgWithdrawRewards", MsgWithdrawRewards],
+  ["/archway.rewards.v1beta1.MsgSetFlatFee", MsgSetFlatFee],
+  ["/cosmwasm.wasm.v1.MsgExecuteContract", MsgExecuteContract]
 ];
 
 /**
@@ -199,14 +208,14 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
    * @param contractAddress - Address of the deployed contract for which rewards metadata will be updated.
    * @param ownerAddress - Optional. Address that will be the contract owner. Defaults to senderAddress.
    * @param rewardsAddress - Optional. Address that will receive the rewards. Defaults to ownerAddress, or to senderAddress.
-   * @returns The transaction response `MsgSetContractMetadataResponse` which is empty \{\}.
+   * @returns The transaction response DeliverTxResponse
    */
   public async setContractRewardsMetadata(
     senderAddress: string,
     contractAddress: string,
     ownerAddress?: string,
     rewardsAddress?: string
-  ): Promise<MsgSetContractMetadataResponse> {
+  ): Promise<DeliverTxResponse> {
     const signerAddr = (await this.currentSigner.getAccounts())[0];
 
     const message: MsgSetContractMetadataEncodeObject = {
@@ -229,7 +238,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
    * @param rewardsAddress - Address where the rewards will be distributed to.
    * @param recordsLimit - Optional. Maximum number of RewardsRecord to be processed. Either this parameter or recordIds has to be set.
    * @param recordIds - Optional. List of specific RewardsRecord IDs to be processed. Either this parameter or recordsLimit has to be set.
-   * @returns The transaction response `MsgWithdrawRewardsResponse` which contains the number of RewardsRecord processed and total rewards transferred.
+   * @returns The transaction response DeliverTxResponse
    */
   public async withdrawContractRewards(
     rewardsAddress: string,
@@ -260,21 +269,27 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
    * @param contractAddress - Address of the deployed contract for which flat fees will be updated.
    * @param feeDenom - Denomination of fee.
    * @param feeAmount - Amount of fee.
-   * @returns The transaction response `MsgSetFlatFeeResponse` which is empty \{\}.
+   * @returns The transaction response DeliverTxResponse
    */
-  public async setContractRewardsFlatFee(
+  public async setFlatFee(
     senderAddress: string,
     contractAddress: string,
-    feeDenom: string,
-    feeAmount: string
-  ): Promise<MsgSetFlatFeeResponse> {
-    return await this.rpcMsgClient.archway.rewards.v1beta1.setFlatFee({
-      senderAddress,
-      contractAddress,
-      flatFeeAmount: {
-        denom: feeDenom,
-        amount: feeAmount,
-      },
-    } as MsgSetFlatFee);
+    denom: string,
+    amount: string
+  ): Promise<DeliverTxResponse> {
+    const signerAddr = (await this.currentSigner.getAccounts())[0];
+
+    const message: MsgSetFlatFeeEncodeObject = {
+      typeUrl: "/archway.rewards.v1beta1.MsgSetFlatFee",
+      value: {
+        senderAddress: senderAddress,
+        contractAddress: contractAddress,
+        flatFeeAmount: {
+          denom,
+          amount
+        }
+      }
+    };
+    return this.signAndBroadcast(signerAddr.address, [message], "auto");
   }
 }

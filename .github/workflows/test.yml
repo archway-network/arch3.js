@@ -14,6 +14,10 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      DEVX_MNEMONIC: '${{ secrets.DEVX_MNEMONIC }}'
+      VALIDATOR_MNEMONIC: '${{ secrets.VALIDATOR_MNEMONIC }}'
+      GENESIS_ACCOUNTS: '${{ secrets.GENESIS_ACCOUNTS }}'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -22,14 +26,15 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - name: Start local chain on docker
-        run: docker compose -f "docker-compose.yaml" up -d --build
+        run: scripts/local-node.sh
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
-          curl --retry 20 -f --retry-all-errors --retry-delay 1 -s "http://localhost:26657/block?height=1" |
+          curl --retry 20 -f --retry-all-errors --retry-delay 2 -s "http://localhost:26657/block?height=1" |
             jq '.error == null' && 
             echo "Node started" || {
               echo "Node failed to start."
               exit 1
             }
+      - run: scripts/deploy-airdrop.sh
       - run: yarn test:all --passWithNoTests

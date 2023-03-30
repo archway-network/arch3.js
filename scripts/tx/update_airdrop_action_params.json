@@ -1,0 +1,8 @@
+{
+  "admin": {
+    "update_airdrop_action_params": {
+      "domain_contract_addr": "archway1dny07jvnkemv5sndvawn0xurxy57p7whn9gpxmfshq85rlctszgsmgs6ua",
+      "minimum_stake": "1"
+    }
+  }
+}

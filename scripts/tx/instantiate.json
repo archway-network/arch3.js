@@ -1,0 +1,10 @@
+{
+  "end_timestamp": "1683453838000000000",
+  "actions_settings": {
+    "connect": 10,
+    "stake": 10,
+    "gov_vote": 20,
+    "create_domain": 20,
+    "ibc": 40
+  }
+}

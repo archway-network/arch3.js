@@ -1,0 +1,142 @@
+{
+  "name": "archway-airdrops",
+  "developer": {
+    "archwayd": {
+      "docker": false
+    },
+    "deployments": [
+      {
+        "project": "genesis",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 1,
+        "txhash": "3C293BB31CBCDE7A287285B5F6446C67FA827D8DCD38700FDF8EEE7AB5E8286D",
+        "address": "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "genesis",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 1,
+        "txhash": "128EF4585C50037503F2290E52711DA1B5BF3C8160E8F2BD0CE9829C257E5ACC"
+      },
+      {
+        "project": "genesis",
+        "type": "instantiate",
+        "chainId": "constantine-1",
+        "codeId": 191,
+        "txhash": "3728CFC5CAF897F31D4D4EFAA8B148609C2FA86311471E8615E7BCB0970F4184",
+        "address": "archway1xruv7wtaj5ttdeffrucyznyc47mk0nt4k0fp3rp2kjk5x4wu8asq3rtc2y",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "genesis",
+        "type": "store",
+        "chainId": "constantine-1",
+        "codeId": 191,
+        "txhash": "1A48D762CDAE55209241E69F905166B8ABE5683A4104886115CB4C2FA634D209"
+      },
+      {
+        "project": "genesis",
+        "type": "instantiate",
+        "chainId": "constantine-1",
+        "codeId": 58,
+        "txhash": "212A957B20D1FD0B78D2E7CB4BDA2A44EC58C94BC37BB40A2374B92A6F3FA54E",
+        "address": "archway1h83rtkmzvqyjy8f47hrk26pg909jmhajl5elre2jhr4u7pqxsnyqkv8z7z",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "genesis",
+        "type": "store",
+        "chainId": "constantine-1",
+        "codeId": 58,
+        "txhash": "C689419FCD2771D6AB292442F4BB633C12D28DE5FEAAC85A52B05EB1EE9118FE"
+      },
+      {
+        "project": "genesis",
+        "type": "set-metadata",
+        "chainId": "constantine-1",
+        "codeId": 28,
+        "txhash": "7FF79A674E0CBFEECD2F172B5F7980E12093287496F10F9E2E58FEA8C8FF8FD1",
+        "contract": "archway15d2tyq2jzxmpg32y3am3w62dts32qgzmds9qnr6c87r0gwwr7ynqwaqt7q",
+        "contractMetadata": {
+          "ownerAddress": "archway1u4rmd5z78smu0tmtw45mran0pz4umzvxaf3g56",
+          "rewardsAddress": "archway1u4rmd5z78smu0tmtw45mran0pz4umzvxaf3g56"
+        }
+      },
+      {
+        "project": "genesis",
+        "type": "instantiate",
+        "chainId": "constantine-1",
+        "codeId": 28,
+        "txhash": "DF7DA370786E60E074544F14D546C58C021659D3229A203C82C1BCC67D7D5260",
+        "address": "archway15d2tyq2jzxmpg32y3am3w62dts32qgzmds9qnr6c87r0gwwr7ynqwaqt7q",
+        "admin": "archway1u4rmd5z78smu0tmtw45mran0pz4umzvxaf3g56"
+      },
+      {
+        "project": "genesis",
+        "type": "store",
+        "chainId": "constantine-1",
+        "codeId": 28,
+        "txhash": "D15A5D1B9DFF4CAA2F2E3F49E4CDFF9D3037C80E0B0BEB56032AF486013A0D34"
+      },
+      {
+        "project": "genesis",
+        "type": "set-metadata",
+        "chainId": "titus-1",
+        "codeId": 1,
+        "txhash": "2E3D2262083E1559DEC5A2F157A16060C2400700013359094E1E7713D3A9D252",
+        "contract": "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u",
+        "contractMetadata": {
+          "ownerAddress": "archway1ef8r7lwu6xtxkzhkmeufpcv7m3xy4gm5l2mazd",
+          "rewardsAddress": "archway1ef8r7lwu6xtxkzhkmeufpcv7m3xy4gm5l2mazd"
+        }
+      },
+      {
+        "project": "genesis",
+        "type": "instantiate",
+        "chainId": "titus-1",
+        "codeId": 1,
+        "txhash": "822FD5ABC91F36DF4BFDF2DB39983C0C8BFB4F11CDF4E7811E9125618513569E",
+        "address": "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u",
+        "admin": "archway1ef8r7lwu6xtxkzhkmeufpcv7m3xy4gm5l2mazd"
+      },
+      {
+        "project": "genesis",
+        "type": "store",
+        "chainId": "titus-1",
+        "codeId": 1,
+        "txhash": "BC30E02938ED49D4D4C11106DC65EC67DEC5AA4A07F7F76D844F59EE09FC13B9"
+      }
+    ]
+  },
+  "network": {
+    "name": "local",
+    "chainId": "local-1",
+    "type": "local",
+    "fees": {
+      "feeDenom": "uarch"
+    },
+    "gas": {
+      "prices": "0.002larch",
+      "mode": "auto",
+      "adjustment": "1.5"
+    },
+    "wasm": {
+      "bech32Hrp": "archway",
+      "archwayd": "0.1.0",
+      "configDir": ".archway",
+      "binary": "archwayd"
+    },
+    "urls": {
+      "rpc": {
+        "url": "tcp://localhost",
+        "port": 26657
+      },
+      "faucets": [
+        "http://localhost:8000"
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Map_of_ActionSettings",
+  "type": "object",
+  "additionalProperties": {
+    "$ref": "#/definitions/ActionSettings"
+  },
+  "definitions": {
+    "ActionSettings": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "percentage"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "percentage": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

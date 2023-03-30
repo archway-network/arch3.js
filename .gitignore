@@ -131,3 +131,4 @@ packages/arch3-proto/yarn.lock
 # others
 packages/arch3-proto/.DS_Store
 packages/arch3-proto/src/protoImports.txt
+scripts/tmp
