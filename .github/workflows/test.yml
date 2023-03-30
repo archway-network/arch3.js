@@ -11,6 +11,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  local_node:
+    name: Local node
+    runs-on: ubuntu-latest
+    env:
+      DEVX_MNEMONIC: '${{ secrets.DEVX_MNEMONIC }}'
+      VALIDATOR_MNEMONIC: '${{ secrets.VALIDATOR_MNEMONIC }}'
+      GENESIS_ACCOUNTS: '${{ secrets.GENESIS_ACCOUNTS }}'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Start local node
+        run: docker compose up -d
+
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -18,6 +30,9 @@ jobs:
       DEVX_MNEMONIC: '${{ secrets.DEVX_MNEMONIC }}'
       VALIDATOR_MNEMONIC: '${{ secrets.VALIDATOR_MNEMONIC }}'
       GENESIS_ACCOUNTS: '${{ secrets.GENESIS_ACCOUNTS }}'
+    needs:
+      - local_node
+    container: ubuntu
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -34,13 +49,11 @@ jobs:
       - run: make install
         working-directory: ./scripts/tmp/archway      
       - run: npm install -g @archwayhq/cli
-      - run: yarn install --immutable      
-      - name: Start local node
-        run: docker compose up -d
+      - run: yarn install --immutable            
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
-          curl --retry 15 -f --retry-all-errors --retry-delay 5 -s "http://0.0.0.0:26657/block?height=1" |
+          curl --retry 15 -f --retry-all-errors --retry-delay 5 -s "http://localhost:26657/block?height=1" |
             jq '.error == null' && 
             echo "Node started" || {
               echo "Node failed to start."
