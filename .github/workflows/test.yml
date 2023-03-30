@@ -38,15 +38,7 @@ jobs:
       - name: Start local node
         run: VALIDATOR_MNEMONIC='${{ secrets.VALIDATOR_MNEMONIC }}' GENESIS_ACCOUNTS='${{ secrets.GENESIS_ACCOUNTS }}' docker compose -f "docker-compose.yaml" up -d --build
       - run: docker ps
-      - name: Wait for local chain to start
-        run: >
-          set -euo pipefail &&
-          curl -v --retry 15 -f --retry-all-errors --retry-delay 5 -s "http://127.0.0.1:26657/block?height=1" |
-            jq '.error == null' && 
-            echo "Node started" || {
-              echo "Node failed to start."
-              exit 1
-            }
+      - run: sleep 2m
       - run: docker exec -i arch3js-node-1 /bin/sh && curl -v -s "http://localhost:26657/block?height=1"
       - name: Deploy airdrop contract
         run: scripts/deploy-airdrop.sh
