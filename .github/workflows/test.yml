@@ -37,14 +37,6 @@ jobs:
       - run: yarn install --immutable      
       - name: Start local chain on docker
         run: scripts/local-node.sh
-      - name: Wait for local chain to start
-        run: >
-          set -euo pipefail &&
-          curl --retry 20 -f --retry-all-errors --retry-delay 2 -s "http://localhost:26657/block?height=1" |
-            jq '.error == null' && 
-            echo "Node started" || {
-              echo "Node failed to start."
-              exit 1
-            }
-      - run: scripts/deploy-airdrop.sh
+      - name: Deploy airdrop contract
+        run: scripts/deploy-airdrop.sh
       - run: yarn test:all --passWithNoTests
