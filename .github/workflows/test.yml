@@ -38,7 +38,7 @@ jobs:
       - name: Start local node
         run: VALIDATOR_MNEMONIC='${{ secrets.VALIDATOR_MNEMONIC }}' GENESIS_ACCOUNTS='${{ secrets.GENESIS_ACCOUNTS }}' docker compose -f "docker-compose.yaml" up -d --build
       - run: docker ps
-      - run: sleep 2m
+      - run: sleep 30
       - run: docker exec -i arch3js-node-1 /bin/sh && curl -v -s "http://localhost:26657/block?height=1"
       - name: Deploy airdrop contract
         run: scripts/deploy-airdrop.sh
