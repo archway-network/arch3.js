@@ -36,7 +36,7 @@ jobs:
       - run: npm install -g @archwayhq/cli
       - run: yarn install --immutable      
       - name: Start local chain on docker
-        run: scripts/local-node.sh
+        run: local-node.sh
         working-directory: ./scripts
       - name: Wait for local chain to start
         run: >
@@ -47,5 +47,8 @@ jobs:
               echo "Node failed to start."
               exit 1
             }
-      - run: scripts/deploy-airdrop.sh
-      - run: yarn test:all --passWithNoTests
+      - name: Deploy airdrop contract
+        run: deploy-airdrop.sh
+        working-directory: ./scripts
+      - name: Start tests
+        run: yarn test:all --passWithNoTests
