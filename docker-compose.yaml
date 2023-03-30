@@ -8,6 +8,7 @@ services:
       start --x-crisis-skip-assert-invariants
       && apt-get update
       && apt-get install -y curl
+    tty: true
     entrypoint: /docker-entrypoint.sh
     ports:
       - 1317:1317   # API
