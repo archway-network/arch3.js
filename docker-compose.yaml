@@ -15,6 +15,7 @@ services:
     volumes:
       - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh
       - data:/root/.archway
+    network_mode: "host"
 
 volumes:
   data:
