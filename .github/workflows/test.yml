@@ -24,12 +24,16 @@ jobs:
         with:
           node-version: 14
           cache: yarn
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.20.1' 
       - run: mkdir scripts/tmp
       - run: cd scripts/tmp
       - run: git clone https://github.com/archway-network/archway.git
       - run: cd archway
-      - run: docker build -t archway-network/archwayd:latest .
+      - run: make install
       - run: cd ../../.. && echo pwd
+      - run: npm install -g @archwayhq/cli
       - run: yarn install --immutable      
       - name: Start local chain on docker
         run: scripts/local-node.sh
