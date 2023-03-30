@@ -4,7 +4,10 @@ services:
   node:
     platform: linux/amd64
     image: archwaynetwork/archwayd:v0.2.0
-    command: start --x-crisis-skip-assert-invariants
+    command: > 
+      start --x-crisis-skip-assert-invariants
+      && apt-get update
+      && apt-get install -y curl
     entrypoint: /docker-entrypoint.sh
     ports:
       - 1317:1317   # API
