@@ -27,7 +27,7 @@ jobs:
       - run: yarn install --immutable
       - name: Start local chain on docker
         run: scripts/local-node.sh
-        shell: bash
+        shell: sh
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
