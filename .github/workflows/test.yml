@@ -24,7 +24,13 @@ jobs:
         with:
           node-version: 14
           cache: yarn
-      - run: yarn install --immutable
+      - run: mkdir scripts/tmp
+      - run: cd scripts/tmp
+      - run: git clone https://github.com/archway-network/archway.git
+      - run: cd archway
+      - run: docker build -t archway-network/archwayd:latest .
+      - run: cd ../../.. && echo pwd
+      - run: yarn install --immutable      
       - name: Start local chain on docker
         run: scripts/local-node.sh
       - name: Wait for local chain to start
