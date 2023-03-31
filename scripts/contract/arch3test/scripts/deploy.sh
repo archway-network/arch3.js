@@ -8,8 +8,16 @@ echo "deployer: ${deployer_addr}"
 
 echo "Start Build"
 archway build --optimize
-pwd
-mv "../artifacts/arch3test-aarch64.wasm" "../artifacts/arch3test.wasm"
+
+cd ../artifacts
+current_path="$(pwd)"
+echo "pwd: ${current_path}"
+
+mv -v arch3test-aarch64.wasm arch3test.wasm
+
+cd ../scripts
+current_path="$(pwd)"
+echo "pwd: ${current_path}"
 
 
 echo "Store"
@@ -31,3 +39,8 @@ archway metadata \
   --from "${deployer_addr}" \
   --owner-address "${deployer_addr}" \
   --rewards-address "${deployer_addr}"
+
+
+contract_addr="$( archway history | sed -n -e 's/.*contract://p' )"
+echo "${contract_addr}"
+echo "{CONTRACT_ADDRESS}=${contract_addr}" >> $GITHUB_ENV
