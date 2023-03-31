@@ -42,7 +42,7 @@ jobs:
           echo "GENESIS_ACCOUNTS='${{ secrets.GENESIS_ACCOUNTS }}'" >> $file
           cat $file
 
-          docker compose -f "docker-compose-gh.yaml" up -d
+          docker compose -f "docker-compose.yaml" up -d
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
@@ -52,12 +52,6 @@ jobs:
               echo "Node failed to start."
               exit 1
             }
-      - name: Clone airdrops repository
-        uses: actions/checkout@v2
-        with:
-          repository: archway-network/archway-airdrops
-          path: scripts/tmp
-          ref: chore/deploy-const
       - name: Deploy airdrop contract
-        run: scripts/deploy-airdrop-gh.sh
+        run: scripts/deploy-contract.sh
       - run: yarn test:all --passWithNoTests
