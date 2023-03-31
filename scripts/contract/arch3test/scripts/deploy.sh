@@ -7,6 +7,7 @@ deployer_addr="${1:-deployer}"
 echo "deployer: ${deployer_addr}"
 
 echo "Start Build"
+pwd
 archway build --optimize
 
 cd ../artifacts
