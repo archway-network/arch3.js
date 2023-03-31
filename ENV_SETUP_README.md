@@ -18,8 +18,8 @@ Again these RewardRecords are given only to the owner of the rewardsAddress of t
 
 # Github Actions 
 - If the local node on docker is not deploying do this to view the logs:
-  1. add -d to docker compose up
-  2. docker logs -f --details --until=20s arch3js-node-1 
+  - remove -d to docker compose up
+  - then you will see the docker terminal running with logging info
 
 
 ### Integration testing
