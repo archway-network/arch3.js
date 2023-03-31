@@ -15,6 +15,8 @@ ls -la
 cd ../scripts
 pwd
 
+archway accounts list
+
 echo "Store"
 archway store --no-confirm --from "$deployer_addr" --no-verify
 
