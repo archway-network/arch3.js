@@ -4,7 +4,7 @@
 
 echo "Start deployment of contract"
 deployer_name="${1:-deployer}"
-deployer_addr=$(archwayd keys show -a "${deployer_name}")
+# deployer_addr=$(archwayd keys show -a "${deployer_name}")
 echo "deployer: ${deployer_name}"
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
@@ -22,7 +22,7 @@ archway instantiate \
   --default-label \
   --no-confirm \
   --from "${deployer_name}" \
-  --admin-address "${deployer_addr}" \
+  --admin-address "${deployer_name}" \
   --args '{"count":0}'
 
 
@@ -30,5 +30,5 @@ echo "Set metadata"
 archway metadata \
   --no-confirm \
   --from "${deployer_name}" \
-  --owner-address "${deployer_addr}" \
-  --rewards-address "${deployer_addr}"
+  --owner-address "${deployer_name}" \
+  --rewards-address "${deployer_name}"

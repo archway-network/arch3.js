@@ -15,7 +15,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     env:
-      DEPLOYER_ACCOUNT_NAME: "constantine-1-devx-test-account"
+      DEPLOYER_ACCOUNT_NAME: "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
       DEVX_MNEMONIC: '${{ secrets.DEVX_MNEMONIC }}'
       VALIDATOR_MNEMONIC: '${{ secrets.VALIDATOR_MNEMONIC }}'
       GENESIS_ACCOUNTS: '${{ secrets.GENESIS_ACCOUNTS }}'
@@ -44,6 +44,8 @@ jobs:
           cat $file
 
           docker compose -f "docker-compose.yaml" up -d
+
+          docker logs -f --details --until=20s arch3js-node-1
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
