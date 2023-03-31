@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-set -euo pipefail
+# set -euo pipefail
 
 echo "Start deployment of contract"
 deployer_name="${1:-deployer}"
