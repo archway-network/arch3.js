@@ -15,6 +15,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     env:
+      ENTRYPOINT_OUTPUT: ""
       DEPLOYER_ACCOUNT_NAME: "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
       DEVX_MNEMONIC: '${{ secrets.DEVX_MNEMONIC }}'
       VALIDATOR_MNEMONIC: '${{ secrets.VALIDATOR_MNEMONIC }}'
@@ -46,6 +47,7 @@ jobs:
           docker compose -f "docker-compose.yaml" up -d
 
           docker logs -f --details --until=20s arch3js-node-1
+      - run: echo ${{ env.ENTRYPOINT_OUTPUT }}
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&

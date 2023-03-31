@@ -18,6 +18,8 @@ GENESIS_ACCOUNTS="${GENESIS_ACCOUNTS:-}"
 
 alias archwayd="archwayd --home ${ARCHWAY_HOME}"
 
+echo "{ENTRYPOINT_OUTPUT}={testing 123}" >> $GITHUB_ENV
+
 # Check if required tools are installed
 command -v curl > /dev/null 2>&1 && command -v jq > /dev/null 2>&1 && command -v sponge > /dev/null 2>&1 || {
   apk add --no-cache ca-certificates curl jq moreutils
