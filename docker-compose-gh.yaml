@@ -18,7 +18,8 @@ services:
     volumes:
       - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh
       - data:/root/.archway
-    
+    env_file:
+      - local-node.env
       
 volumes:
   data:
