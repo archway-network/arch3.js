@@ -74,9 +74,9 @@ describe("Archway Rewards Tx", () => {
       alice.address0
     );
 
-    // perform some tx on contract so that developer rewards are generated
-    await execute(client, alice.address0, contractAddress, { claim_connect_action: {} });
-    await execute(client, alice.address0, contractAddress, { claim_stake_action: {} });
+    // need to do at least two
+    await execute(client, alice.address0, contractAddress, { increment: {} });
+    await execute(client, alice.address0, contractAddress, { increment: {} });
     // wait for tx and rewards to process
     await new Promise(r => setTimeout(r, 30000));
 
@@ -91,8 +91,6 @@ describe("Archway Rewards Tx", () => {
   });
 });
 
-// { claim_connect_action: {} }
-// { claim_stake_action: {} }
 async function execute(signingClient: SigningArchwayClient, senderAddress: string, smartContractAddress: string, msg: any): Promise<any> {
   try {
       const response = await signingClient.execute(senderAddress, smartContractAddress, msg, 'auto');    

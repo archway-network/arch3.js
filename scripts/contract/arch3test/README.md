@@ -1,0 +1,1 @@
+# This contract is intended to be used exclusively to test the arch3 project and protobufs

@@ -1,0 +1,147 @@
+{
+  "useTemplate": true,
+  "template": "increment",
+  "name": "arch3test",
+  "developer": {
+    "archwayd": {
+      "docker": false
+    },
+    "deployments": [
+      {
+        "project": "arch3test",
+        "type": "set-metadata",
+        "chainId": "local-1",
+        "codeId": 1,
+        "txhash": "9F1251B1EDAF7664ACC28D09F8F713B4919B084A16293F6D94BC390EBB19226F",
+        "contract": "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u",
+        "contractMetadata": {
+          "ownerAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+          "rewardsAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+        }
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 1,
+        "txhash": "7A4AECF65F1E668B9776E80FE7BBB8418C8229103D71665A99E86442E4134804",
+        "address": "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 1,
+        "txhash": "BF8BCD03E76CA9C0191B4927BD0CE5B2D4C834009DC8E9F705E3FD55F915D566"
+      },
+      {
+        "project": "arch3test",
+        "type": "set-metadata",
+        "chainId": "local-1",
+        "codeId": 4,
+        "txhash": "5D08AE81C02336F105CAE7CCD48D63B940F565A02DB94D27F675AE9B0EE1CA66",
+        "contract": "archway1zwv6feuzhy6a9wekh96cd57lsarmqlwxdypdsplw6zhfncqw6ftqsh92pp",
+        "contractMetadata": {
+          "ownerAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+          "rewardsAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+        }
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 4,
+        "txhash": "08A615D11BF9C3CB8AB6BF804C76377D48408CB18E269CF422D16FEC4470E395",
+        "address": "archway1zwv6feuzhy6a9wekh96cd57lsarmqlwxdypdsplw6zhfncqw6ftqsh92pp",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 4,
+        "txhash": "471B5844F00A977A4CBE97CBF272F02B0FA23214698CCAB766636C1D72BD0FEF"
+      },
+      {
+        "project": "arch3test",
+        "type": "set-metadata",
+        "chainId": "local-1",
+        "codeId": 3,
+        "txhash": "0CCDC9FF2781F6C82F0895B9B7A18ADB7E09E9B631E8D7610A8D8AA3A757E5B7",
+        "contract": "archway1qg5ega6dykkxc307y25pecuufrjkxkaggkkxh7nad0vhyhtuhw3stvxrw2",
+        "contractMetadata": {
+          "ownerAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+          "rewardsAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+        }
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 3,
+        "txhash": "E898A9C50E6473C7513067FB3F9690AB6AB0F2E88DC63140D04C1ACACD03ACB6",
+        "address": "archway1qg5ega6dykkxc307y25pecuufrjkxkaggkkxh7nad0vhyhtuhw3stvxrw2",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 3,
+        "txhash": "7B1753BE9F1AFAA328B2B131DC547F9327C05BFE46F0F1CD5252E8E1BA56632E"
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "24F08B41D06397FC88FD6D2606D47022BF0F3B5F6512BC01E0EBF0EE49C89A01",
+        "address": "archway1wug8sewp6cedgkmrmvhl3lf3tulagm9hnvy8p0rppz9yjw0g4wtqukxvuk",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "9A8386216931A70EBDFF82140FC29640B4C027EA28ADBF96946A1DFD37630DAB"
+      },
+      {
+        "project": "arch3test",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 1,
+        "txhash": "FBF55F8FE759D0D695EE01BB72A6FCC58B52F748BFC0D5F612D44E3A4E90D21F"
+      }
+    ]
+  },
+  "network": {
+    "name": "local",
+    "chainId": "local-1",
+    "type": "local",
+    "fees": {
+      "feeDenom": "uarch"
+    },
+    "gas": {
+      "prices": "0.002larch",
+      "mode": "auto",
+      "adjustment": "1.5"
+    },
+    "wasm": {
+      "bech32Hrp": "archway",
+      "archwayd": "0.1.0",
+      "configDir": ".archway",
+      "binary": "archwayd"
+    },
+    "urls": {
+      "rpc": {
+        "url": "tcp://localhost",
+        "port": 26657
+      },
+      "faucets": [
+        "http://localhost:8000"
+      ]
+    }
+  }
+}
