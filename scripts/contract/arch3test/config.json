@@ -11,6 +11,104 @@
         "project": "arch3test",
         "type": "set-metadata",
         "chainId": "local-1",
+        "codeId": 3,
+        "txhash": "3F3BAB2B8F32E0E460C5C36264CE70232EE671DA56D1E21D472B52DFEC668FF7",
+        "contract": "archway1qwlgtx52gsdu7dtp0cekka5zehdl0uj3fhp9acg325fvgs8jdzkshh0wkc",
+        "contractMetadata": {
+          "ownerAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+          "rewardsAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+        }
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 3,
+        "txhash": "0AFAAB6CBEA49A726569C4476153DE5D69D707DF6E30AE5A8A7BD095D4295A10",
+        "address": "archway1qwlgtx52gsdu7dtp0cekka5zehdl0uj3fhp9acg325fvgs8jdzkshh0wkc",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 3,
+        "txhash": "B62A65781B2F74AC5AF22BDFE485B56F147AEBD0652A235F1847E827936DD577"
+      },
+      {
+        "project": "arch3test",
+        "type": "set-metadata",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "1CAE277FE0D40CA9E97F6C239E394CAB4EA9910DE4ECCB241BCDD74B0F382B25",
+        "contract": "archway1aakfpghcanxtc45gpqlx8j3rq0zcpyf49qmhm9mdjrfx036h4z5sjf5jv3",
+        "contractMetadata": {
+          "ownerAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+          "rewardsAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+        }
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "F4705177F5A3B4A1EBE1F3B0088C41C2E57FAD80821F626DFBF4FA298AE2626A",
+        "address": "archway1aakfpghcanxtc45gpqlx8j3rq0zcpyf49qmhm9mdjrfx036h4z5sjf5jv3",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "set-metadata",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "A33324350A697993041457D87C4CF92D6C281DEDC0C32741CBA87D970455502F",
+        "contract": "archway1xr3rq8yvd7qplsw5yx90ftsr2zdhg4e9z60h5duusgxpv72hud3sy47dxc",
+        "contractMetadata": {
+          "ownerAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+          "rewardsAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+        }
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "344187098AFC7AFEEDD99F819462C7325F07ABF8261201CC4EC47CA011BA936C",
+        "address": "archway1xr3rq8yvd7qplsw5yx90ftsr2zdhg4e9z60h5duusgxpv72hud3sy47dxc",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "set-metadata",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "B0F1A0440C1CB420D9BFFD289D71B920A68DB9E61BA14ED578891DE13AB5B88D",
+        "contract": "archway1nc5tatafv6eyq7llkr2gv50ff9e22mnf70qgjlv737ktmt4eswrqgj33g6",
+        "contractMetadata": {
+          "ownerAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+          "rewardsAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+        }
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "78CABC8BC45D846BD5623798A272981624DC6DBF60DD7B1710B46137169E7ABC",
+        "address": "archway1nc5tatafv6eyq7llkr2gv50ff9e22mnf70qgjlv737ktmt4eswrqgj33g6",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 2,
+        "txhash": "A233DD6B7BA9D6FF3D69044F16B09EB6C0E88C7F6033F0BA860508CAC3F8F46D"
+      },
+      {
+        "project": "arch3test",
+        "type": "set-metadata",
+        "chainId": "local-1",
         "codeId": 1,
         "txhash": "9F1251B1EDAF7664ACC28D09F8F713B4919B084A16293F6D94BC390EBB19226F",
         "contract": "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u",
