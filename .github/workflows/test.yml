@@ -52,7 +52,7 @@ jobs:
               echo "Node failed to start."
               exit 1
             }
-      - run: git clone --branch chore/deploy-const https://github.com/archway-network/archway.git
+      - run: git clone --branch chore/deploy-const https://github.com/archway-network/archway-airdrops.git
         working-directory: ./scripts/tmp
       - name: Deploy airdrop contract
         run: scripts/deploy-airdrop-gh.sh
