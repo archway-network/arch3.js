@@ -4,12 +4,7 @@
 
 echo "setup variables"
 
-cd scripts/tmp
-echo "current $(pwd)"
-
-echo "cloning archway-airdrop"
-git clone --branch chore/deploy-const https://github.com/archway-network/archway-airdrops.git
-cd archway-airdrops
+cd scripts/tmp/archway-airdrops
 echo "current $(pwd)"
 
 echo "switch to local network"
