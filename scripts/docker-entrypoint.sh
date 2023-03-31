@@ -4,7 +4,7 @@
 # It will initialize the node if it's not configured yet.
 #
 
-set -euo pipefail
+#set -euo pipefail
 
 ARCHWAY_HOME="${ARCHWAY_HOME:-$HOME/.archway}"
 
