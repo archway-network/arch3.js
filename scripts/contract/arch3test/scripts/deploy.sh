@@ -10,15 +10,8 @@ echo "Start Build"
 pwd
 archway build --optimize
 
-cd ../artifacts
-current_path="$(pwd)"
-echo "pwd: ${current_path}"
-
-mv -v arch3test-aarch64.wasm arch3test.wasm
-
-cd ../scripts
-current_path="$(pwd)"
-echo "pwd: ${current_path}"
+mv "${cwd}../artifacts/arch3test-aarch64.wasm" "${cwd}../artifacts/arch3test.wasm"
+pwd
 
 
 echo "Store"
