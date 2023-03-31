@@ -46,10 +46,15 @@ jobs:
           echo "$value"
 
           docker compose -f "docker-compose-gh.yaml" up
-        
-          docker logs -f --details --until=20s arch3js-node-1  
-      - run: docker ps      
-      - run: docker exec -i arch3js-node-1 /bin/sh && curl -v -s "http://localhost:26657/block?height=1"
+      - name: Wait for local chain to start
+        run: >
+          set -euo pipefail &&
+          curl --retry 15 -f --retry-all-errors --retry-delay 2 -s "http://localhost:26657/block?height=1" |
+            jq '.error == null' && 
+            echo "Node started" || {
+              echo "Node failed to start."
+              exit 1
+            }
       - name: Deploy airdrop contract
         run: scripts/deploy-airdrop.sh
       - run: yarn test:all --passWithNoTests

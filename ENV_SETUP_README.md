@@ -14,7 +14,11 @@ Again these RewardRecords are given only to the owner of the rewardsAddress of t
 - A rewardsAddress will only accrue RewardsRecords once the contract processes some tx
 - A rewardsAddress can be changed, however prior rewards do not move to the new address
 - Since some tx can only be done once, for example the action claims transactions for airdrops, the test for withdrawRewards can only be run once
-  - if you need to run it multiple times you must reset the local node and contract!
+- if you need to run it multiple times you must reset the local node and contract!
+
+# Github Actions 
+- If the local node on docker is not deploying add this command just below docker compose up so you can see what's going on:
+  - docker logs -f --details --until=20s arch3js-node-1 
 
 
 ### Integration testing
