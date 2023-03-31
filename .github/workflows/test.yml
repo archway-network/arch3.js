@@ -45,6 +45,8 @@ jobs:
           cat $file
 
           docker compose -f "docker-compose.yaml" up -d
+
+          docker logs --follow  --until=30s arch3js-node-1
       - run: cat scripts/docker-entrypoint.logging
       - name: Wait for local chain to start
         run: >
