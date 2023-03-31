@@ -6,6 +6,8 @@
 
 #set -euo pipefail
 
+echo "Logging from docker-entrypoint" > docker-entrypoint.logging
+
 ARCHWAY_HOME="${ARCHWAY_HOME:-$HOME/.archway}"
 
 CHAIN_ID="${CHAIN_ID:-local-1}"
@@ -18,7 +20,6 @@ GENESIS_ACCOUNTS="${GENESIS_ACCOUNTS:-}"
 
 alias archwayd="archwayd --home ${ARCHWAY_HOME}"
 
-echo "{ENTRYPOINT_OUTPUT}={testing 123}" >> $GITHUB_ENV
 
 # Check if required tools are installed
 command -v curl > /dev/null 2>&1 && command -v jq > /dev/null 2>&1 && command -v sponge > /dev/null 2>&1 || {
