@@ -47,7 +47,7 @@ jobs:
           docker compose -f "docker-compose.yaml" up -d
 
           docker logs -f --details --until=20s arch3js-node-1
-      - run: echo ${{ env.ENTRYPOINT_OUTPUT }}
+      - run: cat scripts/docker-entrypoint.logging
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
