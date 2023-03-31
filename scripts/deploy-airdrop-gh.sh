@@ -4,6 +4,7 @@
 
 echo "setup variables"
 
+mkdir -p scripts/tmp
 cd scripts/tmp/archway-airdrops
 echo "current $(pwd)"
 

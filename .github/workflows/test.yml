@@ -28,11 +28,11 @@ jobs:
         with:
           go-version: '1.20.1' 
       - run: pwd
-      - run: mkdir -p scripts/tmp
+      - run: mkdir -p scripts/tools
       - run: git clone https://github.com/archway-network/archway.git
-        working-directory: ./scripts/tmp
+        working-directory: ./scripts/tools
       - run: make install
-        working-directory: ./scripts/tmp/archway      
+        working-directory: ./scripts/tools/archway      
       - run: npm install -g @archwayhq/cli
       - run: yarn install --immutable      
       - name: Start local node
