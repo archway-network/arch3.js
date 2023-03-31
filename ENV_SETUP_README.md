@@ -17,8 +17,9 @@ Again these RewardRecords are given only to the owner of the rewardsAddress of t
 - if you need to run it multiple times you must reset the local node and contract!
 
 # Github Actions 
-- If the local node on docker is not deploying add this command just below docker compose up so you can see what's going on:
-  - docker logs -f --details --until=20s arch3js-node-1 
+- If the local node on docker is not deploying do this to view the logs:
+  1. add -d to docker compose up
+  2. docker logs -f --details --until=20s arch3js-node-1 
 
 
 ### Integration testing

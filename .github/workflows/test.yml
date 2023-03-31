@@ -53,5 +53,5 @@ jobs:
               exit 1
             }
       - name: Deploy airdrop contract
-        run: scripts/deploy-airdrop.sh
+        run: scripts/deploy-airdrop-gh.sh
       - run: yarn test:all --passWithNoTests
