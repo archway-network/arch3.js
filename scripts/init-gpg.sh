@@ -1,10 +1,10 @@
 #!/bin/sh
 
 echo "show keys"
-gpg_keys="$( find /home/runner/.password-store/ -name \*.gpg | xargs -n 1 gpg )"
-echo "my keys ${gpg_keys}"
 
-gpg_pub="$( echo ${gpg_keys} | sed -n -e 's/.*      //p' )"
-echo "my pub ${gpg_pub}"
+gpg --batch --passphrase '' --quick-generate-key test@test.com default default
 
-pass init "${gpg_pub}"
+gpg_key="$( gpg --list-keys | sed -n '/pub/{n;p;}' | sed -n 's/.*      //p' )"
+echo "my key ${gpg_key}"
+
+pass init "${gpg_key}"
