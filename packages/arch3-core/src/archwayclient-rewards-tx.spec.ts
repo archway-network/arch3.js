@@ -88,6 +88,18 @@ describe("Archway Rewards Tx", () => {
     expect(response).toBeTruthy();
     expect(response.code).toBe(0);
   });
+
+  it("can set flat fee", async () => {
+    const response = await client.setFlatFee(
+      alice.address0,
+      contractAddress,
+      denom,
+      "10000"
+    );
+    
+    expect(response).toBeTruthy();
+    expect(response.code).toBe(0);
+  });
 });
 
 async function execute(signingClient: SigningArchwayClient, senderAddress: string, smartContractAddress: string, msg: any): Promise<any> {

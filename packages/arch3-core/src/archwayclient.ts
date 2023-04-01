@@ -75,13 +75,11 @@ export class ArchwayClient extends CosmWasmClient {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.blockRewardsTracking(request);
   }
 
-  public static async getContractMetadata(request: QueryContractMetadataRequest): Promise<QueryContractMetadataResponse | undefined> {
-    try {
-      return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.contractMetadata(request);
-    } catch (e) {
-      console.log("getContractMetadata error", e);
-      return undefined;
-    }
+  /**
+   * Note: Contract Metadata MUST be set before it can be gotten!
+   */
+  public static async getContractMetadata(request: QueryContractMetadataRequest): Promise<QueryContractMetadataResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.contractMetadata(request);
   }
 
   public static async getEstimateFees(request: QueryEstimateTxFeesRequest): Promise<QueryEstimateTxFeesResponse> {
@@ -104,6 +102,9 @@ export class ArchwayClient extends CosmWasmClient {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.rewardsRecords(request);
   }
 
+  /**
+   * Note: Flat Fee MUST be set before it can be gotten!
+   */
   public static async getFlatFee(request: QueryFlatFeeRequest): Promise<QueryFlatFeeResponse> {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.flatFee(request);
   }

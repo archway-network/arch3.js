@@ -1,6 +1,11 @@
 /* eslint-disable */
 import { Long } from '@archwayhq/arch3-proto/build/codegen/helpers';
-import { ArchwayClient } from './archwayclient';
+import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
+import { ArchwayClient, SigningArchwayClient } from './archwayclient';
+import * as dotenv from "dotenv";
+import { GasPrice } from '@cosmjs/stargate';
+
+dotenv.config();
 
 const rpcLocal = "http://localhost:26657";
 const contractAddress = 'archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u';
@@ -24,8 +29,7 @@ describe('Archway Rewards', () => {
       contractAddress
     });
 
-    // note: some contracts have no metadata defined
-    expect(response === undefined || response.metadata).toBeTruthy();
+    expect(response.metadata).toBeTruthy();
   });
 
   it('check estimate fees is coming back', async () => {
@@ -68,4 +72,32 @@ describe('Archway Rewards', () => {
     expect(response.undistributedFunds).toBeDefined();
   });
 
+  it('check get flat fee is coming back', async () => {
+    await ArchwayClient.connect(rpcLocal);
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(process.env.DEVX_MNEMONIC || "", {
+      prefix: "archway",
+    });
+    const client = await SigningArchwayClient.connectWithSigner(
+      "http://localhost:26657",
+      wallet,
+      { 
+        broadcastPollIntervalMs: 300,
+        broadcastTimeoutMs: 8_000,
+        gasPrice: GasPrice.fromString(`500${denom}`), 
+      }
+    );
+
+    await client.setFlatFee(
+      "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+      contractAddress,
+      denom,
+      "10000"
+    );
+
+    const getResponse = await ArchwayClient.getFlatFee({
+      contractAddress
+    });
+
+    expect(getResponse.flatFeeAmount).toBeTruthy();
+  });
 });
