@@ -30,7 +30,7 @@ archway metadata \
   --owner-address "${deployer_addr}" \
   --rewards-address "${deployer_addr}"
 
-
+archway history
 contract_addr="$( archway history | sed -n -e 's/.*contract://p' )"
-echo "${contract_addr}"
+echo "contract_addr: ${contract_addr}"
 echo "{CONTRACT_ADDRESS}=${contract_addr}" >> $GITHUB_ENV
