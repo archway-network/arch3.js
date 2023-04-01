@@ -4,7 +4,10 @@ set timeout -1
 
 echo "Start create testing account"
 
+CHAIN_ID="${CHAIN_ID:-local-1}"
 DEVX_MNEMONIC="${DEVX_MNEMONIC:-}"
+
+archwayd config chain-id "${CHAIN_ID}"
 
 spawn archwayd keys add --recover ""
 
@@ -13,9 +16,5 @@ send -- "${DEVX_MNEMONIC}\r"
 
 expect eof
 
-# tester_txt="$( archwayd keys add "tester2" )"
-# echo "tester_txt ${tester_txt}"
-# tester_addr="$( echo "${tester_txt}" | sed -n -e 's/.*address://p' )"
-# tester_mnemonic="$( echo ${tester_txt} | sed '3q;d' )"
-# echo "tester_addr: ${tester_addr}"
-# echo "tester_mnemonic: ${tester_mnemonic}"
+archwayd config
+archwayd keys list

@@ -17,7 +17,6 @@ services:
       - 26657:26657 # RPC
     volumes:
       - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh
-      - ./scripts/create-account.sh:/create-account.sh
       - data:/root/.archway
     env_file:
       - local-node.env
