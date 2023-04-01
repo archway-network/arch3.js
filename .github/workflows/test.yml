@@ -19,7 +19,7 @@ jobs:
       DEPLOYER_ACCOUNT_NAME: "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
       DEVX_MNEMONIC: '${{ secrets.DEVX_MNEMONIC }}'
       VALIDATOR_MNEMONIC: '${{ secrets.VALIDATOR_MNEMONIC }}'
-      GENESIS_ACCOUNTS: '${{ secrets.GENESIS_ACCOUNTS }}'
+      GENESIS_ACCOUNTS: "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -41,13 +41,10 @@ jobs:
         run: |
           file="local-node.env"
           echo "VALIDATOR_MNEMONIC='${{ secrets.VALIDATOR_MNEMONIC }}'" > $file
-          echo "GENESIS_ACCOUNTS='${{ secrets.GENESIS_ACCOUNTS }}'" >> $file
+          echo "GENESIS_ACCOUNTS='${{ env.GENESIS_ACCOUNTS }}'" >> $file
           cat $file
 
           docker compose -f "docker-compose.yaml" up
-
-          docker logs --follow  --until=30s arch3js-node-1
-      - run: cat scripts/docker-entrypoint.logging
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
@@ -58,5 +55,5 @@ jobs:
               exit 1
             }
       - name: Deploy airdrop contract
-        run: scripts/deploy-contract.sh "${{ env.DEPLOYER_ACCOUNT_NAME }}"
+        run: scripts/deploy-contract-gh.sh "${{ env.DEPLOYER_ACCOUNT_NAME }}"
      

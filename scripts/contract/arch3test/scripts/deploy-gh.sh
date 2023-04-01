@@ -10,8 +10,6 @@ echo "Start Build"
 pwd
 archway build --optimize
 
-mv "${cwd}../artifacts/arch3test-aarch64.wasm" "${cwd}../artifacts/arch3test.wasm"
-
 echo "Store"
 archway store --no-confirm --from "$deployer_addr" --no-verify
 
