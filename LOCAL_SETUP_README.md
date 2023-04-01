@@ -17,9 +17,7 @@ Again these RewardRecords are given only to the owner of the rewardsAddress of t
 - if you need to run it multiple times you must reset the local node and contract!
 
 # Github Actions 
-- If the local node on docker is not deploying do this to view the logs:
-  - remove -d to docker compose up
-  - then you will see the docker terminal running with logging info
+- See GH_SETUP_README.md
 
 
 ### Integration testing
