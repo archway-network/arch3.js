@@ -8,7 +8,7 @@ services:
       start --x-crisis-skip-assert-invariants
       && apt-get update
       && apt-get install -y curl
-      /docker-entrypoint.sh
+      docker-entrypoint.sh
     ports:
       - 1317:1317   # API
       - 9090:9090   # gRPC
@@ -17,7 +17,7 @@ services:
       - 26657:26657 # RPC
     volumes:
       - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh
-      - ./scripts/docker-entrypoint.logging:/docker-entrypoint.logging
+      - ./scripts:/
       - data:/root/.archway
     env_file:
       - local-node.env
