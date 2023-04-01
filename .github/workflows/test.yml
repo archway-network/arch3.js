@@ -54,6 +54,7 @@ jobs:
               echo "Node failed to start."
               exit 1
             }
+      - run: apt-get install expect
       - run: scripts/create-account.sh
       - name: Deploy airdrop contract
         run: scripts/deploy-contract-gh.sh "${{ env.DEPLOYER_ACCOUNT_NAME }}"
