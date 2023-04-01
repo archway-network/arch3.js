@@ -56,7 +56,10 @@ jobs:
             }
       - run: sudo apt-get install -y expect
       - run: archwayd config chain-id "local-1"
-      - run: pass init my-gpg-id-123
+      - run: |
+          gpg --gen-key
+          
+          pass init my-gpg-id-123
       - run: scripts/create-account.sh
       - run: |
           archwayd config
