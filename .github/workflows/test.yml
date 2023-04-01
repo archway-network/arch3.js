@@ -64,4 +64,8 @@ jobs:
           archwayd keys list
       - name: Deploy airdrop contract
         run: scripts/deploy-contract-gh.sh "${{ env.DEPLOYER_ACCOUNT_NAME }}"
+      - name: Build arch3
+        run: yarn build:all
+      - name: Run tests
+        run: yarn test:all --passWithNoTests
      
