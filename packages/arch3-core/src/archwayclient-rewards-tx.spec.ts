@@ -1,36 +1,10 @@
 /* eslint-disable */
 /* eslint jest/no-hooks: ["error", { "allow": ["afterAll", "beforeAll"] }] */
-import { SigningCosmWasmClientOptions } from "@cosmjs/cosmwasm-stargate";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
-import { GasPrice } from "@cosmjs/stargate";
 import { ArchwayClient } from "../build";
 import { SigningArchwayClient } from "./archwayclient";
-import * as dotenv from "dotenv";
+import { wasmd, alice, contractAddress, denom, defaultSigningClientOptions } from "./fixtures";
 
-dotenv.config();
-
-const wasmd = {
-  blockTime: 1_000, // ms
-  chainId: "local-1",
-  endpoint: "http://localhost:26657",
-  prefix: "archway",
-};
-
-const alice = {
-  mnemonic: process.env.DEVX_MNEMONIC || "",
-  address0: "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
-};
-
-const contractAddress = "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u";
-
-const denom = 'uarch';
-const defaultGasPrice = GasPrice.fromString(`500${denom}`);
-
-const defaultSigningClientOptions: SigningCosmWasmClientOptions = {
-  broadcastPollIntervalMs: 300,
-  broadcastTimeoutMs: 8_000,
-  gasPrice: defaultGasPrice,
-};
 
 describe("Archway Rewards Tx", () => {
   let wallet: DirectSecp256k1HdWallet;
@@ -63,7 +37,7 @@ describe("Archway Rewards Tx", () => {
     expect(response.code).toBe(0);
   });
 
-  it("can withdraw contract rewards", async () => {
+  it("can get and withdraw contract rewards", async () => {
     // first reset rewardsAddress to signing account, alice.address0, since signer and rewardsAddress must be same
     await client.setContractRewardsMetadata(
       alice.address0,
@@ -88,16 +62,22 @@ describe("Archway Rewards Tx", () => {
     expect(response.code).toBe(0);
   });
 
-  it("can set flat fee", async () => {
-    const response = await client.setFlatFee(
+  it("can set and get flat fee", async () => {
+    const setResponse = await client.setFlatFee(
       alice.address0,
       contractAddress,
       denom,
       "10000"
     );
     
-    expect(response).toBeTruthy();
-    expect(response.code).toBe(0);
+    expect(setResponse).toBeTruthy();
+    expect(setResponse.code).toBe(0);
+
+    const getResponse = await ArchwayClient.getFlatFee({
+      contractAddress
+    });
+
+    expect(getResponse.flatFeeAmount).toBeTruthy();
   });
 });
 
