@@ -57,6 +57,8 @@ jobs:
       - run: sudo apt-get install -y expect
       - run: archwayd config chain-id "local-1"
       - run: |
+          gpg --gen-key
+
           gpg --list-keys
           
           pass init my-gpg-id-123
