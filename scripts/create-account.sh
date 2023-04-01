@@ -4,10 +4,9 @@ set timeout -1
 
 puts "Start create testing account"
 
-CHAIN_ID="${CHAIN_ID:-local-1}"
 DEVX_MNEMONIC="${DEVX_MNEMONIC:-}"
 
-archwayd config chain-id "${CHAIN_ID}"
+archwayd config chain-id "local-1"
 
 spawn archwayd keys add --recover ""
 
