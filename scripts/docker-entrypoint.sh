@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-echo "Logging from docker-entrypoint" > docker-entrypoint.logging
+echo "Logging from docker-entrypoint" > log/docker-entrypoint.logging
 
 ARCHWAY_HOME="${ARCHWAY_HOME:-$HOME/.archway}"
 
