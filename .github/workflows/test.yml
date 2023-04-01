@@ -44,7 +44,7 @@ jobs:
           echo "GENESIS_ACCOUNTS='${{ env.GENESIS_ACCOUNTS }}'" >> $file
           cat $file
 
-          docker compose -f "docker-compose.yaml" up
+          docker compose -f "docker-compose.yaml" up -d
       - name: Wait for local chain to start
         run: >
           set -euo pipefail &&
@@ -54,6 +54,7 @@ jobs:
               echo "Node failed to start."
               exit 1
             }
+      - run: archwayd config
       - name: Deploy airdrop contract
         run: scripts/deploy-contract-gh.sh "${{ env.DEPLOYER_ACCOUNT_NAME }}"
      

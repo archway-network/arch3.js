@@ -2,6 +2,8 @@
   
 set timeout -1
 
+echo "Start create testing account"
+
 DEVX_MNEMONIC="${DEVX_MNEMONIC:-}"
 
 spawn archwayd keys add --recover ""
