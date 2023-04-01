@@ -57,6 +57,8 @@ jobs:
       - run: sudo apt-get install -y expect
       - run: archwayd config chain-id "local-1"
       - run: |
+          export GPG_TTY=$(tty)
+
           gpg --batch --gen-key scripts/gen-gpg-key.txt
 
           gpg --list-keys
