@@ -23,7 +23,7 @@ function validate_tx() {
 
 echo "Starting / Restarting node..."
 docker compose down --remove-orphans --volumes
-docker compose up -d
+docker compose up
 
 echo "Waiting for node to start and generate first block..."
 curl --retry 15 -f --retry-all-errors --retry-delay 2 -s "http://localhost:26657/block?height=1" | \
