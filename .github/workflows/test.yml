@@ -56,10 +56,11 @@ jobs:
             }
       - run: sudo apt-get install -y expect
       - run: archwayd config chain-id "local-1"
+      - run: pass init my-gpg-id-123
       - run: scripts/create-account.sh
       - run: |
           archwayd config
-          
+
           archwayd keys list
       - name: Deploy airdrop contract
         run: scripts/deploy-contract-gh.sh "${{ env.DEPLOYER_ACCOUNT_NAME }}"
