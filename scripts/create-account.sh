@@ -2,7 +2,7 @@
   
 set timeout -1
 
-echo "Start create testing account"
+puts "Start create testing account"
 
 CHAIN_ID="${CHAIN_ID:-local-1}"
 DEVX_MNEMONIC="${DEVX_MNEMONIC:-}"
