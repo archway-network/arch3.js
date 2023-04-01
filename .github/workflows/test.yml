@@ -44,7 +44,7 @@ jobs:
           echo "GENESIS_ACCOUNTS='${{ secrets.GENESIS_ACCOUNTS }}'" >> $file
           cat $file
 
-          docker compose -f "docker-compose.yaml" up -d
+          docker compose -f "docker-compose.yaml" up
 
           docker logs --follow  --until=30s arch3js-node-1
       - run: cat scripts/docker-entrypoint.logging
