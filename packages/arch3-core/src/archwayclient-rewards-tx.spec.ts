@@ -21,7 +21,7 @@ const alice = {
   address0: "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
 };
 
-const contractAddress = process.env.CONTRACT_ADDRESS || "";
+const contractAddress = "archway14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sy85n2u";
 
 const denom = 'uarch';
 const defaultGasPrice = GasPrice.fromString(`500${denom}`);
