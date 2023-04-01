@@ -29,7 +29,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '1.20.1' 
-      - run: pwd
+      - uses: olafurpg/setup-gpg@v3
       - run: mkdir -p scripts/tools
       - run: git clone https://github.com/archway-network/archway.git
         working-directory: ./scripts/tools
@@ -56,10 +56,6 @@ jobs:
             }
       - run: sudo apt-get install -y expect
       - run: archwayd config chain-id "local-1"
-      - run: |
-          gpg --gen-key
-          
-          pass init my-gpg-id-123
       - run: scripts/create-account.sh
       - run: |
           archwayd config
