@@ -56,7 +56,7 @@ archway network -m -e local
 Then, run the deployment script specifying the name of the deployer account:
 
 ```bash
-scripts/deploy.sh <account-name>
+scripts/deploy-contract.sh <account-name>
 ```
 
 !!!Note: after deploying your contract you must take the new contract address and update your arch3-proto .env file with it!!!

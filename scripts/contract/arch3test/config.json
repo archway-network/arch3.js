@@ -6,7 +6,36 @@
     "archwayd": {
       "docker": false
     },
-    "deployments": []
+    "deployments": [
+      {
+        "project": "arch3test",
+        "type": "set-metadata",
+        "chainId": "local-1",
+        "codeId": 4,
+        "txhash": "A59720B98D36661D335086263174B3ECD1F0BA2768AE63CDEB4D97C1028EA804",
+        "contract": "archway1ghd753shjuwexxywmgs4xz7x2q732vcnkm6h2pyv9s6ah3hylvrqvlzdpl",
+        "contractMetadata": {
+          "ownerAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38",
+          "rewardsAddress": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+        }
+      },
+      {
+        "project": "arch3test",
+        "type": "instantiate",
+        "chainId": "local-1",
+        "codeId": 4,
+        "txhash": "9278CDFFC5FF81A3EB7A659FD8C2D059FC9FD6ED6ECBB1C0FDBA2CD4E92DC56B",
+        "address": "archway1ghd753shjuwexxywmgs4xz7x2q732vcnkm6h2pyv9s6ah3hylvrqvlzdpl",
+        "admin": "archway1rev2n7edzn6l84k37dhnhs0m9wqlveezvwjj38"
+      },
+      {
+        "project": "arch3test",
+        "type": "store",
+        "chainId": "local-1",
+        "codeId": 4,
+        "txhash": "2ADE12CCCFE90B7EF183CD5011B0A6FA52887428FCBB4CE89167FA10625E4829"
+      }
+    ]
   },
   "network": {
     "name": "local",
