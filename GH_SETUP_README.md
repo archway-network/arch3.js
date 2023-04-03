@@ -8,3 +8,4 @@
 - The expect command installation is needed in order to use archwayd to rehydrate the devx test account
 - Gpg is installed because archwayd uses gpg on linux as the keystore mechanism
 - Prior to running any tests a build:all is required
+- Please do not check in updates to the config.json in the arch3test project. It should not cause failures but it can get quite big since it appends on each deployment

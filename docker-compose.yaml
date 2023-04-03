@@ -3,7 +3,7 @@ version: "3.9"
 services:
   node:
     platform: linux/amd64
-    image: archwaynetwork/archwayd:v0.3.0
+    image: archwaynetwork/archwayd:v0.3.1
     command: > 
       start --x-crisis-skip-assert-invariants
       && apt-get update
