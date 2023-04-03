@@ -1,14 +1,18 @@
-/* eslint-disable */
 import { Long } from '@archwayhq/arch3-proto/build/codegen/helpers';
-import { ArchwayClient } from './archwayclient';
 import * as dotenv from "dotenv";
-import { wasmd, alice, contractAddress, denom } from "./fixtures";
 
-dotenv.config();
+import { ArchwayClient } from './archwayclient';
+import { alice, contractAddress, denom, wasmd } from "./fixtures";
+
 
 const rpcLocal = wasmd.endpoint;
 
 describe('Archway Rewards', () => {
+  /* eslint-disable */
+  beforeAll(() => {
+    dotenv.config();
+  });
+
   it('check block rewards is coming back', async () => {
     await ArchwayClient.connect(rpcLocal);
 

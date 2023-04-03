@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { archway, getRpcClient } from "@archwayhq/arch3-proto";
 import {
   QueryBlockRewardsTrackingRequest,
@@ -30,11 +29,12 @@ import {
   SigningCosmWasmClient,
   SigningCosmWasmClientOptions,
 } from "@cosmjs/cosmwasm-stargate";
+import { EncodeObject, GeneratedType, OfflineSigner, Registry } from "@cosmjs/proto-signing";
+import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
+/* eslint-disable */
 import {
   MsgExecuteContract
 } from "cosmjs-types/cosmwasm/wasm/v1/tx";
-import { EncodeObject, GeneratedType, OfflineSigner, Registry } from "@cosmjs/proto-signing";
-import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
 import Long from "long";
 
 

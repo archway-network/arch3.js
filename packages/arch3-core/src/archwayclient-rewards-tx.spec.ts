@@ -1,10 +1,20 @@
-/* eslint-disable */
 /* eslint jest/no-hooks: ["error", { "allow": ["afterAll", "beforeAll"] }] */
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+
 import { ArchwayClient } from "../build";
 import { SigningArchwayClient } from "./archwayclient";
-import { wasmd, alice, contractAddress, denom, defaultSigningClientOptions } from "./fixtures";
+import { alice, contractAddress, defaultSigningClientOptions, denom, wasmd } from "./fixtures";
 
+async function execute(signingClient: SigningArchwayClient, senderAddress: string, smartContractAddress: string, msg: any): Promise<any> {
+  try {
+    const response = await signingClient.execute(senderAddress, smartContractAddress, msg, 'auto');
+
+    return response;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
 
 describe("Archway Rewards Tx", () => {
   let wallet: DirectSecp256k1HdWallet;
@@ -32,7 +42,7 @@ describe("Archway Rewards Tx", () => {
       alice.address0,
       alice.address0
     );
-    
+
     expect(response).toBeTruthy();
     expect(response.code).toBe(0);
   });
@@ -50,9 +60,10 @@ describe("Archway Rewards Tx", () => {
     await execute(client, alice.address0, contractAddress, { increment: {} });
     await execute(client, alice.address0, contractAddress, { increment: {} });
     // wait for tx and rewards to process
+    /* eslint-disable */
     await new Promise(r => setTimeout(r, 30000));
 
-    await ArchwayClient.connect(wasmd.endpoint);    
+    await ArchwayClient.connect(wasmd.endpoint);
     const rewardRecords = await ArchwayClient.getRewardsRecords({
       rewardsAddress: alice.address0
     });
@@ -69,7 +80,7 @@ describe("Archway Rewards Tx", () => {
       denom,
       "10000"
     );
-    
+
     expect(setResponse).toBeTruthy();
     expect(setResponse.code).toBe(0);
 
@@ -81,13 +92,3 @@ describe("Archway Rewards Tx", () => {
   });
 });
 
-async function execute(signingClient: SigningArchwayClient, senderAddress: string, smartContractAddress: string, msg: any): Promise<any> {
-  try {
-      const response = await signingClient.execute(senderAddress, smartContractAddress, msg, 'auto');    
-
-      return response;
-  } catch(e) {
-      console.error(e);
-      throw e;
-  }
-};
