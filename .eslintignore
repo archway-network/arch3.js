@@ -19,3 +19,4 @@ codegen/
 *.d.ts
 
 jest.config.[jt]s
+commitlint.config.js
