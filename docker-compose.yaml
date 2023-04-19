@@ -1,10 +1,8 @@
-version: "3.9"
-
 services:
   node:
-    image: archwaynetwork/archwayd:latest
-    platform: linux/amd64
-    entrypoint: /scripts/localnet.sh
+    image: archwaynetwork/archwayd:v0.3.0
+    command: start --x-crisis-skip-assert-invariants
+    entrypoint: /docker-entrypoint.sh
     ports:
       - 1317:1317   # API
       - 9090:9090   # gRPC
@@ -12,10 +10,11 @@ services:
       - 26656:26656 # p2p
       - 26657:26657 # RPC
     volumes:
-      - ./scripts:/scripts
-      # - data:/root/.archway
-    # env_file:
-    #   - local-node.env
+      - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh
+      - data:/root/.archway
+    environment:
+      - VALIDATOR_MNEMONIC
+      - GENESIS_ACCOUNTS=archway1ecak50zhujddqd639xw4ejghnyrrc6jlwnlgwt,
 
-# volumes:
-#   data:
+volumes:
+  data:
