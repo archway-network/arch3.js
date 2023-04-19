@@ -10,13 +10,12 @@ generated/
 proto/
 types/
 
+# arch3-proto
+main/
+module/
+scripts/
+codegen/
+
 *.d.ts
 
 jest.config.[jt]s
-
-packages/arch3-proto/main/
-packages/arch3-proto/types/
-packages/arch3-proto/module/
-
-packages/arch3-proto/scripts/
-packages/arch3-proto/src/codegen/
