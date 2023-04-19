@@ -1,14 +1,37 @@
 # arch3-proto
 
-# main script
-- src/codeGenRunner.js is core file that does the codegen work
+## Table of contents
+
+- [arch3-proto](#arch3-proto)
+  - [Table of contents](#table-of-contents)
+  - [Main script](#main-script)
+  - [Current list of protobuf dependencies (use yarn run proto:imports to update)](#current-list-of-protobuf-dependencies-use-yarn-run-protoimports-to-update)
+  - [Scripts](#scripts)
+  - [Testing](#testing)
+  - [Usage](#usage)
+    - [RPC Clients](#rpc-clients)
+      - [Composing Messages](#composing-messages)
+        - [CosmWasm Messages](#cosmwasm-messages)
+        - [IBC Messages](#ibc-messages)
+        - [Cosmos Messages](#cosmos-messages)
+      - [Initializing the Stargate Client](#initializing-the-stargate-client)
+      - [Creating Signers](#creating-signers)
+      - [Proto Signer](#proto-signer)
+      - [Broadcasting Messages](#broadcasting-messages)
+    - [Advanced Usage](#advanced-usage)
+  - [Disclaimer](#disclaimer)
+
+## Main script
+
+- `src/codeGenRunner.js` is core file that does the codegen work
 - the path to proto files is set in protoDirs
 - note as the proto files change the codeGenRunner configs may need to change for a correct gen to happen
 - note any imports of a proto file MUST be included into the workspace proto folder
-    - for example proto/archway/rewards/v1beta1/events.proto does an import of gogoproto/gogo.proto, so this file was added into proto/gogoproto/gogo.proto
-    - use the scripts/import-proto-and-deps.sh script to get both all protos and their dependencies
+  -- for example `proto/archway/rewards/v1beta1/events.proto` does an import of `gogoproto/gogo.proto`, so this file was added into `proto/gogoproto/gogo.proto`
+  -- use the `scripts/import-proto-and-deps.sh` script to get both all protos and their dependencies
 
-# current list of protobuf dependencies (use yarn run proto:imports to update)
+## Current list of protobuf dependencies (use yarn run proto:imports to update)
+
 - archway/rewards/v1beta1/rewards.proto
 - archway/tracking/v1beta1/tracking.proto
 - confio/proofs.proto
@@ -55,48 +78,29 @@
 - tendermint/types/validator.proto
 - tendermint/version/types.proto
 
+## Scripts
 
-# scripts
-- arch:dev:gen and arch:prod:gen generate the ts codegen files in root of src folder
-    - make certain all proto files and their imports exist already in proto folder
-- arch:ts can then be run after to generate the d.ts typescript files inside of the types folder
-- arch:main and arch:module will generate the codegen files as raw js
+- `arch:dev:gen` and `arch:prod:gen` generate the ts codegen files in root of src folder
+  -- make certain all proto files and their imports exist already in proto folder
+- `arch:ts` can then be run after to generate the `d.ts` typescript files inside of the types folder
+- `arch:main` and `arch:module` will generate the codegen files as raw js
 
-# testing
-- When testing you must first have src/codegen generated, use yarn run arch:dev:gen, and types folder, use yarn run arch:ts.
+## Testing
+
+- When testing you must first have `src/codegen` generated, use `yarn run arch:dev:gen`, and types folder, use `yarn run arch:ts`.
 
 <p align="center">
     Typescript protobuf client generator
 </p>
 
-
-## Table of contents
-
-- [arch3-proto](#arch3-proto)
-  - [Install](#install)
-  - [Table of contents](#table-of-contents)
-- [Usage](#usage)
-    - [RPC Clients](#rpc-clients)
-    - [Composing Messages](#composing-messages)
-        - Cosmos, CosmWasm, and IBC
-            - [CosmWasm](#cosmwasm-messages)
-            - [IBC](#ibc-messages)
-            - [Cosmos](#cosmos-messages)
-- [Wallets and Signers](#connecting-with-wallets-and-signing-messages)
-    - [Stargate Client](#initializing-the-stargate-client)
-    - [Creating Signers](#creating-signers)
-    - [Broadcasting Messages](#broadcasting-messages)
-- [Advanced Usage](#advanced-usage)
-- [Developing](#developing)
-- [Credits](#credits)
-
 ## Usage
+
 ### RPC Clients
 
 ```js
 import { archway } from '@archwayhq/arch3-proto' ;
 
-const { createRPCQueryClient } = archway.ClientFactory; 
+const { createRPCQueryClient } = archway.ClientFactory;
 const client = await createRPCQueryClient({ rpcEndpoint: RPC_ENDPOINT });
 
 // now you can query the cosmos modules
@@ -108,9 +112,9 @@ const balances = await client.archway.exchange.v1beta1
     .exchangeBalances()
 ```
 
-### Composing Messages
+#### Composing Messages
 
-Import the `archway` object from `arch3-proto`. 
+Import the `archway` object from `arch3-proto`.
 
 ```js
 import { archway } from '@archwayhq/arch3-proto' ;
@@ -122,7 +126,7 @@ const {
 } = archway.exchange.v1beta1.MessageComposer.withTypeUrl;
 ```
 
-#### CosmWasm Messages
+##### CosmWasm Messages
 
 ```js
 import { cosmwasm } from '@archwayhq/arch3-proto';
@@ -137,7 +141,7 @@ const {
 } = cosmwasm.wasm.v1.MessageComposer.withTypeUrl;
 ```
 
-#### IBC Messages
+##### IBC Messages
 
 ```js
 import { ibc } from '@archwayhq/arch3-proto' ;
@@ -147,7 +151,7 @@ const {
 } = ibc.applications.transfer.v1.MessageComposer.withTypeUrl
 ```
 
-#### Cosmos Messages
+##### Cosmos Messages
 
 ```js
 import { cosmos } from '@archwayhq/arch3-proto' ;
@@ -180,7 +184,7 @@ const {
 } = cosmos.gov.v1beta1.MessageComposer.fromPartial;
 ```
 
-### Initializing the Stargate Client
+#### Initializing the Stargate Client
 
 Use `getSigningarchwayClient` to get your `SigningStargateClient`, with the proto/amino messages full-loaded. No need to manually add amino types, just require and initialize the client:
 
@@ -192,14 +196,15 @@ const stargateClient = await getSigningarchwayClient({
   signer // OfflineSigner
 });
 ```
-### Creating Signers
+
+#### Creating Signers
 
 To broadcast messages, you can create signers with a variety of options:
 
-* [keplr](https://docs.keplr.app/api/cosmjs.html)
-* [cosmjs](https://gist.github.com/webmaster128/8444d42a7eceeda2544c8a59fbd7e1d9)
+- [keplr](https://docs.keplr.app/api/cosmjs.html)
+- [cosmjs](https://gist.github.com/webmaster128/8444d42a7eceeda2544c8a59fbd7e1d9)
 
-### Proto Signer
+#### Proto Signer
 
 ```js
 import { getOfflineSignerProto as getOfflineSigner } from 'cosmjs-utils';
@@ -218,7 +223,8 @@ const mnemonic =
     chain
   });
 ```
-### Broadcasting Messages
+
+#### Broadcasting Messages
 
 Now that you have your `stargateClient`, you can broadcast messages:
 
@@ -248,7 +254,7 @@ const fee: StdFee = {
 const response = await stargateClient.signAndBroadcast(address, [msg], fee);
 ```
 
-## Advanced Usage
+### Advanced Usage
 
 
 If you want to manually construct a stargate client
@@ -257,7 +263,7 @@ If you want to manually construct a stargate client
 import { OfflineSigner, GeneratedType, Registry } from "@cosmjs/proto-signing";
 import { AminoTypes, SigningStargateClient } from "@cosmjs/stargate";
 
-import { 
+import {
     cosmosAminoConverters,
     cosmosProtoRegistry,
     cosmwasmAminoConverters,
