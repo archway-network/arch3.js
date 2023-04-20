@@ -1,14 +1,28 @@
+
+import { archway } from '@archwayhq/arch3-proto';
+import { QueryBlockRewardsTrackingRequest, QueryBlockRewardsTrackingResponse } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
+
+
+type RpcQueryClient = Awaited<ReturnType<typeof archway.ClientFactory.createRPCQueryClient>>;
 
 /**
  * Extension to the {@link CosmWasmClient }.
  * @public
  */
 export class ArchwayClient extends CosmWasmClient {
+  private static rpcQueryClient: RpcQueryClient;
+
   protected constructor(tmClient: Tendermint34Client | undefined) {
     super(tmClient);
+  }
+
+  private static async init(rpcUrl: string): Promise<void> {
+    ArchwayClient.rpcQueryClient = await archway.ClientFactory.createRPCQueryClient({
+      rpcEndpoint: rpcUrl
+    });
   }
 
   /**
@@ -17,7 +31,15 @@ export class ArchwayClient extends CosmWasmClient {
    */
   public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
     const tmClient = await Tendermint34Client.connect(endpoint);
+
+    const rpcUrl = typeof endpoint === 'string' ? endpoint : (endpoint).url;
+
+    await ArchwayClient.init(rpcUrl);
     return new ArchwayClient(tmClient);
+  }
+
+  public static async getBlockRewardsTracking(request: QueryBlockRewardsTrackingRequest): Promise<QueryBlockRewardsTrackingResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.blockRewardsTracking(request);
   }
 }
 
