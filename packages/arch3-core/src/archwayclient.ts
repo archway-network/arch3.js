@@ -26,7 +26,7 @@ export class ArchwayClient extends CosmWasmClient {
  * @public
  */
 export class SigningArchwayClient extends SigningCosmWasmClient {
-  protected constructor(tmClient: Tendermint34Client | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions | undefined) {
+  protected constructor(tmClient: Tendermint34Client | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions) {
     super(tmClient, signer, options);
   }
 
