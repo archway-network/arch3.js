@@ -61,4 +61,12 @@ describe('Archway Rewards', () => {
 
     expect(response.params).toBeDefined();
   });
+
+  it('check pool are coming back', async () => {
+    await ArchwayClient.connect(rpcUrl);
+
+    const response = await ArchwayClient.getPool(undefined);
+
+    expect(response.undistributedFunds).toBeDefined();
+  });
 });
