@@ -6,7 +6,9 @@ import {
   QueryContractMetadataRequest,
   QueryContractMetadataResponse,
   QueryEstimateTxFeesRequest,
-  QueryEstimateTxFeesResponse
+  QueryEstimateTxFeesResponse,
+  QueryOutstandingRewardsRequest,
+  QueryOutstandingRewardsResponse
 } from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
@@ -60,6 +62,10 @@ export class ArchwayClient extends CosmWasmClient {
 
   public static async getEstimateFees(request: QueryEstimateTxFeesRequest): Promise<QueryEstimateTxFeesResponse> {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.estimateTxFees(request);
+  }
+
+  public static async getOutstandingRewards(request: QueryOutstandingRewardsRequest): Promise<QueryOutstandingRewardsResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.outstandingRewards(request);
   }
 }
 

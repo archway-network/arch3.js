@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased - 2023-03-17
  
+This change adds a getter function for outstanding-rewards.
+ 
+### Added
+- *arch3-proto*: added getter function for outstanding-rewards [#44](https://github.com/archway-network/arch3.js)
+ 
+### Changed
+ 
+### Fixed
+
+
+## Unreleased - 2023-03-17
+ 
 This change adds a getter function for estimate-fees.
  
 ### Added
