@@ -5,12 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## Unreleased - 2023-03-17
+ 
+This change adds a getter function for estimate-fees.
+ 
+### Added
+- *arch3-proto*: added getter function for estimate-fees [#43](https://github.com/archway-network/arch3.js)
+ 
+### Changed
+ 
+### Fixed
+
+
 ## Unreleased - 2023-03-17
  
 This change adds a getter function for contract-metadata.
  
 ### Added
-- *arch3-proto*: added getter function for contract-metadata [#41](https://github.com/archway-network/arch3.js)
+- *arch3-proto*: added getter function for contract-metadata [#42](https://github.com/archway-network/arch3.js)
  
 ### Changed
  
@@ -22,7 +35,7 @@ This change adds a getter function for contract-metadata.
 This change adds a getter function for block-rewards-tracking.
  
 ### Added
-- *arch3-proto*: added getter function for block-rewards-tracking [#40](https://github.com/archway-network/arch3.js)
+- *arch3-proto*: added getter function for block-rewards-tracking [#41](https://github.com/archway-network/arch3.js)
  
 ### Changed
  
