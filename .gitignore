@@ -79,10 +79,3 @@ pids/
 
 # env files
 *.env
-
-# package-specific
-packages/arch3-proto/types
-packages/arch3-proto/main
-packages/arch3-proto/module
-packages/arch3-proto/lib
-packages/arch3-proto/src/protoImports.txt
