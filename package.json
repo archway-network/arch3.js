@@ -46,7 +46,7 @@
     "postpack": "pinst --enable",
     "clean": "rm -rf ./build",
     "clean:all": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
-    "build": "[ -z \"${SKIP_BUILD:-}\" ] && yarn clean && tsc",
+    "build": "yarn clean && tsc --project ./tsconfig.json",
     "build:all": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
     "test": "jest",
     "test:watch": "yarn test --watch",
