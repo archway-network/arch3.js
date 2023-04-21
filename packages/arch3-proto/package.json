@@ -40,6 +40,7 @@
   "module": "module/index.js",
   "typings": "types/index.d.ts",
   "scripts": {
+    "clean": "rm -rf ./build ./main ./module",
     "arch:dev:gen": "cross-env NODE_ENV=development babel-node src/codeGenRunner.js",
     "arch:prod:gen": "cross-env NODE_ENV=production babel-node src/codeGenRunner.js",
     "arch:main": "yarn run build:main && cross-env NODE_ENV=production babel-node main/codeGenRunner.js",
@@ -48,24 +49,24 @@
     "build:main": "cross-env BABEL_ENV=production babel src --out-dir main --delete-dir-on-start --extensions \".tsx,.ts,.js\"",
     "build:module": "cross-env MODULE=true babel src --out-dir module --delete-dir-on-start  --extensions \".tsx,.ts,.js\"",
     "build:ts": "tsc --project ./tsconfig.json",
-    "build": "yarn run build:module && yarn run build:main",
-    "buidl": "yarn run build && yarn run build:ts",
-    "codegen": "cross-env NODE_ENV=development babel-node scripts/codegen.js",
+    "build": "yarn clean && yarn run build:module && yarn run build:main && yarn run build:ts",
     "prepare": "yarn run build",
     "dev": "cross-env NODE_ENV=development babel-node src/index --extensions \".tsx,.ts,.js\"",
     "watch": "cross-env NODE_ENV=development babel-watch src/index --extensions \".tsx,.ts,.js\"",
-    "lint": "eslint src --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand",
+    "lint": "eslint . --ext .js,.cjs,.ts",
+    "lint:fix": "yarn lint --fix",
+    "lint:sarif": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif"
   },
   "dependencies": {
     "@babel/runtime": "^7.19.4",
-    "@cosmjs/amino": "0.29.4",
-    "@cosmjs/proto-signing": "0.29.4",
-    "@cosmjs/stargate": "0.29.4",
-    "@cosmjs/tendermint-rpc": "^0.29.4",
-    "protobufjs": "^6.11.2"
+    "@cosmjs/amino": "^0.30.1",
+    "@cosmjs/proto-signing": "^0.30.1",
+    "@cosmjs/stargate": "^0.30.1",
+    "@cosmjs/tendermint-rpc": "^0.30.1",
+    "protobufjs": "^6.11.3"
   },
   "devDependencies": {
     "@babel/cli": "7.19.3",
@@ -81,7 +82,7 @@
     "@babel/plugin-transform-runtime": "7.19.1",
     "@babel/preset-env": "7.19.4",
     "@babel/preset-typescript": "^7.18.6",
-    "@osmonauts/telescope": "^0.78.0",
+    "@osmonauts/telescope": "^0.94.0",
     "@types/jest": "^29.1.2",
     "@types/webgl2": "^0.0.7",
     "babel-core": "7.0.0-bridge.0",

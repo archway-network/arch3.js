@@ -1,10 +1,6 @@
 name: Linter
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: ["*"]
+on: [push, pull_request]
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
@@ -21,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
           cache: yarn
       - run: yarn install --immutable
       - run: yarn build:all

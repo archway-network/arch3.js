@@ -60,14 +60,6 @@ module.exports = {
         avoidEscape: true,
         allowTemplateLiterals: true
       }
-    ],
-    'prettier/prettier': [
-      'error',
-      {
-        trailingComma: 'none',
-        singleQuote: true,
-        printWidth: 80
-      }
     ]
   }
 };
