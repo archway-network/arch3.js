@@ -34,7 +34,7 @@
     "packages/*"
   ],
   "files": [
-    "build/",
+    "build",
     "./*.md",
     "./LICENSE"
   ],
@@ -46,7 +46,7 @@
     "postpack": "pinst --enable",
     "clean": "rimraf ./build",
     "clean:all": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
-    "build": "yarn clean && tsc --project ./tsconfig.json",
+    "build": "yarn clean && tsc --build",
     "build:all": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
     "test": "jest --no-cache",
     "test:watch": "yarn test --watch",

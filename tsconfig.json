@@ -3,7 +3,19 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "build",
-    "rootDir": "src",
+    "rootDirs": [
+      "src",
+      "packages/arch3-core/src",
+      "packages/arch3-proto/src"
+    ],
+    "paths": {
+      "@archwayhq/arch3-core/*": [
+        "./packages/arch3-core/src/*"
+      ],
+      "@archwayhq/arch3-proto/*": [
+        "./packages/arch3-proto/src/*"
+      ],
+    },
     "declaration": true,
     "lib": [
       "dom",
@@ -27,6 +39,8 @@
     "removeComments": false,
     "pretty": true,
     "newLine": "LF",
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
   },
   "include": [
     "src"

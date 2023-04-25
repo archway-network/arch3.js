@@ -31,16 +31,17 @@
     "registry": "https://registry.npmjs.org"
   },
   "files": [
-    "build/",
+    "build",
     "./*.md",
     "./LICENSE"
   ],
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
+    "prepack": "yarn run build",
     "clean": "rimraf ./build",
     "codegen": "./scripts/codegen.js",
-    "build": "yarn clean && tsc --project ./tsconfig.json",
+    "build": "yarn clean && tsc --build",
     "test": "jest --no-cache",
     "test:watch": "jest --watch",
     "lint": "eslint . --ext .js,.cjs,.ts",

@@ -3,7 +3,15 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "build",
-    "rootDir": "src"
+    "rootDirs": [
+      "src",
+      "../arch3-proto/src"
+    ],
+    "paths": {
+      "@archwayhq/arch3-proto/*": [
+        "../arch3-proto/src/*"
+      ],
+    },
   },
   "include": [
     "src"

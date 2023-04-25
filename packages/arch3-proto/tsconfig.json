@@ -3,9 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "build",
-    "rootDir": "src",
+    "rootDirs": [
+      "src",
+    ],
     "allowJs": true,
-    "noImplicitReturns": false
+    "noImplicitReturns": false,
   },
   "include": [
     "src"
