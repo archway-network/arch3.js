@@ -8,13 +8,7 @@ docs/
 examples/
 generated/
 proto/
-types/
-
-# arch3-proto
-main/
-module/
 scripts/
-codegen/
 
 *.d.ts
 

@@ -7,7 +7,6 @@
  
 export * from "./archway/bundle";
 export * from "./ics23/bundle";
-export * from "./cosmos_proto/bundle";
 export * from "./cosmos/bundle";
 export * from "./gogoproto/bundle";
 export * from "./google/bundle";

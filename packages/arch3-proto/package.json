@@ -39,7 +39,7 @@
   "types": "build/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./build",
-    "codegen": "ts-node scripts/codegen.js",
+    "codegen": "./scripts/codegen.js",
     "build": "yarn clean && tsc --project ./tsconfig.json",
     "test": "jest --no-cache",
     "test:watch": "jest --watch",

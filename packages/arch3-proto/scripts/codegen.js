@@ -1,9 +1,11 @@
-import telescope from '@osmonauts/telescope';
-import { join } from 'node:path';
-import { sync as rimraf } from 'rimraf';
+#!/usr/bin/env node
+
+const { default: telescope } = require('@osmonauts/telescope');
+const { join } = require('node:path');
+const { sync: rimraf } = require('rimraf');
 
 const protoDirs = [join(__dirname, '../proto')];
-const outPath = join(__dirname, '../src/codegen');
+const outPath = join(__dirname, '../generated');
 rimraf(outPath);
 
 telescope({
@@ -32,6 +34,7 @@ telescope({
           'cosmos.params.v1beta1',
           'cosmos.slashing.v1beta1',
           'cosmos.vesting.v1beta1',
+          'cosmos_proto',
           'google.api',
           'ibc.core.port.v1',
           'ibc.core.types.v1'
