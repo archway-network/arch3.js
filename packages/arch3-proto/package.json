@@ -1,7 +1,7 @@
 {
   "name": "@archwayhq/arch3-proto",
-  "version": "0.0.1",
-  "description": "Typescript protobuf client generator",
+  "version": "0.1.0",
+  "description": "Archway Protobuf client",
   "homepage": "https://github.com/jsoneaday/arch3-proto#readme",
   "repository": "https://github.com/jsoneaday/arch3-proto",
   "keywords": [
@@ -31,13 +31,12 @@
     "registry": "https://registry.npmjs.org"
   },
   "files": [
-    "types",
-    "src",
-    "main",
-    "module"
+    "build/",
+    "./*.md",
+    "./LICENSE"
   ],
   "main": "build/index.js",
-  "typings": "build/index.d.ts",
+  "types": "build/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./build",
     "codegen": "ts-node scripts/codegen.js",
@@ -59,6 +58,7 @@
   "devDependencies": {
     "@osmonauts/telescope": "^0.94.0",
     "@types/jest": "^29.5.1",
+    "@types/node": "^18.15.13",
     "@types/webgl2": "^0.0.7",
     "eslint": "8.38.0",
     "eslint-config-prettier": "^8.8.0",

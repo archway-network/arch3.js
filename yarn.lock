@@ -73,6 +73,7 @@ __metadata:
     "@cosmjs/tendermint-rpc": ^0.30.1
     "@osmonauts/telescope": ^0.94.0
     "@types/jest": ^29.5.1
+    "@types/node": ^18.15.13
     "@types/webgl2": ^0.0.7
     eslint: 8.38.0
     eslint-config-prettier: ^8.8.0
