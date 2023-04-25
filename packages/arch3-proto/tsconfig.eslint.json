@@ -2,8 +2,6 @@
   "extends": "./tsconfig.json",
   "include": [
     "**/src",
-    "**/.eslintrc.cjs",
-    "**/typedoc.js",
   ],
   "exclude": []
 }

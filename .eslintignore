@@ -18,5 +18,7 @@ codegen/
 
 *.d.ts
 
-jest.config.[jt]s
+.eslintrc.cjs
+jest.config*.[jt]s
 commitlint.config.js
+typedoc.cjs
