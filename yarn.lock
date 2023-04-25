@@ -34,7 +34,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@archwayhq/arch3-core@workspace:packages/arch3-core":
+"@archwayhq/arch3-core@workspace:^, @archwayhq/arch3-core@workspace:packages/arch3-core":
   version: 0.0.0-use.local
   resolution: "@archwayhq/arch3-core@workspace:packages/arch3-core"
   dependencies:
@@ -96,8 +96,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@archwayhq/arch3.js@workspace:."
   dependencies:
-    "@archwayhq/arch3-core": "workspace:packages/arch3-core"
-    "@archwayhq/arch3-proto": "workspace:packages/arch3-proto"
+    "@archwayhq/arch3-core": "workspace:^"
+    "@archwayhq/arch3-proto": "workspace:^"
     "@commitlint/cli": ^17.6.1
     "@commitlint/config-conventional": ^17.6.1
     "@microsoft/eslint-formatter-sarif": ^3.0

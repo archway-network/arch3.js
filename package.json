@@ -64,8 +64,8 @@
     ]
   },
   "dependencies": {
-    "@archwayhq/arch3-core": "workspace:packages/arch3-core",
-    "@archwayhq/arch3-proto": "workspace:packages/arch3-proto"
+    "@archwayhq/arch3-core": "workspace:^",
+    "@archwayhq/arch3-proto": "workspace:^"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.1",
