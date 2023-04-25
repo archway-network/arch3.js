@@ -2,7 +2,7 @@ import { Long } from '@archwayhq/arch3-proto/helpers';
 
 import { ArchwayClient } from './archwayclient';
 
-const rpcUrl = 'https://rpc.constantine-1.archway.tech';
+const rpcUrl = 'https://rpc.constantine-2.archway.tech';
 const airdropContract = 'archway16fpjs4u9pq7px3h3zaawegtfp63dnerm83rjywjn7j9t8g0vtu9qhvgvsr';
 const rewardsAddress = 'archway1u4rmd5z78smu0tmtw45mran0pz4umzvxaf3g56';
 const denom = 'uconst';
