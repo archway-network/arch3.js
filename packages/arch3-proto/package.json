@@ -38,7 +38,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "clean": "rm -rf ./build",
+    "clean": "rimraf ./build",
     "codegen": "./scripts/codegen.js",
     "build": "yarn clean && tsc --project ./tsconfig.json",
     "test": "jest --no-cache",
