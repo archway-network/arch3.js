@@ -40,7 +40,7 @@
   "scripts": {
     "clean": "rm -rf ./build",
     "build": "yarn clean && tsc --project ./tsconfig.json",
-    "test": "jest",
+    "test": "jest --no-cache",
     "test:watch": "yarn test --watch",
     "lint": "eslint . --ext .js,.cjs,.ts",
     "lint:fix": "yarn lint --fix",

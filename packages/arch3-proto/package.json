@@ -41,7 +41,7 @@
     "clean": "rm -rf ./build",
     "codegen": "ts-node scripts/codegen.js",
     "build": "yarn clean && tsc --project ./tsconfig.json",
-    "test": "jest",
+    "test": "jest --no-cache",
     "test:watch": "jest --watch",
     "lint": "eslint . --ext .js,.cjs,.ts",
     "lint:fix": "yarn lint --fix",

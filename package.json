@@ -48,7 +48,7 @@
     "clean:all": "yarn workspaces foreach --topological-dev --parallel --verbose run clean",
     "build": "yarn clean && tsc --project ./tsconfig.json",
     "build:all": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
-    "test": "jest",
+    "test": "jest --no-cache",
     "test:watch": "yarn test --watch",
     "test:all": "yarn workspaces foreach --topological-dev --parallel --verbose run test",
     "lint": "eslint . --ext .js,.cjs,.ts",
