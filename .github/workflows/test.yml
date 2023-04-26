@@ -18,4 +18,5 @@ jobs:
           cache: yarn
       - run: scripts/start-local-node.sh
       - run: yarn install --immutable
-      - run: yarn test:all --passWithNoTests
+      - run: yarn build:all
+      - run: yarn test:all
