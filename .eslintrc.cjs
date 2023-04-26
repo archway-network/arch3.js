@@ -147,6 +147,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'warn',
     '@typescript-eslint/prefer-readonly': 'warn',
     'tsdoc/syntax': ['warn'],
+    'import/no-unresolved': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
   },
