@@ -48,6 +48,7 @@ __metadata:
     "@types/node": ^18.15.13
     "@typescript-eslint/eslint-plugin": ^5.59.1
     "@typescript-eslint/parser": ^5.59.1
+    dotenv: ^16.0.3
     eslint: ^8.39.0
     eslint-import-resolver-node: ^0.3.7
     eslint-plugin-import: ^2.27.5
@@ -76,6 +77,7 @@ __metadata:
     "@types/jest": ^29.5.1
     "@types/node": ^18.15.13
     "@types/webgl2": ^0.0.7
+    dotenv: ^16.0.3
     eslint: 8.39.0
     eslint-config-prettier: ^8.8.0
     eslint-plugin-prettier: ^4.2.1
@@ -107,6 +109,7 @@ __metadata:
     "@typescript-eslint/parser": ^5.59.1
     "@yarnpkg/sdks": ^2.7.0
     conventional-changelog-cli: ^2.2.2
+    dotenv: ^16.0.3
     eslint: ^8.39.0
     eslint-import-resolver-node: ^0.3.7
     eslint-plugin-import: ^2.27.5
@@ -5623,6 +5626,13 @@ __metadata:
   dependencies:
     is-obj: ^2.0.0
   checksum: d5775790093c234ef4bfd5fbe40884ff7e6c87573e5339432870616331189f7f5d86575c5b5af2dcf0f61172990f4f734d07844b1f23482fff09e3c4bead05ea
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.0.3":
+  version: 16.0.3
+  resolution: "dotenv@npm:16.0.3"
+  checksum: afcf03f373d7a6d62c7e9afea6328e62851d627a4e73f2e12d0a8deae1cd375892004f3021883f8aec85932cd2834b091f568ced92b4774625b321db83b827f8
   languageName: node
   linkType: hard
 
