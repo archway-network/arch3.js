@@ -5,19 +5,21 @@
     "outDir": "build",
     "rootDirs": [
       "src",
-      "../arch3-proto/src"
+      "../arch3-proto/src",
+      "../arch3-proto/generated"
     ],
     "paths": {
       "@archwayhq/arch3-proto/*": [
-        "../arch3-proto/src/*"
-      ],
-    },
+        "../arch3-proto/src/*",
+        "../arch3-proto/generated/*"
+      ]
+    }
   },
   "include": [
     "src"
   ],
   "exclude": [
     "src/**/*.spec.ts",
-    "src/**/__mocks__",
+    "src/**/__mocks__"
   ]
 }

@@ -4,15 +4,7 @@
  */
 
 import type { JestConfigWithTsJest } from 'ts-jest';
-
-import { lstatSync, readdirSync } from 'fs';
-import path from 'path';
-
-// get listing of packages in the mono repo
-const basePath = path.resolve(__dirname, 'packages');
-export const packages = readdirSync(basePath).filter(name => {
-  return lstatSync(path.join(basePath, name)).isDirectory();
-});
+import { pathsToModuleNameMapper } from 'ts-jest';
 
 export const baseConfig: JestConfigWithTsJest = {
   // Automatically clear mock calls, instances, contexts and results before every test
@@ -29,7 +21,8 @@ export const baseConfig: JestConfigWithTsJest = {
 
   // An array of regexp pattern strings used to skip coverage collection
   coveragePathIgnorePatterns: [
-    '/node_modules/'
+    '/node_modules/',
+    '/generated/',
   ],
 
   // Indicates which provider should be used to instrument code for coverage
@@ -43,23 +36,6 @@ export const baseConfig: JestConfigWithTsJest = {
 
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
-
-  // An array of directory names to be searched recursively up from the requiring module's location
-  // moduleDirectories: [
-  //   'node_modules',
-  //   '<rootDir>/src'
-  // ],
-
-  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  moduleNameMapper: {
-    ...packages.reduce(
-      (acc, name) => ({
-        ...acc,
-        [`@archwayhq/${name}/(.*)$`]: `<rootDir>/../${name}/src/$1`,
-      }),
-      {},
-    ),
-  },
 
   // A preset that is used as a base for Jest's configuration
   preset: 'ts-jest',
@@ -84,7 +60,7 @@ export const baseConfig: JestConfigWithTsJest = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.ts$': ['ts-jest', {
+    '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: 'tsconfig.spec.json'
     }]
   },
@@ -92,3 +68,11 @@ export const baseConfig: JestConfigWithTsJest = {
   // Indicates whether each individual test should be reported during the run
   verbose: true
 };
+
+export function configWithResolvedModulePaths(compilerOptions: { baseUrl: string, paths: Record<string, string[]> }): JestConfigWithTsJest {
+  return {
+    ...baseConfig,
+    modulePaths: [compilerOptions.baseUrl],
+    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  };
+}

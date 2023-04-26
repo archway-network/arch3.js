@@ -1,17 +1,8 @@
 import type { JestConfigWithTsJest } from 'ts-jest';
-import { baseConfig, packages } from './jest.config.base';
 
-const jestConfig: JestConfigWithTsJest = {
-  ...baseConfig,
-  moduleNameMapper: {
-    ...packages.reduce(
-      (acc, name) => ({
-        ...acc,
-        [`@archwayhq/${name}/(.*)$`]: `<rootDir>/packages/${name}/$1`,
-      }),
-      {},
-    ),
-  },
-};
+import { configWithResolvedModulePaths } from './jest.config.base';
+import { compilerOptions } from './tsconfig.json';
+
+const jestConfig: JestConfigWithTsJest = configWithResolvedModulePaths(compilerOptions);
 
 export default jestConfig;

@@ -1,3 +1,8 @@
-import { baseConfig } from '../../jest.config.base';
+import type { JestConfigWithTsJest } from 'ts-jest';
 
-export default baseConfig;
+import { configWithResolvedModulePaths } from '../../jest.config.base';
+import { compilerOptions } from './tsconfig.json';
+
+const jestConfig: JestConfigWithTsJest = configWithResolvedModulePaths(compilerOptions);
+
+export default jestConfig;
