@@ -17,20 +17,21 @@ GENESIS_ACCOUNTS="${GENESIS_ACCOUNTS:-}"
 
 alias archwayd="archwayd --home ${ARCHWAY_HOME}"
 
-# Check if required tools are installed
-command -v curl > /dev/null 2>&1 && command -v jq > /dev/null 2>&1 && command -v sponge > /dev/null 2>&1 || {
-  apk add --no-cache ca-certificates curl jq moreutils
-}
-command -v dasel > /dev/null 2>&1 || {
-  bin_url="$(curl -sSLf https://api.github.com/repos/tomwright/dasel/releases/latest | grep browser_download_url | grep linux_amd64 | grep -v .gz | cut -d\" -f 4)"
-  curl -sSLf "${bin_url}" -L -o /usr/local/bin/dasel && chmod +x /usr/local/bin/dasel
-}
-
 if [[ ! -f "${ARCHWAY_HOME}/config/genesis.json" ]]; then
+  # Check if required tools are installed
+  command -v curl >/dev/null 2>&1 && command -v jq >/dev/null 2>&1 && command -v sponge >/dev/null 2>&1 || {
+    apk add --no-cache ca-certificates curl jq moreutils
+  }
+  command -v dasel >/dev/null 2>&1 || {
+    bin_url="$(curl -sSLf https://api.github.com/repos/tomwright/dasel/releases/latest | grep browser_download_url | grep linux_amd64 | grep -v .gz | cut -d\" -f 4)"
+    curl -sSLf "${bin_url}" -L -o /usr/local/bin/dasel && chmod +x /usr/local/bin/dasel
+  }
+
   echo "Initializing the node ${MONIKER} on chain ${CHAIN_ID}..."
   archwayd init --chain-id "${CHAIN_ID}" "${MONIKER}" | jq .
 
   archwayd config chain-id "${CHAIN_ID}"
+  archwayd config node "tcp://node:26657"
   archwayd config keyring-backend test
   archwayd config output json
 
@@ -41,15 +42,15 @@ if [[ ! -f "${ARCHWAY_HOME}/config/genesis.json" ]]; then
   TOTAL_SUPPLY_AMOUNT=1000000000000000
 
   ADDRESSES=0
-  GENESIS_ACCOUNTS_BALANCE=$(( TOTAL_SUPPLY_AMOUNT / 20 ))
+  GENESIS_ACCOUNTS_BALANCE=$((TOTAL_SUPPLY_AMOUNT / 20))
   for account in $(echo "${GENESIS_ACCOUNTS}" | awk -F',' '{ for( i=1; i<=NF; i++ ) print $i }'); do
     [[ -n "${account}" ]] || break
     echo "Adding account ${account} with ${GENESIS_ACCOUNTS_BALANCE}${DENOM}"
     archwayd add-genesis-account "${account}" "${GENESIS_ACCOUNTS_BALANCE}${DENOM}"
-    ADDRESSES=$(( ADDRESSES + 1 ))
+    ADDRESSES=$((ADDRESSES + 1))
   done
 
-  VALIDATOR_ACCOUNT_BALANCE=$(( TOTAL_SUPPLY_AMOUNT - (ADDRESSES * GENESIS_ACCOUNTS_BALANCE) ))
+  VALIDATOR_ACCOUNT_BALANCE=$((TOTAL_SUPPLY_AMOUNT - (ADDRESSES * GENESIS_ACCOUNTS_BALANCE)))
   if ! [[ ${VALIDATOR_ACCOUNT_BALANCE} -gt 0 ]]; then
     echo "Not enough tokens left for the validator. Please, remove some genesis accounts."
   fi
@@ -80,27 +81,27 @@ if [[ ! -f "${ARCHWAY_HOME}/config/genesis.json" ]]; then
   jq \
     --arg denom "${DENOM}" \
     "${GENESIS_PARAMS}" \
-    ${ARCHWAY_HOME}/config/genesis.json | \
+    ${ARCHWAY_HOME}/config/genesis.json |
     sponge ${ARCHWAY_HOME}/config/genesis.json
 
-  DELEGATION_AMOUNT=$(( VALIDATOR_ACCOUNT_BALANCE / 2 ))
+  DELEGATION_AMOUNT=$((VALIDATOR_ACCOUNT_BALANCE / 2))
   echo "Generating the genesis tx with delegation of ${DELEGATION_AMOUNT}${DENOM}..."
   archwayd gentx validator "${DELEGATION_AMOUNT}${DENOM}" --chain-id ${CHAIN_ID}
 
   archwayd collect-gentxs
   archwayd validate-genesis
 
-  cat ${ARCHWAY_HOME}/config/app.toml | \
-    dasel put -r toml -t string -v "0.0001${DENOM}" 'minimum-gas-prices' | \
-    dasel put -r toml -t bool -v true 'api.enable' | \
-    dasel put -r toml -t bool -v true 'grpc-web.enable-unsafe-cors' | \
+  cat ${ARCHWAY_HOME}/config/app.toml |
+    dasel put -r toml -t string -v "0.0001${DENOM}" 'minimum-gas-prices' |
+    dasel put -r toml -t bool -v true 'api.enable' |
+    dasel put -r toml -t bool -v true 'grpc-web.enable-unsafe-cors' |
     sponge ${ARCHWAY_HOME}/config/app.toml
 
-  cat ${ARCHWAY_HOME}/config/config.toml | \
-    dasel put -r toml -t string -v 'tcp://0.0.0.0:26658' 'proxy_app' | \
-    dasel put -r toml -t string -v 'tcp://0.0.0.0:26657' 'rpc.laddr' | \
-    dasel put -r toml -t string -v '*' 'rpc.cors_allowed_origins.[]' | \
-    dasel put -r toml -t bool -v true 'rpc.unsafe' | \
+  cat ${ARCHWAY_HOME}/config/config.toml |
+    dasel put -r toml -t string -v 'tcp://0.0.0.0:26658' 'proxy_app' |
+    dasel put -r toml -t string -v 'tcp://0.0.0.0:26657' 'rpc.laddr' |
+    dasel put -r toml -t string -v '*' 'rpc.cors_allowed_origins.[]' |
+    dasel put -r toml -t bool -v true 'rpc.unsafe' |
     sponge ${ARCHWAY_HOME}/config/config.toml
 fi
 

@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: 16
           cache: yarn
+      - run: sudo apt update && sudo apt install -y jq
       - run: scripts/start-local-node.sh
       - run: yarn install --immutable
       - run: yarn build:all
