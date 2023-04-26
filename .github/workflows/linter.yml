@@ -21,9 +21,12 @@ jobs:
           cache: yarn
       - run: yarn install --immutable
       - run: yarn build:all
-      - run: yarn lint:sarif || true
+      - run: yarn lint:sarif:all || true
+      - run: |
+          mkdir -p ./reports
+          cp -r *.sarif packages/*/*.sarif ./reports
       - uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: eslint-results.sarif
+          sarif_file: ./reports
           category: eslint
           wait-for-processing: true
