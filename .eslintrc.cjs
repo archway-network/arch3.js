@@ -10,21 +10,28 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
+    // tsconfigRootDir: __dirname,
     project: './tsconfig.eslint.json',
   },
   plugins: [
     '@typescript-eslint',
-    'eslint-plugin-tsdoc',
-    'simple-import-sort',
     'import',
+    'jsdoc',
   ],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:node/recommended',
+    'plugin:jsdoc/recommended-typescript',
   ],
+  settings: {
+    node: {
+      tryExtensions: ['.ts', '.d.ts', '.js', '.json'],
+    }
+  },
   rules: {
     'indent': ['error', 2],
     'array-callback-return': 'error',
@@ -76,6 +83,7 @@ module.exports = {
     'operator-linebreak': 'error',
     'prefer-arrow-callback': 'error',
     'prefer-const': 'error',
+    'quotes': ['error', 'single', { avoidEscape: true }],
     'require-atomic-updates': 'error',
     'rest-spread-spacing': 'error',
     'semi': 'error',
@@ -146,10 +154,20 @@ module.exports = {
     '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
     '@typescript-eslint/no-use-before-define': 'warn',
     '@typescript-eslint/prefer-readonly': 'warn',
-    'tsdoc/syntax': ['warn'],
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'import/no-duplicates': 'error',
     'import/no-unresolved': 'off',
-    'simple-import-sort/imports': 'error',
-    'simple-import-sort/exports': 'error',
+    'import/order': ['error', {
+      'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+      'newlines-between': 'always',
+      alphabetize: {
+        order: 'asc',
+        caseInsensitive: true
+      }
+    }],
+    'jsdoc/require-jsdoc': ['warn', { 'publicOnly': true }],
+    'jsdoc/tag-lines': ['warn', 'any', { 'startLines': 1 }],
   },
   overrides: [
     {

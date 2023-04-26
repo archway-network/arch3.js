@@ -1,5 +1,5 @@
 import { HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
-import { OfflineSigner } from "@cosmjs/proto-signing";
+import { OfflineSigner } from '@cosmjs/proto-signing';
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
 
 /**
