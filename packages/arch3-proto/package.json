@@ -44,9 +44,9 @@
     "build": "yarn clean && tsc --build",
     "test": "jest --no-cache",
     "test:watch": "jest --watch",
-    "lint": "eslint . --ext .js,.cjs,.ts",
+    "lint": "eslint ./src --ext .js,.cjs,.ts --no-error-on-unmatched-pattern",
     "lint:fix": "yarn lint --fix",
-    "lint:sarif": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
+    "lint:sarif": "yarn lint --format @microsoft/sarif --output-file $(basename $npm_package_name).eslint-results.sarif",
     "docs": "typedoc --options typedoc.cjs ."
   },
   "dependencies": {
