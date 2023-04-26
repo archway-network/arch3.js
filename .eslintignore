@@ -8,15 +8,11 @@ docs/
 examples/
 generated/
 proto/
-types/
-
-# arch3-proto
-main/
-module/
 scripts/
-codegen/
 
 *.d.ts
 
-jest.config.[jt]s
+.eslintrc.cjs
+jest.config*.[jt]s
 commitlint.config.js
+typedoc.cjs

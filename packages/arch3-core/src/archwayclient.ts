@@ -1,4 +1,3 @@
-
 import { archway } from '@archwayhq/arch3-proto';
 import {
   QueryBlockRewardsTrackingRequest,
@@ -17,7 +16,7 @@ import {
   QueryRewardsPoolResponse,
   QueryRewardsRecordsRequest,
   QueryRewardsRecordsResponse
-} from '@archwayhq/arch3-proto/src/codegen/archway/rewards/v1beta1/query';
+} from '@archwayhq/arch3-proto/archway/rewards/v1beta1/query';
 import { CosmWasmClient, HttpEndpoint, SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';

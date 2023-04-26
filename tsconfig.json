@@ -1,9 +1,22 @@
-/* Visit https://www.typescriptlang.org/tsconfig#declaration to read more about this file */
 {
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "build",
-    "rootDir": "src",
+    "rootDirs": [
+      "src",
+      "packages/arch3-core/src",
+      "packages/arch3-proto/src",
+      "packages/arch3-proto/generated"
+    ],
+    "paths": {
+      "@archwayhq/arch3-core/*": [
+        "./packages/arch3-core/src/*"
+      ],
+      "@archwayhq/arch3-proto/*": [
+        "./packages/arch3-proto/src/*",
+        "./packages/arch3-proto/generated/*"
+      ]
+    },
     "declaration": true,
     "lib": [
       "dom",
@@ -26,13 +39,13 @@
     "skipLibCheck": true,
     "removeComments": false,
     "pretty": true,
-    "newLine": "LF",
+    "newLine": "LF"
   },
   "include": [
     "src"
   ],
   "exclude": [
     "src/**/*.spec.ts",
-    "src/**/__mocks__",
+    "src/**/__mocks__"
   ]
 }
