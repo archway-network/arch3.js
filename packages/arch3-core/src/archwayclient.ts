@@ -57,13 +57,8 @@ export class ArchwayClient extends CosmWasmClient {
     return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.blockRewardsTracking(request);
   }
 
-  public static async getContractMetadata(request: QueryContractMetadataRequest): Promise<QueryContractMetadataResponse | undefined> {
-    try {
-      return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.contractMetadata(request);
-    } catch (e) {
-      console.log("error", e);
-      return undefined;
-    }
+  public static async getContractMetadata(request: QueryContractMetadataRequest): Promise<QueryContractMetadataResponse> {
+    return await ArchwayClient.rpcQueryClient.archway.rewards.v1beta1.contractMetadata(request);
   }
 
   public static async getEstimateFees(request: QueryEstimateTxFeesRequest): Promise<QueryEstimateTxFeesResponse> {
