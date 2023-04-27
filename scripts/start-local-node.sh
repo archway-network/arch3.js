@@ -51,6 +51,26 @@ function gas-prices-estimate() {
     jq -r '.gas_unit_price | (.amount + .denom)'
 }
 
+function dotenv-add() {
+  local name="${1:-}"
+  local value="${2:-}"
+
+  local dotenv="${SCRIPT_DIR}/../.env"
+
+  [[ -f ${dotenv} ]] || touch ${dotenv}
+
+  if grep -qF -- "${name}=" ${dotenv}; then
+    replace="s/^${name}=.*/${name}=${value}/g"
+    if [[ "$OSTYPE" =~ ^darwin ]]; then
+      sed -i '' -e "${replace}" ${dotenv}
+    else
+      sed -i -e "${replace}" ${dotenv}
+    fi
+  else
+    echo "${name}=${value}" >>${dotenv}
+  fi
+}
+
 function cleanup() {
   if [[ ${CI:-} == true ]]; then
     echo "Shutting down..."
@@ -109,7 +129,7 @@ VOTER_CONTRACT_ADDRESS="$(
     "${SALT}" \
     "${INSTANTIATE_PARAMS}"
 )"
-export VOTER_CONTRACT_ADDRESS
+dotenv-add VOTER_CONTRACT_ADDRESS "$VOTER_CONTRACT_ADDRESS"
 
 CONTRACT_INFO="$(archwayd q wasm contract "${VOTER_CONTRACT_ADDRESS}" --output json 2>/dev/null || echo '{}')"
 CONTRACT_INSTANTIATED="$(echo "${CONTRACT_INFO}" | jq -r '.contract_info != null')"
