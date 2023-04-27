@@ -102,22 +102,23 @@ INSTANTIATE_PARAMS="$(
     }'
 )"
 
-CONTRACT_ADDRESS="$(
+VOTER_CONTRACT_ADDRESS="$(
   archwayd q wasm build-address \
     "$(sha256sum "${SCRIPT_DIR}/${WASM}" | awk '{ print $1 }')" \
     "${VALIDATOR_ADDR}" \
     "${SALT}" \
     "${INSTANTIATE_PARAMS}"
 )"
+export VOTER_CONTRACT_ADDRESS
 
-CONTRACT_INFO="$(archwayd q wasm contract "${CONTRACT_ADDRESS}" --output json 2>/dev/null || echo '{}')"
+CONTRACT_INFO="$(archwayd q wasm contract "${VOTER_CONTRACT_ADDRESS}" --output json 2>/dev/null || echo '{}')"
 CONTRACT_INSTANTIATED="$(echo "${CONTRACT_INFO}" | jq -r '.contract_info != null')"
 
 if [[ ${CONTRACT_INSTANTIATED} == true ]]; then
   echo "! contract already stored and instantiated"
   CONTRACT_CODE_ID="$(echo "${CONTRACT_INFO}" | jq -r '.contract_info.code_id')"
   echo "  code id: ${CONTRACT_CODE_ID}"
-  echo "  contract address: ${CONTRACT_ADDRESS}"
+  echo "  contract address: ${VOTER_CONTRACT_ADDRESS}"
 else
   echo "- storing..."
   TX_RESULT="$(
@@ -142,15 +143,15 @@ else
   validate-tx "$TX_RESULT" "failed to instantiate contract!"
   TX_HASH="$(echo $TX_RESULT | jq -r '.txhash')"
   TX_CONTRACT_ADDRESS="$(echo $TX_RESULT | jq -r '.logs[].events[] | select(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") | .value')"
-  [[ "${CONTRACT_ADDRESS}" == "${TX_CONTRACT_ADDRESS}" ]] || error "contract address mismatch: expected ${CONTRACT_ADDRESS}, got ${TX_CONTRACT_ADDRESS}"
+  [[ "${VOTER_CONTRACT_ADDRESS}" == "${TX_CONTRACT_ADDRESS}" ]] || error "contract address mismatch: expected ${VOTER_CONTRACT_ADDRESS}, got ${TX_CONTRACT_ADDRESS}"
   echo "  tx: ${TX_HASH}"
-  echo "  contract address: ${CONTRACT_ADDRESS}"
+  echo "  contract address: ${VOTER_CONTRACT_ADDRESS}"
 fi
 
 echo "- setting metadata..."
 TX_RESULT="$(
   archwayd-tx rewards set-contract-metadata \
-    "${CONTRACT_ADDRESS}" \
+    "${VOTER_CONTRACT_ADDRESS}" \
     --owner-address "${VALIDATOR_ADDR}" \
     --rewards-address "${VALIDATOR_ADDR}"
 )"
@@ -161,7 +162,7 @@ echo "  tx: ${TX_HASH}"
 echo "- setting contract premium..."
 TX_RESULT="$(
   archwayd-tx rewards set-flat-fee \
-    "${CONTRACT_ADDRESS}" \
+    "${VOTER_CONTRACT_ADDRESS}" \
     "100${DENOM}"
 )"
 validate-tx "$TX_RESULT" "failed to set flat fee!"
