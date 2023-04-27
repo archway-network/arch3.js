@@ -4,7 +4,7 @@ import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
 
 /**
  * Extension to the {@link SigningCosmWasmClient }.
- * @public
+ *
  */
 export class SigningArchwayClient extends SigningCosmWasmClient {
   protected constructor(tmClient: Tendermint34Client | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions) {
@@ -39,6 +39,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient {
    * @param options - options for signing and broadcasting transactions.
    * @returns An offline `SigningArchwayClient`.
    */
+  // eslint-disable-next-line @typescript-eslint/require-await
   public static override async offline(
     signer: OfflineSigner,
     options: SigningCosmWasmClientOptions = {},
