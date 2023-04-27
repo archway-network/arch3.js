@@ -58,7 +58,7 @@ function cleanup() {
   fi
 }
 
-trap cleanup EXIT
+trap cleanup ERR
 
 echo "Starting the node..."
 docker compose up --remove-orphans -d
