@@ -21,18 +21,12 @@ function error() {
   exit 1
 }
 
-function docker-exec-archwayd() {
+function archwayd() {
   docker compose exec node archwayd "$@"
 }
 
-function docker-run-archwayd() {
-  docker compose run --rm -it \
-    --volume ${SCRIPT_DIR}/contracts:/contracts:ro \
-    node "$@"
-}
-
-function docker-run-archwayd-tx() {
-  docker-run-archwayd tx "$@" \
+function archwayd-tx() {
+  archwayd tx "$@" \
     --from validator \
     --gas auto \
     --gas-prices "$(gas-prices-estimate)" \
@@ -42,34 +36,44 @@ function docker-run-archwayd-tx() {
     --yes
 }
 
+function validate-tx() {
+  local tx_result="${1:-}"
+  local error_message="${2:-}"
+  eval $(echo "${TX_RESULT}" | jq -r '.code == 0') || {
+    jq . "${TX_RESULT}"
+    error "${error_message}"
+  }
+}
+
 function gas-prices-estimate() {
   local contract_address="${1:-}"
-  docker-exec-archwayd q rewards estimate-fees 1 ${contract_address} --output json |
+  archwayd q rewards estimate-fees 1 ${contract_address} --output json |
     jq -r '.gas_unit_price | (.amount + .denom)'
 }
 
 function cleanup() {
   if [[ ${CI:-} == true ]]; then
+    echo "Shutting down..."
     docker compose down --volumes
   fi
 }
 
 trap cleanup EXIT
 
+echo "Starting the node..."
 docker compose up --remove-orphans -d
 
 echo "Waiting for the node to generate the first block..."
 eval $(
   curl --retry 30 -f --retry-all-errors --retry-delay 1 -s "http://localhost:26657/block?height=1" |
-    jq -er '.error == null'
+    jq -r '.error == null'
 ) || {
   docker compose logs --tail 100
-  docker compose down --volumes
   error "node failed to start!"
 }
 ok "node started"
 
-VALIDATOR_ADDR="$(docker-exec-archwayd keys show validator -a)"
+VALIDATOR_ADDR="$(archwayd keys show validator -a)"
 DENOM="$(archwayd q staking params | jq -r '.bond_denom')"
 
 echo
@@ -99,34 +103,27 @@ INSTANTIATE_PARAMS="$(
 )"
 
 CONTRACT_ADDRESS="$(
-  docker-exec-archwayd q wasm build-address \
+  archwayd q wasm build-address \
     "$(sha256sum "${SCRIPT_DIR}/${WASM}" | awk '{ print $1 }')" \
     "${VALIDATOR_ADDR}" \
     "${SALT}" \
     "${INSTANTIATE_PARAMS}"
 )"
 
-CONTRACT_LABEL="validator-voter-0.4.0"
-
-CONTRACT_INFO="$(
-  docker-exec-archwayd q wasm contract "${CONTRACT_ADDRESS}" --output json
-)"
-CONTRACT_INSTANTIATED="$(
-  echo "${CONTRACT_INFO}" |
-    jq -er --arg contract_label "${CONTRACT_LABEL}" '.contract_info.label == $contract_label'
-)"
+CONTRACT_INFO="$(archwayd q wasm contract "${CONTRACT_ADDRESS}" --output json 2>/dev/null || echo '{}')"
+CONTRACT_INSTANTIATED="$(echo "${CONTRACT_INFO}" | jq -r '.contract_info != null')"
 
 if [[ ${CONTRACT_INSTANTIATED} == true ]]; then
-  echo "- already stored and instantiated"
+  echo "! contract already stored and instantiated"
   CONTRACT_CODE_ID="$(echo "${CONTRACT_INFO}" | jq -r '.contract_info.code_id')"
   echo "  code id: ${CONTRACT_CODE_ID}"
   echo "  contract address: ${CONTRACT_ADDRESS}"
 else
   echo "- storing..."
   TX_RESULT="$(
-    docker-run-archwayd-tx wasm store /"${WASM}"
+    archwayd-tx wasm store /"${WASM}"
   )"
-  eval $(echo $TX_RESULT | jq -er '.code == 0') || error "failed to store contract!"
+  validate-tx "$TX_RESULT" "failed to store contract!"
   TX_HASH="$(echo $TX_RESULT | jq -r '.txhash')"
   CONTRACT_CODE_ID="$(echo $TX_RESULT | jq -r '.logs[].events[] | select(.type == "store_code") | .attributes[] | select(.key == "code_id") | .value')"
   echo "  tx: ${TX_HASH}"
@@ -134,15 +131,15 @@ else
 
   echo "- instantiating..."
   TX_RESULT="$(
-    docker-run-archwayd-tx wasm instantiate2 \
+    archwayd-tx wasm instantiate2 \
       "${CONTRACT_CODE_ID}" \
       "${INSTANTIATE_PARAMS}" \
       "${SALT}" \
       --fix-msg \
-      --label "${CONTRACT_LABEL}" \
+      --label "voter" \
       --admin "${VALIDATOR_ADDR}"
   )"
-  eval $(echo $TX_RESULT | jq -er '.code == 0') || error "failed to instantiate contract!"
+  validate-tx "$TX_RESULT" "failed to instantiate contract!"
   TX_HASH="$(echo $TX_RESULT | jq -r '.txhash')"
   TX_CONTRACT_ADDRESS="$(echo $TX_RESULT | jq -r '.logs[].events[] | select(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") | .value')"
   [[ "${CONTRACT_ADDRESS}" == "${TX_CONTRACT_ADDRESS}" ]] || error "contract address mismatch: expected ${CONTRACT_ADDRESS}, got ${TX_CONTRACT_ADDRESS}"
@@ -152,22 +149,22 @@ fi
 
 echo "- setting metadata..."
 TX_RESULT="$(
-  docker-run-archwayd-tx rewards set-contract-metadata \
+  archwayd-tx rewards set-contract-metadata \
     "${CONTRACT_ADDRESS}" \
     --owner-address "${VALIDATOR_ADDR}" \
     --rewards-address "${VALIDATOR_ADDR}"
 )"
-eval $(echo $TX_RESULT | jq -er '.code == 0') || error "failed to set metadata!"
+validate-tx "$TX_RESULT" "failed to set metadata!"
 TX_HASH="$(echo $TX_RESULT | jq -r '.txhash')"
 echo "  tx: ${TX_HASH}"
 
 echo "- setting contract premium..."
 TX_RESULT="$(
-  docker-run-archwayd-tx rewards set-flat-fee \
+  archwayd-tx rewards set-flat-fee \
     "${CONTRACT_ADDRESS}" \
     "100${DENOM}"
 )"
-eval $(echo $TX_RESULT | jq -er '.code == 0') || error "failed to set flat fee!"
+validate-tx "$TX_RESULT" "failed to set flat fee!"
 TX_HASH="$(echo $TX_RESULT | jq -r '.txhash')"
 echo "  tx: ${TX_HASH}"
 

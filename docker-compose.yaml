@@ -10,7 +10,8 @@ services:
       - 26656:26656 # p2p
       - 26657:26657 # RPC
     volumes:
-      - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh:ro
+      - ./scripts/contracts:/contracts:ro
       - data:/root/.archway
     environment:
       - VALIDATOR_MNEMONIC
