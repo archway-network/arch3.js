@@ -10,6 +10,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      VALIDATOR_MNEMONIC: ${{secrets.VALIDATOR_MNEMONIC}}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
