@@ -1,49 +1,138 @@
-import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
-import { GasPrice } from "@cosmjs/stargate";
 
-import { ArchwayClient, SigningArchwayClient } from './archwayclient';
+import { ArchwayClient } from './archwayclient';
 
-const wasmd = {
-  blockTime: 1_000, // ms
-  chainId: "local-1",
-  endpoint: "http://localhost:26657",
-  prefix: "archway1",
+const archwayd = {
+  chainId: 'local-1',
+  endpoint: 'http://localhost:26657',
+  prefix: 'archway',
+  denom: 'uarch',
 };
 
-const alice = {
-  mnemonic: "culture ten bar chase cross obey margin owner recycle trim valid logic forward mixed render have patrol dynamic tuition choose thing salute inside blossom",
-  pubkey0: {
-    type: "/cosmos.crypto.secp256k1.PubKey",
-    value: "AuoJH6FNYQVPNxRYSUGudoAIG3aXI+GvyazrmVFf2x/w",
+async function validatorWallet(): Promise<DirectSecp256k1HdWallet> {
+  if (!process.env.VALIDATOR_MNEMONIC) {
+    throw new Error('Missing VALIDATOR_MNEMONIC env var!');
+  }
+  return await DirectSecp256k1HdWallet.fromMnemonic(process.env.VALIDATOR_MNEMONIC, { prefix: archwayd.prefix });
+}
+
+async function getFirstWalletAddress(): Promise<string> {
+  const wallet = await validatorWallet();
+  const accounts = await wallet.getAccounts();
+  return accounts[0].address;
+}
+
+const contracts = {
+  voter: {
+    address: process.env.VOTER_CONTRACT_ADDRESS || '',
   },
-  address0: "archway1ecak50zhujddqd639xw4ejghnyrrc6jlwnlgwt",
-};
-
-const defaultGasPrice = GasPrice.fromString("0.02uarch");
-
-const defaultSigningClientOptions: SigningCosmWasmClientOptions = {
-  broadcastPollIntervalMs: 300,
-  broadcastTimeoutMs: 8_000,
-  gasPrice: defaultGasPrice,
 };
 
 describe('ArchwayClient', () => {
-  describe("connect", () => {
-    it("can be constructed", async () => {
-      const client = await ArchwayClient.connect(wasmd.endpoint);
-      expect(client).toBeTruthy();
+  describe('connect', () => {
+    it('can be constructed', async () => {
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      expect(client).toBeDefined();
       client.disconnect();
     });
   });
-});
 
-describe('SigningArchwayClient', () => {
-  describe("connectWithSigner", () => {
-    it("can be constructed", async () => {
-      const wallet = await DirectSecp256k1HdWallet.fromMnemonic(alice.mnemonic, { prefix: wasmd.prefix });
-      const client = await SigningArchwayClient.connectWithSigner(wasmd.endpoint, wallet, defaultSigningClientOptions);
-      expect(client).toBeTruthy();
+  describe('rewards', () => {
+    it('gets the block rewards tracking', async () => {
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = client.getBlockRewardsTracking();
+
+      expect(response).toBeDefined();
+
+      client.disconnect();
+    });
+
+    it('gets the contract metadata', async () => {
+      const contractAddress = contracts.voter.address;
+
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = await client.getContractMetadata(contractAddress);
+
+      const validatorAddress = await getFirstWalletAddress();
+      expect(response).toMatchObject({
+        contractAddress,
+        ownerAddress: validatorAddress,
+        rewardsAddress: validatorAddress
+      });
+
+      client.disconnect();
+    });
+
+    it('estimate fees without contract', async () => {
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = await client.getEstimateTxFees(1);
+
+      expect(response.gasUnitPrice).toBeDefined();
+      expect(response.contractAddress).toBeUndefined();
+      expect(response.estimatedFee).toHaveLength(0);
+
+      client.disconnect();
+    });
+
+    it('estimate fees for a contract with premium enabled', async () => {
+      const contractAddress = contracts.voter.address;
+
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = await client.getEstimateTxFees(1, contractAddress);
+
+      expect(response.gasUnitPrice).toBeDefined();
+      expect(response.contractAddress).toBe(contractAddress);
+      expect(response.estimatedFee).toContainEqual({
+        denom: archwayd.denom,
+        amount: '100',
+      });
+
+      client.disconnect();
+    });
+
+    it('check outstanding rewards are coming back', async () => {
+      const rewardsAddress = await getFirstWalletAddress();
+
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = await client.getOutstandingRewards(rewardsAddress);
+
+      expect(response.rewardsAddress).toBe(rewardsAddress);
+      expect(response.totalRewards).toHaveLength(0);
+      expect(response.recordsNum).toBe(0);
+
+      client.disconnect();
+    });
+
+    it('check pool are coming back', async () => {
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = await client.getRewardsPool();
+
+      expect(response.treasuryFunds).toBeDefined();
+      expect(response.undistributedFunds).toBeDefined();
+
+      client.disconnect();
+    });
+
+    it('check rewards records are coming back', async () => {
+      const rewardsAddress = await getFirstWalletAddress();
+
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = await client.getAllRewardsRecords(rewardsAddress);
+
+      expect(response).toHaveLength(0);
+
+      client.disconnect();
+    });
+
+    it('check flat fee are coming back', async () => {
+      const contractAddress = contracts.voter.address;
+
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = await client.getContractPremium(contractAddress);
+
+      expect(response.contractAddress).toBe(contractAddress);
+      expect(response.flatFee).toBeDefined();
+
       client.disconnect();
     });
   });
