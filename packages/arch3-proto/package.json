@@ -51,7 +51,7 @@
     "lint": "eslint ./src --ext .js,.cjs,.ts --no-error-on-unmatched-pattern",
     "lint:fix": "yarn lint --fix",
     "lint:sarif": "yarn lint --format @microsoft/sarif --output-file $(basename $npm_package_name).eslint-results.sarif",
-    "docs": "typedoc --options typedoc.cjs ."
+    "docs": "typedoc"
   },
   "dependencies": {
     "@cosmjs/amino": "^0.30.1",
