@@ -36,8 +36,6 @@ import * as _81 from "./bank/v1beta1/tx.rpc.msg";
 import * as _82 from "./distribution/v1beta1/tx.rpc.msg";
 import * as _83 from "./gov/v1beta1/tx.rpc.msg";
 import * as _84 from "./staking/v1beta1/tx.rpc.msg";
-import * as _95 from "./rpc.query";
-import * as _96 from "./rpc.tx";
 export namespace cosmos {
   export namespace bank {
     export const v1beta1 = {
@@ -124,8 +122,4 @@ export namespace cosmos {
       ..._80
     };
   }
-  export const ClientFactory = {
-    ..._95,
-    ..._96
-  };
 }

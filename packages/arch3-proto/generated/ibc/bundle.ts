@@ -27,8 +27,6 @@ import * as _89 from "./applications/transfer/v1/tx.rpc.msg";
 import * as _90 from "./core/channel/v1/tx.rpc.msg";
 import * as _91 from "./core/client/v1/tx.rpc.msg";
 import * as _92 from "./core/connection/v1/tx.rpc.msg";
-import * as _97 from "./rpc.query";
-import * as _98 from "./rpc.tx";
 export namespace ibc {
   export namespace applications {
     export namespace transfer {
@@ -96,8 +94,4 @@ export namespace ibc {
       };
     }
   }
-  export const ClientFactory = {
-    ..._97,
-    ..._98
-  };
 }

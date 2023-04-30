@@ -60,7 +60,8 @@ telescope({
     },
     rpcClients: {
       enabled: true,
-      camelCase: true
+      camelCase: true,
+      bundle: false
     }
   }
 })

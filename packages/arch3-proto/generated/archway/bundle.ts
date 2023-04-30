@@ -10,8 +10,6 @@ import * as _7 from "./tracking/v1beta1/tracking";
 import * as _72 from "./rewards/v1beta1/query.rpc.Query";
 import * as _73 from "./tracking/v1beta1/query.rpc.Query";
 import * as _74 from "./rewards/v1beta1/tx.rpc.msg";
-import * as _93 from "./rpc.query";
-import * as _94 from "./rpc.tx";
 export namespace archway {
   export namespace rewards {
     export const v1beta1 = {
@@ -32,8 +30,4 @@ export namespace archway {
       ..._73
     };
   }
-  export const ClientFactory = {
-    ..._93,
-    ..._94
-  };
 }
