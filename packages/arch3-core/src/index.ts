@@ -5,3 +5,5 @@ export { ArchwayClient } from './archwayclient';
 export { SigningArchwayClient } from './signingarchwayclient';
 
 export * from './modules';
+export * from './types';
+export * from './queryclient';

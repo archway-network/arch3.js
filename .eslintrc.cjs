@@ -160,6 +160,10 @@ module.exports = {
         format: ['strictCamelCase'],
         leadingUnderscore: 'allow',
       },
+      {
+        selector: 'interface',
+        format: ['PascalCase'],
+      },
     ],
     '@typescript-eslint/no-dynamic-delete': 'warn',
     '@typescript-eslint/no-empty-function': 'off',
