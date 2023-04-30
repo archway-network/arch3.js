@@ -53,7 +53,7 @@ telescope({
       }
     },
     aminoEncoding: {
-      enabled: false
+      enabled: true
     },
     lcdClients: {
       enabled: false

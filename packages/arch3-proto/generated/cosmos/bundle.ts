@@ -26,16 +26,24 @@ import * as _32 from "./tx/v1beta1/service";
 import * as _33 from "./tx/v1beta1/tx";
 import * as _34 from "./upgrade/v1beta1/query";
 import * as _35 from "./upgrade/v1beta1/upgrade";
-import * as _75 from "./bank/v1beta1/query.rpc.Query";
-import * as _76 from "./distribution/v1beta1/query.rpc.Query";
-import * as _77 from "./gov/v1beta1/query.rpc.Query";
-import * as _78 from "./staking/v1beta1/query.rpc.Query";
-import * as _79 from "./tx/v1beta1/service.rpc.Service";
-import * as _80 from "./upgrade/v1beta1/query.rpc.Query";
-import * as _81 from "./bank/v1beta1/tx.rpc.msg";
-import * as _82 from "./distribution/v1beta1/tx.rpc.msg";
-import * as _83 from "./gov/v1beta1/tx.rpc.msg";
-import * as _84 from "./staking/v1beta1/tx.rpc.msg";
+import * as _77 from "./bank/v1beta1/tx.amino";
+import * as _78 from "./distribution/v1beta1/tx.amino";
+import * as _79 from "./gov/v1beta1/tx.amino";
+import * as _80 from "./staking/v1beta1/tx.amino";
+import * as _81 from "./bank/v1beta1/tx.registry";
+import * as _82 from "./distribution/v1beta1/tx.registry";
+import * as _83 from "./gov/v1beta1/tx.registry";
+import * as _84 from "./staking/v1beta1/tx.registry";
+import * as _85 from "./bank/v1beta1/query.rpc.Query";
+import * as _86 from "./distribution/v1beta1/query.rpc.Query";
+import * as _87 from "./gov/v1beta1/query.rpc.Query";
+import * as _88 from "./staking/v1beta1/query.rpc.Query";
+import * as _89 from "./tx/v1beta1/service.rpc.Service";
+import * as _90 from "./upgrade/v1beta1/query.rpc.Query";
+import * as _91 from "./bank/v1beta1/tx.rpc.msg";
+import * as _92 from "./distribution/v1beta1/tx.rpc.msg";
+import * as _93 from "./gov/v1beta1/tx.rpc.msg";
+import * as _94 from "./staking/v1beta1/tx.rpc.msg";
 export namespace cosmos {
   export namespace bank {
     export const v1beta1 = {
@@ -43,8 +51,10 @@ export namespace cosmos {
       ..._10,
       ..._11,
       ..._12,
-      ..._75,
-      ..._81
+      ..._77,
+      ..._81,
+      ..._85,
+      ..._91
     };
   }
   export namespace base {
@@ -79,8 +89,10 @@ export namespace cosmos {
       ..._20,
       ..._21,
       ..._22,
-      ..._76,
-      ..._82
+      ..._78,
+      ..._82,
+      ..._86,
+      ..._92
     };
   }
   export namespace gov {
@@ -89,8 +101,10 @@ export namespace cosmos {
       ..._24,
       ..._25,
       ..._26,
-      ..._77,
-      ..._83
+      ..._79,
+      ..._83,
+      ..._87,
+      ..._93
     };
   }
   export namespace staking {
@@ -99,8 +113,10 @@ export namespace cosmos {
       ..._28,
       ..._29,
       ..._30,
-      ..._78,
-      ..._84
+      ..._80,
+      ..._84,
+      ..._88,
+      ..._94
     };
   }
   export namespace tx {
@@ -112,14 +128,14 @@ export namespace cosmos {
     export const v1beta1 = {
       ..._32,
       ..._33,
-      ..._79
+      ..._89
     };
   }
   export namespace upgrade {
     export const v1beta1 = {
       ..._34,
       ..._35,
-      ..._80
+      ..._90
     };
   }
 }
