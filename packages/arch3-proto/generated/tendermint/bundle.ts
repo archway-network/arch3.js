@@ -1,39 +1,39 @@
 /* eslint-disable */
-import * as _61 from "./abci/types";
-import * as _62 from "./crypto/keys";
-import * as _63 from "./crypto/proof";
-import * as _64 from "./libs/bits/types";
-import * as _65 from "./p2p/types";
-import * as _66 from "./types/block";
-import * as _67 from "./types/evidence";
-import * as _68 from "./types/params";
-import * as _69 from "./types/types";
-import * as _70 from "./types/validator";
-import * as _71 from "./version/types";
+import * as _47 from "./abci/types";
+import * as _48 from "./crypto/keys";
+import * as _49 from "./crypto/proof";
+import * as _50 from "./libs/bits/types";
+import * as _51 from "./p2p/types";
+import * as _52 from "./types/block";
+import * as _53 from "./types/evidence";
+import * as _54 from "./types/params";
+import * as _55 from "./types/types";
+import * as _56 from "./types/validator";
+import * as _57 from "./version/types";
 export namespace tendermint {
   export const abci = {
-    ..._61
+    ..._47
   };
   export const crypto = {
-    ..._62,
-    ..._63
+    ..._48,
+    ..._49
   };
   export namespace libs {
     export const bits = {
-      ..._64
+      ..._50
     };
   }
   export const p2p = {
-    ..._65
+    ..._51
   };
   export const types = {
-    ..._66,
-    ..._67,
-    ..._68,
-    ..._69,
-    ..._70
+    ..._52,
+    ..._53,
+    ..._54,
+    ..._55,
+    ..._56
   };
   export const version = {
-    ..._71
+    ..._57
   };
 }
