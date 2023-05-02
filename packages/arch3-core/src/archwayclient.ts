@@ -43,7 +43,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    * @param tmClient - A Tendermint client for a given endpoint.
    * @returns An {@link ArchwayClient} connected to the endpoint.
    */
-  // eslint-disable-next-line @typescript-eslint/require-await
+  /* eslint-disable-next-line @typescript-eslint/require-await */
   public static override async create(tmClient: TendermintClient): Promise<ArchwayClient> {
     return new ArchwayClient(tmClient);
   }

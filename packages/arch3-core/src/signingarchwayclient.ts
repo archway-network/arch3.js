@@ -52,7 +52,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param options - Options for the signing client.
    * @returns A {@link SigningArchwayClient} connected to the endpoint.
    */
-  // eslint-disable-next-line @typescript-eslint/require-await
+  /* eslint-disable-next-line @typescript-eslint/require-await */
   public static override async createWithSigner(
     tmClient: TendermintClient,
     signer: OfflineSigner,
@@ -74,7 +74,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param options - options for signing and broadcasting transactions.
    * @returns An offline {@link SigningArchwayClient}.
    */
-  // eslint-disable-next-line @typescript-eslint/require-await
+  /* eslint-disable-next-line @typescript-eslint/require-await */
   public static override async offline(
     signer: OfflineSigner,
     options: SigningCosmWasmClientOptions = {},
