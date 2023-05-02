@@ -57,7 +57,7 @@
     "lint:all": "yarn workspaces foreach --parallel --verbose run lint",
     "lint:fix:all": "yarn workspaces foreach --parallel --verbose run lint:fix",
     "lint:sarif:all": "yarn workspaces foreach --parallel --verbose run lint:sarif",
-    "docs": "typedoc --options typedoc.cjs .",
+    "docs": "typedoc",
     "docs:all": "yarn workspaces foreach --parallel --verbose run docs",
     "publish:all": "yarn workspaces foreach --topological --no-private --verbose npm publish"
   },
