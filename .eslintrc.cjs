@@ -30,6 +30,15 @@ module.exports = {
   settings: {
     node: {
       tryExtensions: ['.ts', '.d.ts', '.js', '.json'],
+    },
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx']
+    },
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+      },
+      node: true
     }
   },
   rules: {
@@ -129,13 +138,22 @@ module.exports = {
         format: ['StrictPascalCase'],
       },
       {
-        selector: 'enumMember',
+        selector: 'interface',
+        format: ['PascalCase'],
+      },
+      {
+        selector: ['enum', 'enumMember'],
         format: ['StrictPascalCase'],
       },
       {
         selector: 'variable',
         format: ['strictCamelCase'],
         leadingUnderscore: 'allow',
+      },
+      {
+        selector: 'variable',
+        modifiers: ['const', 'exported'],
+        format: ['strictCamelCase', 'StrictPascalCase'],
       },
       {
         selector: 'parameter',
@@ -156,14 +174,23 @@ module.exports = {
     '@typescript-eslint/prefer-readonly': 'warn',
     'import/first': 'error',
     'import/newline-after-import': 'error',
+    'import/no-absolute-path': 'error',
     'import/no-duplicates': 'error',
-    'import/no-unresolved': 'off',
+    'import/no-unresolved': 'error',
+    'import/no-useless-path-segments': 'error',
     'import/order': ['error', {
       'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+      'pathGroups': [
+        {
+          'pattern': '@archwayhq/**',
+          'group': 'external',
+          'position': 'after'
+        }
+      ],
       'newlines-between': 'always',
-      alphabetize: {
-        order: 'asc',
-        caseInsensitive: true
+      'alphabetize': {
+        'order': 'asc',
+        'caseInsensitive': true
       }
     }],
     'jsdoc/require-jsdoc': ['warn', { 'publicOnly': true }],
@@ -185,14 +212,15 @@ module.exports = {
       rules: {
         'jest/consistent-test-it': 'error',
         'jest/no-conditional-in-test': 'warn',
-        'jest/prefer-expect-assertions': 'off',
-        'jest/prefer-expect-resolves': 'error',
         'jest/prefer-comparison-matcher': 'error',
         'jest/prefer-equality-matcher': 'error',
+        'jest/prefer-expect-assertions': 'off',
+        'jest/prefer-expect-resolves': 'error',
+        'jest/prefer-lowercase-title': 'off',
         'jest/prefer-spy-on': 'error',
         'jest/prefer-todo': 'warn',
         'jest/require-top-level-describe': 'error',
-        'jest/prefer-lowercase-title': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
       }
     },
   ],
