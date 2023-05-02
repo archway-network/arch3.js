@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as _36 from "./gogo";
+import * as _22 from "./gogo";
 export const gogoproto = {
-  ..._36
+  ..._22
 };

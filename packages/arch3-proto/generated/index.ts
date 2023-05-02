@@ -6,9 +6,12 @@
   */
  
 export * from "./archway/bundle";
+export * from "./archway/client";
 export * from "./ics23/bundle";
 export * from "./cosmos/bundle";
+export * from "./cosmos/client";
 export * from "./gogoproto/bundle";
 export * from "./google/bundle";
 export * from "./ibc/bundle";
+export * from "./ibc/client";
 export * from "./tendermint/bundle";

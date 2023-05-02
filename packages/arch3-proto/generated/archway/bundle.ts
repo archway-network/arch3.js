@@ -7,11 +7,11 @@ import * as _4 from "./rewards/v1beta1/tx";
 import * as _5 from "./tracking/v1beta1/genesis";
 import * as _6 from "./tracking/v1beta1/query";
 import * as _7 from "./tracking/v1beta1/tracking";
-import * as _72 from "./rewards/v1beta1/query.rpc.Query";
-import * as _73 from "./tracking/v1beta1/query.rpc.Query";
-import * as _74 from "./rewards/v1beta1/tx.rpc.msg";
-import * as _93 from "./rpc.query";
-import * as _94 from "./rpc.tx";
+import * as _58 from "./rewards/v1beta1/tx.amino";
+import * as _59 from "./rewards/v1beta1/tx.registry";
+import * as _60 from "./rewards/v1beta1/query.rpc.Query";
+import * as _61 from "./tracking/v1beta1/query.rpc.Query";
+import * as _62 from "./rewards/v1beta1/tx.rpc.msg";
 export namespace archway {
   export namespace rewards {
     export const v1beta1 = {
@@ -20,8 +20,10 @@ export namespace archway {
       ..._2,
       ..._3,
       ..._4,
-      ..._72,
-      ..._74
+      ..._58,
+      ..._59,
+      ..._60,
+      ..._62
     };
   }
   export namespace tracking {
@@ -29,11 +31,7 @@ export namespace archway {
       ..._5,
       ..._6,
       ..._7,
-      ..._73
+      ..._61
     };
   }
-  export const ClientFactory = {
-    ..._93,
-    ..._94
-  };
 }
