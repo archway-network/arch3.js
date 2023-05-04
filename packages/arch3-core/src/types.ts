@@ -61,7 +61,7 @@ export interface OutstandingRewards {
   /** Total rewards credited to the rewards address. */
   readonly totalRewards: Coin[];
   /** Total number of RewardsRecord objects stored for the rewards address. */
-  readonly recordsNum: number;
+  readonly totalRecords: number;
 }
 
 /**
