@@ -48,7 +48,7 @@
     "clean:all": "yarn workspaces foreach --parallel --verbose run clean",
     "build": "yarn clean && tsc --build",
     "build:all": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
-    "test": "jest --no-cache",
+    "test": "jest",
     "test:watch": "yarn test --watch",
     "test:all": "yarn workspaces foreach --topological-dev --parallel --verbose run test --passWithNoTests",
     "lint": "eslint ./src --ext .js,.cjs,.ts --no-error-on-unmatched-pattern",
