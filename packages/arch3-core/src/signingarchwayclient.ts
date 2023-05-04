@@ -1,3 +1,4 @@
+import { Long } from '@archwayhq/arch3-proto/helpers';
 import {
   createWasmAminoConverters,
   HttpEndpoint,
@@ -5,7 +6,7 @@ import {
   SigningCosmWasmClientOptions
 } from '@cosmjs/cosmwasm-stargate';
 import { wasmTypes } from '@cosmjs/cosmwasm-stargate/build/modules';
-import { OfflineSigner, Registry } from '@cosmjs/proto-signing';
+import { Coin, OfflineSigner, Registry } from '@cosmjs/proto-signing';
 import {
   AminoTypes,
   createDefaultAminoConverters,
@@ -54,6 +55,16 @@ export interface TxResult {
 export interface SetContractMetadataResult extends TxResult {
   /** Contract rewards distribution options for a particular contract. */
   readonly metadata: ContractMetadata;
+}
+
+/**
+ * The result of a {@link SigningArchwayClient.withdrawDeveloperRewardsByLimit} transaction.
+ */
+export interface WithdrawContractRewardsResult extends TxResult {
+  /** Address receiving the rewards. */
+  rewardsAddress: string;
+  /** Total rewards withdrawn. */
+  rewards: Coin[];
 }
 
 function createDeliverTxResponseErrorMessage(result: DeliverTxResponse): string {
@@ -178,17 +189,67 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     };
     /* eslint-enable */
     return {
-      metadata: {
-        contractAddress: contractMetadata.contract_address,
-        ownerAddress: contractMetadata.owner_address,
-        rewardsAddress: contractMetadata.rewards_address,
-      },
       logs: parsedLogs,
       height: result.height,
       transactionHash: result.transactionHash,
       events: result.events,
       gasWanted: result.gasWanted,
       gasUsed: result.gasUsed,
+      metadata: {
+        contractAddress: contractMetadata.contract_address,
+        ownerAddress: contractMetadata.owner_address,
+        rewardsAddress: contractMetadata.rewards_address,
+      },
+    };
+  }
+
+  /**
+   * Withdraws rewards for the `senderAddress` up to the given limit of records to process.
+   * If the limit is set to `0`, it will use the default limit from the protocol.
+   * The default limit is a parameter on the rewards module and it can be updated via governance.
+   *
+   * This method is useful when the contract has a large number of rewards to withdraw,
+   * so they can be processed in batches.
+   *
+   * @param senderAddress - Address of the message sender and rewards destination.
+   * @param limit - Maximum number of rewards to withdraw.
+   * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
+   * @param memo - Optional memo to add to the transaction.
+   * @returns A transaction result with information about the rewards withdrawn.
+   * @throws Error if the transaction fails.
+   *
+   * @see Check the [Archway Bindings](https://github.com/archway-network/archway-bindings) repository
+   * for more information on how to withdraw rewards from a contract.
+   */
+  public async withdrawDeveloperRewardsByLimit(
+    senderAddress: string,
+    limit: number,
+    fee: StdFee | 'auto' | number,
+    memo?: string,
+  ): Promise<WithdrawContractRewardsResult> {
+    const rewardsAddress = senderAddress;
+    const message = RewardsMsgEncoder.withdrawRewards({
+      rewardsAddress,
+      recordsLimit: {
+        limit: Long.fromNumber(limit),
+      }
+    });
+    const result = await this.signAndBroadcast(senderAddress, [message], fee, memo);
+    if (isDeliverTxFailure(result)) {
+      throw new Error(createDeliverTxResponseErrorMessage(result));
+    }
+    const parsedLogs = logs.parseRawLog(result.rawLog);
+    const rewardsAttr = logs.findAttribute(parsedLogs, 'archway.rewards.v1beta1.RewardsWithdrawEvent', 'rewards');
+    const rewards = JSON.parse(rewardsAttr.value) as Coin[];
+    return {
+      logs: parsedLogs,
+      height: result.height,
+      transactionHash: result.transactionHash,
+      events: result.events,
+      gasWanted: result.gasWanted,
+      gasUsed: result.gasUsed,
+      rewardsAddress,
+      rewards,
     };
   }
 

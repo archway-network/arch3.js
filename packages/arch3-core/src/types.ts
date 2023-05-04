@@ -5,6 +5,7 @@ import { Coin } from '@cosmjs/stargate';
  *
  * @see {@link ./queryclient!IArchwayQueryClient.getContractMetadata}
  * @see {@link ./signingarchwayclient!SigningArchwayClient.setContractMetadata}
+ * @see {@link ./signingarchwayclient!SigningArchwayClient.withdrawDeveloperRewardsByLimit}
  */
 export interface ContractMetadata {
   /** Address of the contract with the rewards metadata. */

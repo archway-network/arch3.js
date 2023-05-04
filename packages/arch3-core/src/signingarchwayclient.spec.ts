@@ -81,14 +81,47 @@ describe('SigningArchwayClient', () => {
       });
     });
 
-    describe('withdraw', () => {
-      it.todo('withdraws rewards by limit');
-
-      it.todo('withdraws rewards by id');
-    });
-
     describe('contract premium', () => {
       it.todo('sets the contract premium');
+    });
+
+    describe('withdraw', () => {
+      it('withdraws rewards by limit', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+
+        const contractAddress = contracts.voter.addresses[3];
+        const rewardsAddress = accounts[3].address;
+
+        /* eslint-disable camelcase, @typescript-eslint/naming-convention */
+        const msg = {
+          new_voting: {
+            name: 'test_voting',
+            vote_options: ['yes', 'no'],
+            duration: 10000000000,
+          }
+        };
+        /* eslint-enable camelcase, @typescript-eslint/naming-convention */
+        await client.execute(rewardsAddress, contractAddress, msg, 'auto', undefined, coins(10, archwayd.denom));
+
+        const result = await client.withdrawDeveloperRewardsByLimit(rewardsAddress, 0, 'auto');
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          rewardsAddress: rewardsAddress,
+          rewards: [expect.objectContaining({
+            amount: expect.any(String),
+            denom: archwayd.denom,
+          })],
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
     });
   });
 });
