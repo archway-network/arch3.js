@@ -15,7 +15,14 @@ services:
       - data:/root/.archway
     environment:
       - VALIDATOR_MNEMONIC
-      - GENESIS_ACCOUNTS=archway1ecak50zhujddqd639xw4ejghnyrrc6jlwnlgwt,
+    healthcheck:
+      test:
+        curl --retry 5 --retry-delay 1 --retry-all-errors -sf 'http://localhost:26657/status' |
+        jq -e '.result.sync_info | (.latest_block_height > 0 and .catching_up == false)'
+      interval: 5s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
 
 volumes:
   data:
