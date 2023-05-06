@@ -322,7 +322,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     return await this.archwayQueryClient.getContractPremium(contractAddress);
   }
 
-  public async getEstimateTxFees(gasLimit: number, contractAddress?: string): Promise<EstimateTxFees> {
+  public async getEstimateTxFees(gasLimit?: number, contractAddress?: string): Promise<EstimateTxFees> {
     return await this.archwayQueryClient.getEstimateTxFees(gasLimit, contractAddress);
   }
 

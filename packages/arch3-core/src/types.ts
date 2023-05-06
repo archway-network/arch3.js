@@ -1,4 +1,4 @@
-import { Coin } from '@cosmjs/stargate';
+import { Coin, GasPrice } from '@cosmjs/stargate';
 
 /**
  * Defines the contract rewards distribution options for a particular contract.
@@ -47,9 +47,9 @@ export interface ContractPremium {
  */
 export interface EstimateTxFees {
   /** Maximum amount of gas to be used in this transaction. */
-  readonly gasLimit: number;
+  readonly gasLimit?: number;
   /** Minimum transaction fee per gas unit. */
-  readonly gasUnitPrice?: Coin;
+  readonly gasUnitPrice?: GasPrice;
   /** Contract address used to query for premium fees. */
   readonly contractAddress?: string;
   /** Estimated transaction fee for a given gas limit and contract premium. */

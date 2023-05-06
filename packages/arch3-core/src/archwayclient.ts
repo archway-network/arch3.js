@@ -60,7 +60,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
     return await this.archwayQueryClient.getContractPremium(contractAddress);
   }
 
-  public async getEstimateTxFees(gasLimit: number, contractAddress?: string): Promise<EstimateTxFees> {
+  public async getEstimateTxFees(gasLimit?: number, contractAddress?: string): Promise<EstimateTxFees> {
     return await this.archwayQueryClient.getEstimateTxFees(gasLimit, contractAddress);
   }
 
