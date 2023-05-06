@@ -216,6 +216,10 @@ module.exports = {
       extends: ['plugin:jest/all'],
       rules: {
         'jest/consistent-test-it': 'error',
+        'jest/expect-expect': ['error', {
+          'assertFunctionNames': ['expect*', 'assert*'],
+          'additionalTestBlockFunctions': []
+        }],
         'jest/no-conditional-in-test': 'warn',
         'jest/prefer-comparison-matcher': 'error',
         'jest/prefer-equality-matcher': 'error',
