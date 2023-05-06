@@ -340,7 +340,7 @@ for i in {0..1}; do
     archwayd-tx rewards set-flat-fee \
       --from "${alice_addresses[i]}" \
       "${contract_addresses[i]}" \
-      "100${denom}"
+      "1000${denom}"
   )"
   validate-tx "$tx_result" "failed to set flat fee!"
   tx_hash="$(jq -r '.txhash' <<<"${tx_result}")"

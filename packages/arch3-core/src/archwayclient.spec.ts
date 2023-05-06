@@ -80,10 +80,7 @@ describe('ArchwayClient', () => {
       const gasUnitPriceAmount = response.gasUnitPrice?.amount;
       expect(gasUnitPriceAmount?.isLessThan(Decimal.one(gasUnitPriceAmount?.fractionalDigits))).toBeTruthy();
       expect(response.contractAddress).toBe(contractAddress);
-      expect(response.estimatedFee).toContainEqual({
-        denom: archwayd.denom,
-        amount: '100',
-      });
+      expect(response.estimatedFee).toContainEqual(coin(1000, archwayd.denom));
 
       client.disconnect();
     });
@@ -123,7 +120,7 @@ describe('ArchwayClient', () => {
       const response = await client.getContractPremium(contractAddress);
 
       expect(response.contractAddress).toBe(contractAddress);
-      expect(response.flatFee).toMatchObject(coin(100, archwayd.denom));
+      expect(response.flatFee).toMatchObject(coin(1000, archwayd.denom));
 
       client.disconnect();
     });
