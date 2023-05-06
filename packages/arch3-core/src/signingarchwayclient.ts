@@ -6,14 +6,14 @@ import {
   SigningCosmWasmClientOptions
 } from '@cosmjs/cosmwasm-stargate';
 import { wasmTypes } from '@cosmjs/cosmwasm-stargate/build/modules';
-import { Coin, OfflineSigner, Registry } from '@cosmjs/proto-signing';
+import { Coin, EncodeObject, OfflineSigner, Registry } from '@cosmjs/proto-signing';
 import {
   AminoTypes,
+  assertIsDeliverTxSuccess,
   createDefaultAminoConverters,
   defaultRegistryTypes,
   DeliverTxResponse,
   Event,
-  isDeliverTxFailure,
   logs,
   StdFee
 } from '@cosmjs/stargate';
@@ -30,6 +30,10 @@ import {
   RewardsPool,
   RewardsRecord
 } from './types';
+
+interface DeliverTxResponseWithLogs extends DeliverTxResponse {
+  readonly parsedLogs: readonly logs.Log[];
+}
 
 /**
  * A base interface for all transaction results.
@@ -75,8 +79,16 @@ export interface WithdrawContractRewardsResult extends TxResult {
   rewards: Coin[];
 }
 
-function createDeliverTxResponseErrorMessage(result: DeliverTxResponse): string {
-  return `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`;
+function buildResult(response: DeliverTxResponseWithLogs): TxResult {
+  const { height, transactionHash, gasWanted, gasUsed, events, parsedLogs } = response;
+  return {
+    logs: parsedLogs,
+    height,
+    transactionHash,
+    events,
+    gasWanted,
+    gasUsed,
+  };
 }
 
 /**
@@ -183,12 +195,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         rewardsAddress: metadata.rewardsAddress ?? '',
       }
     });
-    const result = await this.signAndBroadcast(senderAddress, [message], fee, memo);
-    if (isDeliverTxFailure(result)) {
-      throw new Error(createDeliverTxResponseErrorMessage(result));
-    }
-    const parsedLogs = logs.parseRawLog(result.rawLog);
-    const metadataAttr = logs.findAttribute(parsedLogs, 'archway.rewards.v1beta1.ContractMetadataSetEvent', 'metadata');
+    const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
+    const metadataAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1beta1.ContractMetadataSetEvent', 'metadata');
     /* eslint-disable camelcase, @typescript-eslint/naming-convention */
     const contractMetadata = JSON.parse(metadataAttr.value) as {
       contract_address: string,
@@ -197,12 +205,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     };
     /* eslint-enable */
     return {
-      logs: parsedLogs,
-      height: result.height,
-      transactionHash: result.transactionHash,
-      events: result.events,
-      gasWanted: result.gasWanted,
-      gasUsed: result.gasUsed,
+      ...buildResult(response),
       metadata: {
         contractAddress: contractMetadata.contract_address,
         ownerAddress: contractMetadata.owner_address,
@@ -238,19 +241,10 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       contractAddress,
       flatFeeAmount: flatFee,
     });
-    const result = await this.signAndBroadcast(senderAddress, [message], fee, memo);
-    if (isDeliverTxFailure(result)) {
-      throw new Error(createDeliverTxResponseErrorMessage(result));
-    }
-    const parsedLogs = logs.parseRawLog(result.rawLog);
-    const flatFeeAttr = logs.findAttribute(parsedLogs, 'archway.rewards.v1beta1.ContractFlatFeeSetEvent', 'flat_fee');
+    const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
+    const flatFeeAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1beta1.ContractFlatFeeSetEvent', 'flat_fee');
     return {
-      logs: parsedLogs,
-      height: result.height,
-      transactionHash: result.transactionHash,
-      events: result.events,
-      gasWanted: result.gasWanted,
-      gasUsed: result.gasUsed,
+      ...buildResult(response),
       premium: {
         contractAddress,
         flatFee: JSON.parse(flatFeeAttr.value) as Coin,
@@ -289,22 +283,30 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         limit: Long.fromNumber(limit),
       }
     });
-    const result = await this.signAndBroadcast(senderAddress, [message], fee, memo);
-    if (isDeliverTxFailure(result)) {
-      throw new Error(createDeliverTxResponseErrorMessage(result));
-    }
-    const parsedLogs = logs.parseRawLog(result.rawLog);
-    const rewardsAttr = logs.findAttribute(parsedLogs, 'archway.rewards.v1beta1.RewardsWithdrawEvent', 'rewards');
+    const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
+    const rewardsAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1beta1.RewardsWithdrawEvent', 'rewards');
     const rewards = JSON.parse(rewardsAttr.value) as Coin[];
     return {
-      logs: parsedLogs,
-      height: result.height,
-      transactionHash: result.transactionHash,
-      events: result.events,
-      gasWanted: result.gasWanted,
-      gasUsed: result.gasUsed,
+      ...buildResult(response),
       rewardsAddress,
       rewards,
+    };
+  }
+
+  private async assertSignAndBroadcast(
+    signerAddress: string,
+    messages: readonly EncodeObject[],
+    fee: StdFee | 'auto' | number,
+    memo?: string
+  ): Promise<DeliverTxResponseWithLogs> {
+    const response = await this.signAndBroadcast(signerAddress, messages, fee, memo);
+    assertIsDeliverTxSuccess(response);
+
+    const parsedLogs = logs.parseRawLog(response.rawLog);
+
+    return {
+      ...response,
+      parsedLogs,
     };
   }
 
