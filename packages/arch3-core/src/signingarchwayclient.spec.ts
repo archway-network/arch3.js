@@ -1,5 +1,5 @@
 import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
-import { AccountData, coins, DirectSecp256k1HdWallet, makeCosmoshubPath } from '@cosmjs/proto-signing';
+import { AccountData, coin, coins, DirectSecp256k1HdWallet, makeCosmoshubPath } from '@cosmjs/proto-signing';
 import { GasPrice } from '@cosmjs/stargate';
 
 import { SigningArchwayClient } from './signingarchwayclient';
@@ -82,7 +82,65 @@ describe('SigningArchwayClient', () => {
     });
 
     describe('contract premium', () => {
-      it.todo('sets the contract premium');
+      it('sets the contract premium', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+
+        const contractAddress = contracts.voter.addresses[1];
+        const ownerAddress = accounts[1].address;
+
+        const result = await client.setContractPremium(
+          ownerAddress,
+          contractAddress,
+          coin(200, archwayd.denom),
+          'auto'
+        );
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          premium: {
+            contractAddress,
+            flatFee: coin(200, archwayd.denom),
+          },
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
+
+      it('disables the contract premium', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+
+        const contractAddress = contracts.voter.addresses[2];
+        const ownerAddress = accounts[2].address;
+
+        const result = await client.setContractPremium(
+          ownerAddress,
+          contractAddress,
+          coin(0, archwayd.denom),
+          'auto'
+        );
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          premium: {
+            contractAddress,
+            flatFee: coin(0, archwayd.denom),
+          },
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
     });
 
     describe('withdraw', () => {

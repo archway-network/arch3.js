@@ -58,6 +58,14 @@ export interface SetContractMetadataResult extends TxResult {
 }
 
 /**
+ * The result of a {@link SigningArchwayClient.setContractPremium} transaction.
+ */
+export interface SetContractPremiumResult extends TxResult {
+  /** Contract premium fee for a particular contract. */
+  readonly premium: ContractPremium;
+}
+
+/**
  * The result of a {@link SigningArchwayClient.withdrawDeveloperRewardsByLimit} transaction.
  */
 export interface WithdrawContractRewardsResult extends TxResult {
@@ -204,7 +212,54 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   }
 
   /**
-   * Withdraws rewards for the `senderAddress` up to the given limit of records to process.
+   * Updates the contract's premium fee. Only the owner of the contract metadata can update the fee.
+   *
+   * @param senderAddress - Address of the message sender.
+   * @param contractAddress - Contract address to set the premium fee.
+   * @param flatFee - The contract premium fee. To disable the fee, set its `amount` to `0`.
+   * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
+   * @param memo - Optional memo to add to the transaction.
+   * @returns A transaction result with the contract's premium fee.
+   * @throws Error if the transaction fails.
+   *
+   * @see {@link SigningArchwayClient.withdrawContractRewards} for details on how to withdraw rewards.
+   * @see Check the [Archway Bindings](https://github.com/archway-network/archway-bindings) repository
+   * for more information on how to withdraw rewards from a contract.
+   */
+  public async setContractPremium(
+    senderAddress: string,
+    contractAddress: string,
+    flatFee: Coin,
+    fee: StdFee | 'auto' | number,
+    memo?: string,
+  ): Promise<SetContractPremiumResult> {
+    const message = RewardsMsgEncoder.setFlatFee({
+      senderAddress,
+      contractAddress,
+      flatFeeAmount: flatFee,
+    });
+    const result = await this.signAndBroadcast(senderAddress, [message], fee, memo);
+    if (isDeliverTxFailure(result)) {
+      throw new Error(createDeliverTxResponseErrorMessage(result));
+    }
+    const parsedLogs = logs.parseRawLog(result.rawLog);
+    const flatFeeAttr = logs.findAttribute(parsedLogs, 'archway.rewards.v1beta1.ContractFlatFeeSetEvent', 'flat_fee');
+    return {
+      logs: parsedLogs,
+      height: result.height,
+      transactionHash: result.transactionHash,
+      events: result.events,
+      gasWanted: result.gasWanted,
+      gasUsed: result.gasUsed,
+      premium: {
+        contractAddress,
+        flatFee: JSON.parse(flatFeeAttr.value) as Coin,
+      }
+    };
+  }
+
+  /**
+   * Withdraws rewards for the `senderAddress` up to the given `limit` of records to process.
    * If the limit is set to `0`, it will use the default limit from the protocol.
    * The default limit is a parameter on the rewards module and it can be updated via governance.
    *
