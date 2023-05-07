@@ -25,11 +25,8 @@ function archwayd() {
   docker compose exec node archwayd "$@"
 }
 
-# shellcheck disable=SC2120
 function gas-prices-estimate() {
-  local contract_address="${1:-}"
-  # shellcheck disable=SC2086
-  archwayd q rewards estimate-fees 1 ${contract_address} --output json |
+  archwayd q rewards estimate-fees 1 --output json |
     jq -r '.gas_unit_price | (.amount + .denom)'
 }
 
@@ -151,6 +148,52 @@ function instantiate-contract() {
     --arg tx_hash "${tx_hash:-}" \
     '{
       "contract_address": $contract_address,
+      "tx_hash": $tx_hash
+    }'
+}
+
+function execute-contract() {
+  local address="${1:-}"
+  local contract_address="${2:-}"
+  local msg="${3:-}"
+  local amount="${4:-}"
+
+  local gas=300000
+  local fees
+  fees="$(
+    archwayd q rewards estimate-fees ${gas} "${contract_address}" --output json |
+      jq -r '.estimated_fee[0] | (.amount + .denom)'
+  )"
+
+  local tx_result
+  tx_result="$(
+    if [[ -n "${amount}" ]]; then
+      archwayd tx wasm execute \
+        --from "${address}" \
+        --amount "${amount}" \
+        --gas ${gas} \
+        --fees "${fees}" \
+        --broadcast-mode block \
+        --output json \
+        --yes \
+        "${contract_address}" \
+        "${msg}"
+    else
+      archwayd tx wasm execute \
+        --from "${address}" \
+        --fees "${fees}" \
+        --broadcast-mode block \
+        --output json \
+        --yes \
+        "${contract_address}" \
+        "${msg}"
+    fi
+  )"
+  validate-tx "${tx_result}" "failed to execute contract!"
+
+  jq --null-input \
+    --arg tx_hash "$(jq -r '.txhash' <<<"${tx_result}")" \
+    '{
       "tx_hash": $tx_hash
     }'
 }
@@ -304,3 +347,26 @@ for i in {0..1}; do
   echo "   tx: ${tx_hash}"
 done
 ok "contract premium set"
+
+echo
+echo "[‣] generating rewards..."
+i=0
+echo " • voter-$i..."
+execute_result="$(
+  execute-contract \
+    "${alice_addresses[i]}" \
+    "${contract_addresses[i]}" \
+    "$(
+      jq --null-input \
+        '{
+          new_voting: {
+            name: "test_voting_rewards",
+            vote_options: ["yes", "no"],
+            duration: 10000000000,
+          }
+        }'
+    )" \
+    "10${denom}"
+)"
+tx_hash="$(jq -r '.tx_hash' <<<"${execute_result}")"
+echo "   tx: ${tx_hash}"

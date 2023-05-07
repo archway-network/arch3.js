@@ -93,8 +93,8 @@ describe('ArchwayClient', () => {
       const response = await client.getOutstandingRewards(aliceAddress);
 
       expect(response.rewardsAddress).toBe(aliceAddress);
-      expect(response.totalRewards).toHaveLength(0);
-      expect(response.totalRecords).toBe(0);
+      expect(response.totalRewards).not.toHaveLength(0);
+      expect(response.totalRecords).toBeGreaterThan(0);
 
       client.disconnect();
     });
@@ -113,7 +113,7 @@ describe('ArchwayClient', () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);
       const response = await client.getAllRewardsRecords(aliceAddress);
 
-      expect(response).toHaveLength(0);
+      expect(response).not.toHaveLength(0);
 
       client.disconnect();
     });
