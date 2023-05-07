@@ -70,7 +70,7 @@ export interface SetContractPremiumResult extends TxResult {
 }
 
 /**
- * The result of a {@link SigningArchwayClient.withdrawDeveloperRewardsByLimit} transaction.
+ * The result of a {@link SigningArchwayClient.withdrawContractRewards} transaction.
  */
 export interface WithdrawContractRewardsResult extends TxResult {
   /** Address receiving the rewards. */
@@ -270,7 +270,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @see Check the [Archway Bindings](https://github.com/archway-network/archway-bindings) repository
    * for more information on how to withdraw rewards from a contract.
    */
-  public async withdrawDeveloperRewardsByLimit(
+  public async withdrawContractRewards(
     senderAddress: string,
     limit: number,
     fee: StdFee | 'auto' | number,

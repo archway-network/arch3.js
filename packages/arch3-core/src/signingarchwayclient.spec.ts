@@ -162,7 +162,7 @@ describe('SigningArchwayClient', () => {
         /* eslint-enable camelcase, @typescript-eslint/naming-convention */
         await client.execute(rewardsAddress, contractAddress, msg, 'auto', undefined, coins(10, archwayd.denom));
 
-        const result = await client.withdrawDeveloperRewardsByLimit(rewardsAddress, 0, 'auto');
+        const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
 
         expect(result).toMatchObject({
           height: expect.any(Number),
