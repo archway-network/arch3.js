@@ -1,8 +1,13 @@
-export * from '@archwayhq/arch3-proto';
 export * from '@cosmjs/cosmwasm-stargate';
 
 export { ArchwayClient } from './archwayclient';
-export { SigningArchwayClient } from './signingarchwayclient';
+export {
+  SetContractMetadataResult,
+  SetContractPremiumResult,
+  SigningArchwayClient,
+  TxResult,
+  WithdrawContractRewardsResult,
+} from './signingarchwayclient';
 
 export * from './modules';
 export * from './types';
