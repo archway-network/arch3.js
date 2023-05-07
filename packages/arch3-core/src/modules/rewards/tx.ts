@@ -6,4 +6,7 @@ export { registry as rewardsTypes } from '@archwayhq/arch3-proto/archway/rewards
 
 export const createRewardsAminoConverters: () => AminoConverters = () => AminoConverter;
 
+/**
+ * Encodes the transaction messages for the `x/rewards` module.
+ */
 export const RewardsMsgEncoder = MessageComposer.fromPartial;

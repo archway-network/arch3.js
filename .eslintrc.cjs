@@ -200,6 +200,9 @@ module.exports = {
     }],
     'jsdoc/require-jsdoc': ['warn', { 'publicOnly': true }],
     'jsdoc/tag-lines': ['warn', 'any', { 'startLines': 1 }],
+    'jsdoc/check-tag-names': ['warn', {
+      'definedTags': ['remarks']
+    }],
   },
   overrides: [
     {

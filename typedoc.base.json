@@ -2,7 +2,7 @@
   "$schema": "https://typedoc.org/schema.json",
   "includeVersion": true,
   "excludePrivate": true,
-  "githubPages": false,
+  "githubPages": true,
   "visibilityFilters": {
     "protected": true,
     "private": false,
@@ -13,5 +13,45 @@
     "notExported": true,
     "invalidLink": true,
     "notDocumented": false
+  },
+  "externalSymbolLinkMappings": {
+    "global": {
+      "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+    },
+    "typescript": {
+      "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+    },
+    "@cosmjs/cosmwasm-stargate": {
+      "CosmWasmClient": "https://cosmos.github.io/cosmjs/latest/cosmwasm-stargate/classes/CosmWasmClient.html",
+      "SigningCosmWasmClient": "https://cosmos.github.io/cosmjs/latest/cosmwasm-stargate/classes/SigningCosmWasmClient.html",
+      "SigningCosmWasmClientOptions": "https://cosmos.github.io/cosmjs/latest/cosmwasm-stargate/interfaces/SigningCosmWasmClientOptions.html",
+      "HttpEndpoint": "https://cosmos.github.io/cosmjs/latest/cosmwasm-stargate/interfaces/HttpEndpoint.html"
+    },
+    "@cosmjs/stargate": {
+      "AminoTypes": "https://cosmos.github.io/cosmjs/latest/stargate/classes/AminoTypes.html",
+      "Coin": "https://cosmos.github.io/cosmjs/latest/stargate/interfaces/Coin.html",
+      "Event": "https://cosmos.github.io/cosmjs/latest/stargate/interfaces/Event.html",
+      "GasPrice": "https://cosmos.github.io/cosmjs/latest/stargate/classes/GasPrice.html",
+      "StdFee": "https://cosmos.github.io/cosmjs/latest/stargate/interfaces/StdFee.html",
+      "logs.Log": "https://cosmos.github.io/cosmjs/latest/stargate/interfaces/logs.Log.html",
+      "Log": "https://cosmos.github.io/cosmjs/latest/stargate/interfaces/logs.Log.html",
+      "DeliverTxResponse": "https://cosmos.github.io/cosmjs/latest/stargate/interfaces/DeliverTxResponse.html",
+      "QueryClient": "https://cosmos.github.io/cosmjs/latest/stargate/classes/QueryClient.html"
+    },
+    "@cosmjs/tendermint-rpc": {
+      "TendermintClient": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/interfaces/TendermintClient.html",
+      "Tendermint34Client": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/classes/tendermint34.Tendermint34Client.html",
+      "Tendermint37Client": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/classes/tendermint37.Tendermint37Client.html",
+      "HttpEndpoint": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/interfaces/HttpEndpoint.html"
+    },
+    "@cosmjs/proto-signing": {
+      "EncodeObject": "https://cosmos.github.io/cosmjs/latest/proto-signing/interfaces/EncodeObject.html",
+      "DirectSecp256k1HdWallet": "https://cosmos.github.io/cosmjs/latest/proto-signing/classes/DirectSecp256k1HdWallet.html",
+      "OfflineSigner": "https://cosmos.github.io/cosmjs/latest/proto-signing/modules.html#OfflineSigner",
+      "Registry": "https://cosmos.github.io/cosmjs/latest/proto-signing/interfaces/Registry.html"
+    },
+    "@cosmjs/amino": {
+      "Coin": "https://cosmos.github.io/cosmjs/latest/amino/interfaces/Coin.html",
+    }
   }
 }

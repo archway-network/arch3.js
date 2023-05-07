@@ -3,9 +3,9 @@ import { Coin, GasPrice } from '@cosmjs/stargate';
 /**
  * Defines the contract rewards distribution options for a particular contract.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getContractMetadata}
- * @see {@link ./signingarchwayclient!SigningArchwayClient.setContractMetadata}
- * @see {@link ./signingarchwayclient!SigningArchwayClient.withdrawDeveloperRewardsByLimit}
+ * @see {@link ArchwayClient.getContractMetadata}
+ * @see {@link SigningArchwayClient.setContractMetadata}
+ * @see {@link SigningArchwayClient.withdrawContractRewards}
  */
 export interface ContractMetadata {
   /** Address of the contract with the rewards metadata. */
@@ -30,7 +30,8 @@ export interface ContractMetadata {
  * Defines a contract premium fee for a particular contract.
  * Only the contract metadata owner can set the premium fee.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getContractPremium}
+ * @see {@link ArchwayClient.getContractPremium}
+ * @see {@link SigningArchwayClient.setContractPremium}
  */
 export interface ContractPremium {
   /** Contract address with the premium fee. */
@@ -43,7 +44,7 @@ export interface ContractPremium {
  * Contains the transaction fees estimation for a given gas limit,
  * including the contract premium if a contract address is provided.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getEstimateTxFees}
+ * @see {@link ArchwayClient.getEstimateTxFees}
  */
 export interface EstimateTxFees {
   /** Maximum amount of gas to be used in this transaction. */
@@ -59,7 +60,7 @@ export interface EstimateTxFees {
 /**
  * Outstanding rewards available for a rewards address.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getBlockRewardsTracking}
+ * @see {@link ArchwayClient.getBlockRewardsTracking}
  */
 export interface OutstandingRewards {
   /** Address to which the rewards are deposited. */
@@ -73,7 +74,7 @@ export interface OutstandingRewards {
 /**
  * Contains all rewards ready for withdrawal and treasury funds.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getRewardsPool}
+ * @see {@link ArchwayClient.getRewardsPool}
  */
 export interface RewardsPool {
   /** Tokens ready for withdrawal. */
@@ -87,9 +88,9 @@ export interface RewardsPool {
 
 /**
  * Defines rewards that are pending withdraw.
- * This record is being created by the x/rewards EndBlocker and pruned after the rewards are distributed.
+ * This record is created by the `x/rewards` EndBlocker and deleted after the rewards are withdrawn.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getAllRewardsRecords}
+ * @see {@link ArchwayClient.getAllRewardsRecords}
  */
 export interface RewardsRecord {
   /** Unique ID of the record. */
@@ -107,7 +108,7 @@ export interface RewardsRecord {
 /**
  * Defines rewards distribution data for a particular block.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getBlockRewardsTracking}
+ * @see {@link ArchwayClient.getBlockRewardsTracking}
  */
 export interface BlockRewards {
   /** Current the block height. */
@@ -121,7 +122,7 @@ export interface BlockRewards {
 /**
  * Defines rewards distribution data related to a transaction.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getBlockRewardsTracking}
+ * @see {@link ArchwayClient.getBlockRewardsTracking}
  */
 export interface TxRewards {
   /** Tracking transaction ID. */
@@ -135,7 +136,7 @@ export interface TxRewards {
 /**
  * Rewards tracking information for a particular block.
  *
- * @see {@link ./queryclient!IArchwayQueryClient.getBlockRewardsTracking}
+ * @see {@link ArchwayClient.getBlockRewardsTracking}
  */
 export interface BlockTracking {
   /** Inflation rewards for the block. */
