@@ -83,7 +83,7 @@ export interface IArchwayQueryClient {
    * @param rewardsAddress - Address set in a contract's metadata to receive rewards.
    * @returns All rewards records for the given address.
    *
-   * @see {@link ArchwayClient.getContractMetadata}
+   * @see {@link IArchwayQueryClient.getContractMetadata}
    */
   getAllRewardsRecords(rewardsAddress: string): Promise<readonly RewardsRecord[]>;
 }
