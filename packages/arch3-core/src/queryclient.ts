@@ -2,6 +2,8 @@ import { setupWasmExtension, WasmExtension } from '@cosmjs/cosmwasm-stargate';
 import {
   AuthExtension,
   BankExtension,
+  decodeCosmosSdkDecFromProto,
+  GasPrice,
   QueryClient,
   setupAuthExtension,
   setupBankExtension,
@@ -58,7 +60,7 @@ export interface IArchwayQueryClient {
    * @param contractAddress - Contract address to include the flat fees in the estimate.
    * @returns The estimated transaction fees for the lastest block.
    */
-  getEstimateTxFees(gasLimit: number, contractAddress?: string): Promise<EstimateTxFees>;
+  getEstimateTxFees(gasLimit?: number, contractAddress?: string): Promise<EstimateTxFees>;
 
   /**
    * Queries the unclaimed rewards available for a given address.
@@ -81,7 +83,7 @@ export interface IArchwayQueryClient {
    * @param rewardsAddress - Address set in a contract's metadata to receive rewards.
    * @returns All rewards records for the given address.
    *
-   * @see {@link ArchwayClient.getContractMetadata}
+   * @see {@link IArchwayQueryClient.getContractMetadata}
    */
   getAllRewardsRecords(rewardsAddress: string): Promise<readonly RewardsRecord[]>;
 }
@@ -119,11 +121,13 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
       block: { txRewards: txRewardsResponse, inflationRewards }
     } = await client.rewards.blockRewardsTracking();
 
-    const txRewards = txRewardsResponse.map(txReward => { return {
-      txId: txReward.txId.toNumber(),
-      height: txReward.height.toNumber(),
-      feeRewards: txReward.feeRewards,
-    }; });
+    const txRewards = txRewardsResponse.map(txReward => {
+      return {
+        txId: txReward.txId.toNumber(),
+        height: txReward.height.toNumber(),
+        feeRewards: txReward.feeRewards,
+      };
+    });
 
     return {
       inflationRewards: {
@@ -150,17 +154,32 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
 
   public async getContractPremium(contractAddress: string): Promise<ContractPremium> {
     const client = this.forceGetQueryClient();
-    const { flatFeeAmount } = await client.rewards.flatFee(contractAddress);
-
-    return {
-      contractAddress,
-      flatFee: flatFeeAmount,
-    };
+    try {
+      const { flatFeeAmount } = await client.rewards.flatFee(contractAddress);
+      return {
+        contractAddress,
+        flatFee: flatFeeAmount,
+      };
+    } catch (e) {
+      return {
+        contractAddress,
+      };
+    }
   }
 
-  public async getEstimateTxFees(gasLimit: number, contractAddress?: string): Promise<EstimateTxFees> {
+  public async getEstimateTxFees(gasLimit?: number, contractAddress?: string): Promise<EstimateTxFees> {
     const client = this.forceGetQueryClient();
-    const { estimatedFee, gasUnitPrice } = await client.rewards.estimateTxFees(gasLimit, contractAddress || '');
+    const {
+      estimatedFee,
+      gasUnitPrice: { amount: gasAmount, denom: gasDenom }
+    } = await client.rewards.estimateTxFees(gasLimit ?? 0, contractAddress ?? '');
+
+    // The RPC queries do not include the decimal precision fot types.Dec,
+    // so we need to manually decode the gas amount from the proto, as suggested in
+    // https://github.com/osmosis-labs/telescope/issues/247#issuecomment-1292407464
+    // See also: https://github.com/cosmos/cosmos-sdk/issues/10863
+    const gasUnitPriceAmount = decodeCosmosSdkDecFromProto(gasAmount);
+    const gasUnitPrice = new GasPrice(gasUnitPriceAmount, gasDenom);
 
     return {
       gasLimit,

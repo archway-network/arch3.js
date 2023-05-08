@@ -1,6 +1,7 @@
+import { Coin, addCoins, coin, coins } from '@cosmjs/amino';
 import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
-import { AccountData, coin, coins, DirectSecp256k1HdWallet, makeCosmoshubPath } from '@cosmjs/proto-signing';
-import { GasPrice } from '@cosmjs/stargate';
+import { AccountData, DirectSecp256k1HdWallet, decodeTxRaw, makeCosmoshubPath } from '@cosmjs/proto-signing';
+import { GasPrice, calculateFee } from '@cosmjs/stargate';
 
 import { SigningArchwayClient } from './signingarchwayclient';
 import { ContractMetadata } from './types';
@@ -32,13 +33,32 @@ async function getWalletWithAccounts(): Promise<[DirectSecp256k1HdWallet, readon
   return [wallet, accounts];
 }
 
-const defaultGasPrice = GasPrice.fromString('0.2uarch');
+const flatFee = coin(1000, archwayd.denom);
 
 const defaultSigningClientOptions: SigningCosmWasmClientOptions = {
   broadcastPollIntervalMs: 200,
   broadcastTimeoutMs: 8_000,
-  gasPrice: defaultGasPrice,
+  gasPrice: GasPrice.fromString('0.2uarch'),
 };
+
+async function assertGasPriceEstimation(
+  client: SigningArchwayClient,
+  transactionHash: string,
+  gasWanted: number,
+  gasUnitPrice?: GasPrice,
+  flatFees: readonly Coin[] = [],
+): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const txResponse = (await client.getTx(transactionHash))!;
+  const tx = decodeTxRaw(txResponse.tx);
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/no-non-null-assertion
+  const { amount: calculatedAmount, gas: expectedGas } = calculateFee(gasWanted, gasUnitPrice!);
+  const expectedAmount = [...calculatedAmount, ...flatFees].reduce(addCoins);
+  const txFee = tx.authInfo.fee;
+  expect(txFee?.amount).toContainEqual(expectedAmount);
+  expect(txFee?.gasLimit.toString()).toBe(expectedGas);
+}
 
 describe('SigningArchwayClient', () => {
   describe('connectWithSigner', () => {
@@ -47,6 +67,112 @@ describe('SigningArchwayClient', () => {
       const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
       expect(client).toBeDefined();
       client.disconnect();
+    });
+  });
+
+  describe('minimum gas fee estimation', () => {
+    const clientOptions: SigningCosmWasmClientOptions = {
+      broadcastPollIntervalMs: 200,
+      broadcastTimeoutMs: 8_000,
+    };
+
+    it('works for base transactions', async () => {
+      const [wallet, accounts] = await getWalletWithAccounts();
+      const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+      const { gasUnitPrice } = await client.getEstimateTxFees();
+      const { transactionHash, gasWanted } = await client.sendTokens(
+        accounts[4].address,
+        accounts[1].address,
+        coins(1, archwayd.denom),
+        'auto'
+      );
+
+      await assertGasPriceEstimation(client, transactionHash, gasWanted, gasUnitPrice);
+
+      client.disconnect();
+    });
+
+    describe('on contracts without premium', () => {
+      it('works on execute', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+        const contractAddress = contracts.voter.addresses[2];
+        const ownerAddress = accounts[2].address;
+
+        /* eslint-disable camelcase, @typescript-eslint/naming-convention */
+        const msg = {
+          new_voting: {
+            name: 'test_voting_fees',
+            vote_options: ['yes', 'no'],
+            duration: 10000000000,
+          }
+        };
+        /* eslint-enable */
+
+        const { gasUnitPrice } = await client.getEstimateTxFees();
+        const { transactionHash, gasWanted } = await client.execute(
+          ownerAddress,
+          contractAddress,
+          msg,
+          'auto',
+          undefined,
+          coins(10, archwayd.denom)
+        );
+
+        await assertGasPriceEstimation(client, transactionHash, gasWanted, gasUnitPrice);
+
+        client.disconnect();
+      });
+    });
+
+    describe('on contracts with premium', () => {
+      it('works on execute', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+        const contractAddress = contracts.voter.addresses[1];
+        const ownerAddress = accounts[1].address;
+
+        /* eslint-disable camelcase, @typescript-eslint/naming-convention */
+        const msgs = [
+          {
+            new_voting: {
+              name: 'test_voting_fees_1',
+              vote_options: ['yes', 'no'],
+              duration: 10000000000,
+            }
+          },
+          {
+            new_voting: {
+              name: 'test_voting_fees_2',
+              vote_options: ['yes', 'no', 'maybe'],
+              duration: 10000000000,
+            }
+          }
+        ];
+        /* eslint-enable */
+        const instructions = msgs.map(msg => {
+          return {
+            contractAddress,
+            msg,
+            funds: coins(10, archwayd.denom),
+          };
+        });
+
+        const { gasUnitPrice } = await client.getEstimateTxFees();
+        const { transactionHash, gasWanted } = await client.executeMultiple(
+          ownerAddress,
+          instructions,
+          'auto',
+          undefined
+        );
+
+        await assertGasPriceEstimation(client, transactionHash, gasWanted, gasUnitPrice, [flatFee, flatFee]);
+
+        client.disconnect();
+      });
     });
   });
 
@@ -86,13 +212,13 @@ describe('SigningArchwayClient', () => {
         const [wallet, accounts] = await getWalletWithAccounts();
         const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
 
-        const contractAddress = contracts.voter.addresses[1];
         const ownerAddress = accounts[1].address;
+        const contractAddress = contracts.voter.addresses[1];
 
         const result = await client.setContractPremium(
           ownerAddress,
           contractAddress,
-          coin(200, archwayd.denom),
+          flatFee,
           'auto'
         );
 
@@ -103,7 +229,7 @@ describe('SigningArchwayClient', () => {
           gasUsed: expect.any(Number),
           premium: {
             contractAddress,
-            flatFee: coin(200, archwayd.denom),
+            flatFee,
           },
         });
         expect(result.logs).not.toHaveLength(0);
@@ -154,7 +280,7 @@ describe('SigningArchwayClient', () => {
         /* eslint-disable camelcase, @typescript-eslint/naming-convention */
         const msg = {
           new_voting: {
-            name: 'test_voting',
+            name: 'test_voting_rewards',
             vote_options: ['yes', 'no'],
             duration: 10000000000,
           }

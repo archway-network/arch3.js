@@ -1,4 +1,5 @@
 import { Long } from '@archwayhq/arch3-proto/helpers';
+import { Coin, addCoins } from '@cosmjs/amino';
 import {
   createWasmAminoConverters,
   HttpEndpoint,
@@ -6,18 +7,21 @@ import {
   SigningCosmWasmClientOptions
 } from '@cosmjs/cosmwasm-stargate';
 import { wasmTypes } from '@cosmjs/cosmwasm-stargate/build/modules';
-import { Coin, EncodeObject, OfflineSigner, Registry } from '@cosmjs/proto-signing';
+import { EncodeObject, OfflineSigner, Registry } from '@cosmjs/proto-signing';
 import {
   AminoTypes,
   assertIsDeliverTxSuccess,
+  calculateFee,
   createDefaultAminoConverters,
   defaultRegistryTypes,
   DeliverTxResponse,
   Event,
+  GasPrice,
   logs,
   StdFee
 } from '@cosmjs/stargate';
 import { Tendermint34Client, TendermintClient } from '@cosmjs/tendermint-rpc';
+import _ from 'lodash';
 
 import { createRewardsAminoConverters, RewardsMsgEncoder, rewardsTypes } from './modules';
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
@@ -91,11 +95,17 @@ function buildResult(response: DeliverTxResponseWithLogs): TxResult {
   };
 }
 
+const flatFeeRequiredTypes: readonly string[] = [
+  '/cosmwasm.wasm.v1.MsgExecuteContract',
+  '/cosmwasm.wasm.v1.MsgMigrateContract',
+];
+
 /**
  * Extension to the {@link SigningCosmWasmClient} for transacting with Archway's modules.
  */
 export class SigningArchwayClient extends SigningCosmWasmClient implements IArchwayQueryClient {
   private readonly archwayQueryClient: IArchwayQueryClient;
+  private readonly defaultGasPrice?: GasPrice;
 
   protected constructor(tmClient: TendermintClient | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions) {
     const {
@@ -105,9 +115,11 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         ...createWasmAminoConverters(),
         ...createRewardsAminoConverters(),
       }),
+      gasPrice,
     } = options;
     super(tmClient, signer, { ...options, registry, aminoTypes });
     this.archwayQueryClient = createArchwayQueryClient(tmClient);
+    this.defaultGasPrice = gasPrice;
   }
 
   /**
@@ -293,6 +305,60 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     };
   }
 
+  /**
+   * Creates a transaction with the given messages, fee and memo. Then signs and broadcasts the transaction.
+   *
+   * @param signerAddress - The address that will sign transactions using this instance.
+   *                        The signer must be able to sign with this address.
+   * @param messages - The messages to include in the transaction. The messages types should be registered in the
+   *                  {@link SigningArchwayClient.registry} when the client is instantiated.
+   * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
+   * @param memo - Optional memo to add to the transaction.
+   * @returns A {@link DeliverTxResponse} after successfully broadcasting the transaction.
+   */
+  public override async signAndBroadcast(
+    signerAddress: string,
+    messages: readonly EncodeObject[],
+    fee: number | StdFee | 'auto',
+    memo?: string
+  ): Promise<DeliverTxResponse> {
+    let usedFee: StdFee;
+    if (fee === 'auto' || typeof fee === 'number') {
+      const gasEstimation = await this.simulate(signerAddress, messages, memo);
+      const gasPrice = this.defaultGasPrice ?? (await this.getEstimateTxFees(gasEstimation)).gasUnitPrice;
+      const multiplier = typeof fee === 'number' ? fee : 1.3;
+      const estimatedFee = calculateFee(Math.round(gasEstimation * multiplier), gasPrice);
+      usedFee = await this.calculateFlatFee(messages, estimatedFee);
+    } else {
+      usedFee = fee;
+    }
+    return super.signAndBroadcast(signerAddress, messages, usedFee, memo);
+  }
+
+  private async calculateFlatFee(messages: readonly EncodeObject[], estimatedFee: StdFee): Promise<StdFee> {
+    const _getContractPremium = _.memoize((contractAddress: string) => this.getContractPremium(contractAddress));
+    const flatFees = await Promise.all(
+      messages
+        .filter(({ typeUrl }) => flatFeeRequiredTypes.includes(typeUrl))
+        .map(({ value }) => {
+          const contractAddress = _.get(value, 'contract') as string;
+          return _getContractPremium(contractAddress);
+        })
+    );
+    const cleanedFlatFees = _.compact(flatFees.map(({ flatFee }) => flatFee));
+    if (_.isEmpty(cleanedFlatFees)) {
+      return estimatedFee;
+    }
+
+    const totalFee = [...estimatedFee.amount, ...cleanedFlatFees]
+      .reduce((acc, fee) => addCoins(acc, fee));
+
+    return {
+      ...estimatedFee,
+      amount: [totalFee]
+    };
+  }
+
   private async assertSignAndBroadcast(
     signerAddress: string,
     messages: readonly EncodeObject[],
@@ -322,7 +388,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     return await this.archwayQueryClient.getContractPremium(contractAddress);
   }
 
-  public async getEstimateTxFees(gasLimit: number, contractAddress?: string): Promise<EstimateTxFees> {
+  public async getEstimateTxFees(gasLimit?: number, contractAddress?: string): Promise<EstimateTxFees> {
     return await this.archwayQueryClient.getEstimateTxFees(gasLimit, contractAddress);
   }
 

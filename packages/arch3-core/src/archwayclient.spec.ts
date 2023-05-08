@@ -1,3 +1,6 @@
+import { coin } from '@cosmjs/amino';
+import { Decimal } from '@cosmjs/math';
+
 import { ArchwayClient } from './archwayclient';
 
 const archwayd = {
@@ -7,7 +10,13 @@ const archwayd = {
   denom: 'uarch',
 };
 
-const contractAddress = 'archway1ry0fa2zdu46gu5v9r0lx5x7klmued4hz8lcekzdf6yutllxvhd4sqh452d';
+const contracts = {
+  voter: {
+    codeId: parseInt(process.env.VOTER_CONTRACT_CODE_ID || '1'),
+    addresses: process.env.VOTER_CONTRACT_ADDRESSES?.split(' ') || []
+  },
+};
+const contractAddress = contracts.voter.addresses[0];
 const aliceAddress = 'archway1ecak50zhujddqd639xw4ejghnyrrc6jlwnlgwt';
 
 describe('ArchwayClient', () => {
@@ -44,13 +53,15 @@ describe('ArchwayClient', () => {
 
     it('estimate fees without contract', async () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);
-      const response = await client.getEstimateTxFees(1);
+      const response = await client.getEstimateTxFees();
 
-      expect(response.gasLimit).toBeGreaterThan(0);
+      expect(response.gasLimit).toBeUndefined();
       expect(response.gasUnitPrice).toMatchObject({
         denom: archwayd.denom,
-        amount: expect.stringMatching(/\d+/),
+        amount: expect.any(Decimal),
       });
+      const gasUnitPriceAmount = response.gasUnitPrice?.amount;
+      expect(gasUnitPriceAmount?.isLessThan(Decimal.one(gasUnitPriceAmount?.fractionalDigits))).toBeTruthy();
       expect(response.contractAddress).toBeUndefined();
       expect(response.estimatedFee).toHaveLength(0);
 
@@ -61,16 +72,15 @@ describe('ArchwayClient', () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);
       const response = await client.getEstimateTxFees(1, contractAddress);
 
-      expect(response.gasLimit).toBeGreaterThan(0);
+      expect(response.gasLimit).toBe(1);
       expect(response.gasUnitPrice).toMatchObject({
         denom: archwayd.denom,
-        amount: expect.stringMatching(/\d+/),
+        amount: expect.any(Decimal),
       });
+      const gasUnitPriceAmount = response.gasUnitPrice?.amount;
+      expect(gasUnitPriceAmount?.isLessThan(Decimal.one(gasUnitPriceAmount?.fractionalDigits))).toBeTruthy();
       expect(response.contractAddress).toBe(contractAddress);
-      expect(response.estimatedFee).toContainEqual({
-        denom: archwayd.denom,
-        amount: '100',
-      });
+      expect(response.estimatedFee).toContainEqual(coin(1000, archwayd.denom));
 
       client.disconnect();
     });
@@ -80,8 +90,8 @@ describe('ArchwayClient', () => {
       const response = await client.getOutstandingRewards(aliceAddress);
 
       expect(response.rewardsAddress).toBe(aliceAddress);
-      expect(response.totalRewards).toHaveLength(0);
-      expect(response.totalRecords).toBe(0);
+      expect(response.totalRewards).not.toHaveLength(0);
+      expect(response.totalRecords).toBeGreaterThan(0);
 
       client.disconnect();
     });
@@ -100,17 +110,27 @@ describe('ArchwayClient', () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);
       const response = await client.getAllRewardsRecords(aliceAddress);
 
-      expect(response).toHaveLength(0);
+      expect(response).not.toHaveLength(0);
 
       client.disconnect();
     });
 
-    it('check flat fee are coming back', async () => {
+    it('check contract premium are coming back', async () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);
       const response = await client.getContractPremium(contractAddress);
 
       expect(response.contractAddress).toBe(contractAddress);
-      expect(response.flatFee).toBeDefined();
+      expect(response.flatFee).toMatchObject(coin(1000, archwayd.denom));
+
+      client.disconnect();
+    });
+
+    it('check does not fail when contract premium is not set', async () => {
+      const client = await ArchwayClient.connect(archwayd.endpoint);
+      const response = await client.getContractPremium(contracts.voter.addresses[2]);
+
+      expect(response.contractAddress).toBe(contracts.voter.addresses[2]);
+      expect(response.flatFee).toBeUndefined();
 
       client.disconnect();
     });

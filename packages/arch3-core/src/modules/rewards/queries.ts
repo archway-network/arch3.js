@@ -18,7 +18,7 @@ export interface RewardsExtension {
     readonly contractMetadata: (contractAddress: string) => Promise<QueryContractMetadataResponse>;
     readonly blockRewardsTracking: () => Promise<QueryBlockRewardsTrackingResponse>;
     readonly rewardsPool: () => Promise<QueryRewardsPoolResponse>;
-    readonly estimateTxFees: (gasLimit: number, contractAddress?: string) => Promise<QueryEstimateTxFeesResponse>;
+    readonly estimateTxFees: (gasLimit: number, contractAddress: string) => Promise<QueryEstimateTxFeesResponse>;
     readonly rewardsRecords: (rewardsAddress: string, paginationKey?: Uint8Array) => Promise<QueryRewardsRecordsResponse>;
     readonly outstandingRewards: (rewardsAddress: string) => Promise<QueryOutstandingRewardsResponse>;
     readonly flatFee: (contractAddress: string) => Promise<QueryFlatFeeResponse>;
@@ -40,20 +40,14 @@ export function setupRewardsExtension(base: QueryClient): RewardsExtension {
       contractMetadata: (contractAddress: string) => queryService.contractMetadata({ contractAddress }),
       blockRewardsTracking: () => queryService.blockRewardsTracking(),
       rewardsPool: () => queryService.rewardsPool(),
-      estimateTxFees: (gasLimit: number, contractAddress: string) => {
-        const request = {
-          gasLimit: Long.fromNumber(gasLimit),
-          contractAddress,
-        };
-        return queryService.estimateTxFees(request);
-      },
-      rewardsRecords: (rewardsAddress: string, paginationKey?: Uint8Array) => {
-        const request = {
-          rewardsAddress,
-          pagination: createPagination(paginationKey),
-        };
-        return queryService.rewardsRecords(request);
-      },
+      estimateTxFees: (gasLimit: number, contractAddress: string) => queryService.estimateTxFees({
+        gasLimit: Long.fromNumber(gasLimit),
+        contractAddress,
+      }),
+      rewardsRecords: (rewardsAddress: string, paginationKey?: Uint8Array) => queryService.rewardsRecords({
+        rewardsAddress,
+        pagination: createPagination(paginationKey),
+      }),
       outstandingRewards: (rewardsAddress: string) => queryService.outstandingRewards({ rewardsAddress }),
       flatFee: (contractAddress: string) => queryService.flatFee({ contractAddress }),
     }
