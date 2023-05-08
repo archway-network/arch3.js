@@ -23,3 +23,27 @@ jobs:
       - run: yarn install --immutable
       - run: yarn build:all
       - run: yarn test:all
+
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+      - run: yarn install --immutable
+      - run: yarn build:all
+      - run: yarn lint:sarif:all || true
+      - run: |
+          mkdir -p ./reports
+          cp -r *.sarif packages/*/*.sarif ./reports
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ./reports
+          category: eslint
+          wait-for-processing: true

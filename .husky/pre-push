@@ -3,3 +3,4 @@
 
 echo "Linting staged files..."
 yarn lint-staged
+git diff --quiet -- **/*.ts
