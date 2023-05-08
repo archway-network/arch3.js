@@ -1,30 +1,41 @@
 import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
+import { AccountData, coin, coins, DirectSecp256k1HdWallet, makeCosmoshubPath } from '@cosmjs/proto-signing';
 import { GasPrice } from '@cosmjs/stargate';
 
 import { SigningArchwayClient } from './signingarchwayclient';
+import { ContractMetadata } from './types';
 
-const wasmd = {
-  blockTime: 6_000, // ms
+const archwayd = {
   chainId: 'local-1',
   endpoint: 'http://localhost:26657',
-  prefix: 'archway1',
+  prefix: 'archway',
   denom: 'uarch',
 };
 
-const alice = {
-  mnemonic: 'culture ten bar chase cross obey margin owner recycle trim valid logic forward mixed render have patrol dynamic tuition choose thing salute inside blossom',
-  pubkey0: {
-    type: '/cosmos.crypto.secp256k1.PubKey',
-    value: 'AuoJH6FNYQVPNxRYSUGudoAIG3aXI+GvyazrmVFf2x/w',
+const contracts = {
+  voter: {
+    codeId: parseInt(process.env.VOTER_CONTRACT_CODE_ID || '1'),
+    addresses: process.env.VOTER_CONTRACT_ADDRESSES?.split(' ') || []
   },
-  address0: 'archway1ecak50zhujddqd639xw4ejghnyrrc6jlwnlgwt',
 };
 
-const defaultGasPrice = GasPrice.fromString('0.02uarch');
+const mnemonics = {
+  alice: process.env.ALICE_MNEMONIC || '',
+};
+
+async function getWalletWithAccounts(): Promise<[DirectSecp256k1HdWallet, readonly AccountData[]]> {
+  const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonics.alice, {
+    hdPaths: [0, 1, 2, 3, 4].map(makeCosmoshubPath),
+    prefix: archwayd.prefix
+  });
+  const accounts = await wallet.getAccounts();
+  return [wallet, accounts];
+}
+
+const defaultGasPrice = GasPrice.fromString('0.2uarch');
 
 const defaultSigningClientOptions: SigningCosmWasmClientOptions = {
-  broadcastPollIntervalMs: 300,
+  broadcastPollIntervalMs: 200,
   broadcastTimeoutMs: 8_000,
   gasPrice: defaultGasPrice,
 };
@@ -32,10 +43,143 @@ const defaultSigningClientOptions: SigningCosmWasmClientOptions = {
 describe('SigningArchwayClient', () => {
   describe('connectWithSigner', () => {
     it('can be constructed', async () => {
-      const wallet = await DirectSecp256k1HdWallet.fromMnemonic(alice.mnemonic, { prefix: wasmd.prefix });
-      const client = await SigningArchwayClient.connectWithSigner(wasmd.endpoint, wallet, defaultSigningClientOptions);
-      expect(client).toBeTruthy();
+      const wallet = await DirectSecp256k1HdWallet.generate(12, { prefix: archwayd.prefix });
+      const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+      expect(client).toBeDefined();
       client.disconnect();
+    });
+  });
+
+  describe('rewards', () => {
+    describe('contract metadata', () => {
+      it('sets both owner and rewards', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+
+        const contractAddress = contracts.voter.addresses[1];
+        const ownerAddress = accounts[1].address;
+        const rewardsAddress = accounts[4].address;
+
+        const metadata: ContractMetadata = {
+          contractAddress,
+          ownerAddress,
+          rewardsAddress,
+        };
+        const result = await client.setContractMetadata(ownerAddress, metadata, 'auto');
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          metadata,
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
+    });
+
+    describe('contract premium', () => {
+      it('sets the contract premium', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+
+        const contractAddress = contracts.voter.addresses[1];
+        const ownerAddress = accounts[1].address;
+
+        const result = await client.setContractPremium(
+          ownerAddress,
+          contractAddress,
+          coin(200, archwayd.denom),
+          'auto'
+        );
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          premium: {
+            contractAddress,
+            flatFee: coin(200, archwayd.denom),
+          },
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
+
+      it('disables the contract premium', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+
+        const contractAddress = contracts.voter.addresses[2];
+        const ownerAddress = accounts[2].address;
+
+        const result = await client.setContractPremium(
+          ownerAddress,
+          contractAddress,
+          coin(0, archwayd.denom),
+          'auto'
+        );
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          premium: {
+            contractAddress,
+            flatFee: coin(0, archwayd.denom),
+          },
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
+    });
+
+    describe('withdraw', () => {
+      it('withdraws rewards by limit', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+
+        const contractAddress = contracts.voter.addresses[3];
+        const rewardsAddress = accounts[3].address;
+
+        /* eslint-disable camelcase, @typescript-eslint/naming-convention */
+        const msg = {
+          new_voting: {
+            name: 'test_voting',
+            vote_options: ['yes', 'no'],
+            duration: 10000000000,
+          }
+        };
+        /* eslint-enable camelcase, @typescript-eslint/naming-convention */
+        await client.execute(rewardsAddress, contractAddress, msg, 'auto', undefined, coins(10, archwayd.denom));
+
+        const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          rewardsAddress: rewardsAddress,
+          rewards: [expect.objectContaining({
+            amount: expect.any(String),
+            denom: archwayd.denom,
+          })],
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
     });
   });
 });

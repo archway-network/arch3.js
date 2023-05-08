@@ -36,12 +36,16 @@ jobs:
         with:
           node-version: 16
           cache: yarn
+      - run: sudo apt update && sudo apt install -y jq
       - run: yarn install --immutable
       - run: yarn build:all
       - run: yarn lint:sarif:all || true
       - run: |
           mkdir -p ./reports
-          cp -r *.sarif packages/*/*.sarif ./reports
+          for f in *.sarif packages/*/*.sarif; do
+            # Filter out lint results with suppressions because of nasty false positives on GitHub
+            jq '.runs |= map(.results |= map(. | select(.suppressions | length == 0)))' "$f" > "./reports/$(basename $f)"
+          done
       - uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ./reports

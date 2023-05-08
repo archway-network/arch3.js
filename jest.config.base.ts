@@ -61,7 +61,7 @@ export const baseConfig: JestConfigWithTsJest = {
   ],
 
   // Default timeout of a test in milliseconds.
-  testTimeout: 3000,
+  testTimeout: 30000,
 
   // A map from regular expressions to paths to transformers
   transform: {

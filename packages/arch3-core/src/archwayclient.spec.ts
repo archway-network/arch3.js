@@ -81,7 +81,7 @@ describe('ArchwayClient', () => {
 
       expect(response.rewardsAddress).toBe(aliceAddress);
       expect(response.totalRewards).toHaveLength(0);
-      expect(response.recordsNum).toBe(0);
+      expect(response.totalRecords).toBe(0);
 
       client.disconnect();
     });

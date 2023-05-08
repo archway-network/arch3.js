@@ -177,7 +177,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
     return {
       rewardsAddress,
       totalRewards,
-      recordsNum: recordsNum.toNumber(),
+      totalRecords: recordsNum.toNumber(),
     };
   }
 

@@ -4,32 +4,38 @@ import { Coin } from '@cosmjs/stargate';
  * Defines the contract rewards distribution options for a particular contract.
  *
  * @see {@link ./queryclient!IArchwayQueryClient.getContractMetadata}
+ * @see {@link ./signingarchwayclient!SigningArchwayClient.setContractMetadata}
+ * @see {@link ./signingarchwayclient!SigningArchwayClient.withdrawDeveloperRewardsByLimit}
  */
 export interface ContractMetadata {
-  /** Contract address. */
+  /** Address of the contract with the rewards metadata. */
   readonly contractAddress: string;
   /**
    * Owner address who can modify contract the metadata.
    * That could be the contract admin or the contract itself.
-   * If the owner address is set to a contract address,
-   * the contract can modify the metadata on its own using the WASM bindings.
+   * If the `ownerAddress` is set to a contract address, only the contract
+   * will be able to modify the metadata using the [WASM bindings](https://github.com/archway-network/archway-bindings).
    */
   readonly ownerAddress?: string;
   /**
    * Address to distribute rewards to. If not set, rewards are not distributed for this contract.
+   *
+   * If a contract address is set as the `rewardsAddress`, only the contract will be able to withdraw
+   * the rewards using the [WASM bindings](https://github.com/archway-network/archway-bindings).
    */
   readonly rewardsAddress?: string;
 }
 
 /**
- * Defines the contract premium fee for a particular contract.
+ * Defines a contract premium fee for a particular contract.
+ * Only the contract metadata owner can set the premium fee.
  *
  * @see {@link ./queryclient!IArchwayQueryClient.getContractPremium}
  */
 export interface ContractPremium {
-  /** Contract address. */
+  /** Contract address with the premium fee. */
   readonly contractAddress: string;
-  /** Contract premium fee set by the contract metadata owner. */
+  /** Premium fee set by the contract metadata owner. */
   readonly flatFee?: Coin;
 }
 
@@ -61,7 +67,7 @@ export interface OutstandingRewards {
   /** Total rewards credited to the rewards address. */
   readonly totalRewards: Coin[];
   /** Total number of RewardsRecord objects stored for the rewards address. */
-  readonly recordsNum: number;
+  readonly totalRecords: number;
 }
 
 /**
