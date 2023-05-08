@@ -19,9 +19,15 @@ export interface QueryContractMetadataRequest {
 export interface QueryContractMetadataResponse {
   metadata?: ContractMetadata;
 }
-/** QueryBlockRewardsTrackingRequest is the request for Query.BlockRewardsTracking. */
+/**
+ * QueryBlockRewardsTrackingRequest is the request for
+ * Query.BlockRewardsTracking.
+ */
 export interface QueryBlockRewardsTrackingRequest {}
-/** QueryBlockRewardsTrackingResponse is the response for Query.BlockRewardsTracking. */
+/**
+ * QueryBlockRewardsTrackingResponse is the response for
+ * Query.BlockRewardsTracking.
+ */
 export interface QueryBlockRewardsTrackingResponse {
   block?: BlockTracking;
 }
@@ -32,8 +38,9 @@ export interface QueryRewardsPoolResponse {
   /** undistributed_funds are undistributed yet tokens (ready for withdrawal). */
   undistributedFunds: Coin[];
   /**
-   * treasury_funds are treasury tokens available (no mechanism is available to withdraw ATM).
-   * Treasury tokens are collected on a block basis. Those tokens are unused block rewards.
+   * treasury_funds are treasury tokens available (no mechanism is available to
+   * withdraw ATM). Treasury tokens are collected on a block basis. Those tokens
+   * are unused block rewards.
    */
   treasuryFunds: Coin[];
 }
@@ -60,7 +67,10 @@ export interface BlockTracking {
 }
 /** QueryRewardsRecordsRequest is the request for Query.RewardsRecords. */
 export interface QueryRewardsRecordsRequest {
-  /** rewards_address is the target address to query records for (bech32 encoded). */
+  /**
+   * rewards_address is the target address to query records for (bech32
+   * encoded).
+   */
   rewardsAddress: string;
   /** pagination is an optional pagination options for the request. */
   pagination?: PageRequest;
@@ -74,14 +84,20 @@ export interface QueryRewardsRecordsResponse {
 }
 /** QueryOutstandingRewardsRequest is the request for Query.OutstandingRewards. */
 export interface QueryOutstandingRewardsRequest {
-  /** rewards_address is the target address to query calculated rewards for (bech32 encoded). */
+  /**
+   * rewards_address is the target address to query calculated rewards for
+   * (bech32 encoded).
+   */
   rewardsAddress: string;
 }
 /** QueryOutstandingRewardsResponse is the response for Query.OutstandingRewards. */
 export interface QueryOutstandingRewardsResponse {
   /** total_rewards is the total rewards credited to the rewards_address. */
   totalRewards: Coin[];
-  /** records_num is the total number of RewardsRecord objects stored for the rewards_address. */
+  /**
+   * records_num is the total number of RewardsRecord objects stored for the
+   * rewards_address.
+   */
   recordsNum: Long;
 }
 /** QueryFlatFeeRequest is the request for Query.FlatFeet */
@@ -91,7 +107,10 @@ export interface QueryFlatFeeRequest {
 }
 /** QueryFlatFeeResponse is the response for Query.FlatFee */
 export interface QueryFlatFeeResponse {
-  /** flat_fee_amount defines the minimum flat fee set by the contract_owner per contract execution. */
+  /**
+   * flat_fee_amount defines the minimum flat fee set by the contract_owner per
+   * contract execution.
+   */
   flatFeeAmount?: Coin;
 }
 function createBaseQueryParamsRequest(): QueryParamsRequest {

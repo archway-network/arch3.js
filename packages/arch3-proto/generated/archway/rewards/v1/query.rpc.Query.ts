@@ -14,15 +14,25 @@ export interface Query {
   /** RewardsPool returns the current undistributed rewards pool funds. */
   rewardsPool(request?: QueryRewardsPoolRequest): Promise<QueryRewardsPoolResponse>;
   /**
-   * EstimateTxFees returns the estimated transaction fees for the given transaction
-   * gas limit using the minimum consensus fee value for the current block.
+   * EstimateTxFees returns the estimated transaction fees for the given
+   * transaction gas limit using the minimum consensus fee value for the current
+   * block.
    */
   estimateTxFees(request: QueryEstimateTxFeesRequest): Promise<QueryEstimateTxFeesResponse>;
-  /** RewardsRecords returns the paginated list of RewardsRecord objects stored for the provided rewards_address. */
+  /**
+   * RewardsRecords returns the paginated list of RewardsRecord objects stored
+   * for the provided rewards_address.
+   */
   rewardsRecords(request: QueryRewardsRecordsRequest): Promise<QueryRewardsRecordsResponse>;
-  /** OutstandingRewards returns total rewards credited from different contracts for the provided rewards_address. */
+  /**
+   * OutstandingRewards returns total rewards credited from different contracts
+   * for the provided rewards_address.
+   */
   outstandingRewards(request: QueryOutstandingRewardsRequest): Promise<QueryOutstandingRewardsResponse>;
-  /** FlatFee returns the flat fee set by the contract owner for the provided contract_address */
+  /**
+   * FlatFee returns the flat fee set by the contract owner for the provided
+   * contract_address
+   */
   flatFee(request: QueryFlatFeeRequest): Promise<QueryFlatFeeResponse>;
 }
 export class QueryClientImpl implements Query {
@@ -40,42 +50,42 @@ export class QueryClientImpl implements Query {
   }
   params(request: QueryParamsRequest = {}): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.rewards.v1beta1.Query", "Params", data);
+    const promise = this.rpc.request("archway.rewards.v1.Query", "Params", data);
     return promise.then(data => QueryParamsResponse.decode(new _m0.Reader(data)));
   }
   contractMetadata(request: QueryContractMetadataRequest): Promise<QueryContractMetadataResponse> {
     const data = QueryContractMetadataRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.rewards.v1beta1.Query", "ContractMetadata", data);
+    const promise = this.rpc.request("archway.rewards.v1.Query", "ContractMetadata", data);
     return promise.then(data => QueryContractMetadataResponse.decode(new _m0.Reader(data)));
   }
   blockRewardsTracking(request: QueryBlockRewardsTrackingRequest = {}): Promise<QueryBlockRewardsTrackingResponse> {
     const data = QueryBlockRewardsTrackingRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.rewards.v1beta1.Query", "BlockRewardsTracking", data);
+    const promise = this.rpc.request("archway.rewards.v1.Query", "BlockRewardsTracking", data);
     return promise.then(data => QueryBlockRewardsTrackingResponse.decode(new _m0.Reader(data)));
   }
   rewardsPool(request: QueryRewardsPoolRequest = {}): Promise<QueryRewardsPoolResponse> {
     const data = QueryRewardsPoolRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.rewards.v1beta1.Query", "RewardsPool", data);
+    const promise = this.rpc.request("archway.rewards.v1.Query", "RewardsPool", data);
     return promise.then(data => QueryRewardsPoolResponse.decode(new _m0.Reader(data)));
   }
   estimateTxFees(request: QueryEstimateTxFeesRequest): Promise<QueryEstimateTxFeesResponse> {
     const data = QueryEstimateTxFeesRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.rewards.v1beta1.Query", "EstimateTxFees", data);
+    const promise = this.rpc.request("archway.rewards.v1.Query", "EstimateTxFees", data);
     return promise.then(data => QueryEstimateTxFeesResponse.decode(new _m0.Reader(data)));
   }
   rewardsRecords(request: QueryRewardsRecordsRequest): Promise<QueryRewardsRecordsResponse> {
     const data = QueryRewardsRecordsRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.rewards.v1beta1.Query", "RewardsRecords", data);
+    const promise = this.rpc.request("archway.rewards.v1.Query", "RewardsRecords", data);
     return promise.then(data => QueryRewardsRecordsResponse.decode(new _m0.Reader(data)));
   }
   outstandingRewards(request: QueryOutstandingRewardsRequest): Promise<QueryOutstandingRewardsResponse> {
     const data = QueryOutstandingRewardsRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.rewards.v1beta1.Query", "OutstandingRewards", data);
+    const promise = this.rpc.request("archway.rewards.v1.Query", "OutstandingRewards", data);
     return promise.then(data => QueryOutstandingRewardsResponse.decode(new _m0.Reader(data)));
   }
   flatFee(request: QueryFlatFeeRequest): Promise<QueryFlatFeeResponse> {
     const data = QueryFlatFeeRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.rewards.v1beta1.Query", "FlatFee", data);
+    const promise = this.rpc.request("archway.rewards.v1.Query", "FlatFee", data);
     return promise.then(data => QueryFlatFeeResponse.decode(new _m0.Reader(data)));
   }
 }
