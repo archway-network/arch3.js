@@ -46,7 +46,7 @@
     "clean": "rimraf ./build",
     "codegen": "./scripts/codegen.js",
     "build": "yarn clean && tsc --build",
-    "test": "DOTENV_CONFIG_PATH=../../.env jest --no-cache",
+    "test": "DOTENV_CONFIG_PATH=../../.env jest",
     "test:watch": "jest --watch",
     "lint": "eslint ./src --ext .js,.cjs,.ts --no-error-on-unmatched-pattern",
     "lint:fix": "yarn lint --fix",

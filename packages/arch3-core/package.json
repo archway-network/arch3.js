@@ -41,7 +41,7 @@
     "prepack": "yarn run build",
     "clean": "rimraf ./build",
     "build": "yarn clean && tsc --build",
-    "test": "DOTENV_CONFIG_PATH=../../.env jest --no-cache",
+    "test": "DOTENV_CONFIG_PATH=../../.env jest",
     "test:watch": "yarn test --watch",
     "lint": "eslint ./src --ext .js,.cjs,.ts --no-error-on-unmatched-pattern",
     "lint:fix": "yarn lint --fix",
