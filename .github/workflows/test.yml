@@ -25,7 +25,7 @@ jobs:
       - run: yarn test:all
 
   eslint:
-    name: ESLint scanning
+    name: ESLint
     runs-on: ubuntu-latest
     permissions:
       contents: read
