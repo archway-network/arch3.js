@@ -41,6 +41,7 @@ module.exports = {
       node: true
     }
   },
+  reportUnusedDisableDirectives: true,
   rules: {
     'indent': ['error', 2],
     'array-callback-return': 'error',
@@ -170,11 +171,11 @@ module.exports = {
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-floating-promises': 'warn',
-    '@typescript-eslint/no-parameter-properties': 'warn',
     '@typescript-eslint/no-shadow': 'warn',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
     '@typescript-eslint/no-use-before-define': 'warn',
+    '@typescript-eslint/parameter-properties': 'warn',
     '@typescript-eslint/prefer-readonly': 'warn',
     'import/first': 'error',
     'import/newline-after-import': 'error',

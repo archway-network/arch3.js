@@ -197,7 +197,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
     const metadataAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1beta1.ContractMetadataSetEvent', 'metadata');
-    /* eslint-disable camelcase, @typescript-eslint/naming-convention */
+    /* eslint-disable @typescript-eslint/naming-convention */
     const contractMetadata = JSON.parse(metadataAttr.value) as {
       contract_address: string,
       owner_address?: string,
