@@ -12,11 +12,12 @@
 name: CodeQL
 
 on:
+  # Trigger the workflow on push for all branches or pull request to main
   push:
-    branches: [main, develop]
+    branches: "*"
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [main, develop]
+    branches: [main]
   schedule:
     # “At 12:00 on Wednesdays”
     - cron: "0 12 * * 3"
@@ -51,7 +52,7 @@ jobs:
           # Prefix the list here with "+" to use these queries and those in the config file.
 
           # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
-          # queries: security-extended,security-and-quality
+          queries: security-extended
 
       # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
       # If this step fails, then you should remove it and run the build manually (see below)
@@ -64,9 +65,13 @@ jobs:
       #   If the Autobuild fails above, remove it and uncomment the following three lines.
       #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
 
-      # - run: |
-      #   echo "Run, Build Application using script"
-      #   ./location_of_script_within_repo/buildscript.sh
+      # Install dependencies and build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+      - run: yarn install --immutable
+      - run: yarn build:all
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
