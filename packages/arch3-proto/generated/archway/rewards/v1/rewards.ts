@@ -1,31 +1,47 @@
 /* eslint-disable */
-import { Coin } from "../../../cosmos/base/v1beta1/coin";
+import { DecCoin, Coin } from "../../../cosmos/base/v1beta1/coin";
 import { Timestamp } from "../../../google/protobuf/timestamp";
 import { Long, isSet, fromJsonTimestamp, fromTimestamp } from "../../../helpers";
 import * as _m0 from "protobufjs/minimal";
 /** Params defines the module parameters. */
 export interface Params {
   /**
-   * inflation_rewards_ratio defines the percentage of minted inflation tokens that are used for dApp rewards [0.0, 1.0].
-   * If set to 0.0, no inflation rewards are distributed.
+   * inflation_rewards_ratio defines the percentage of minted inflation tokens
+   * that are used for dApp rewards [0.0, 1.0]. If set to 0.0, no inflation
+   * rewards are distributed.
    */
   inflationRewardsRatio: string;
   /**
-   * tx_fee_rebate_ratio defines the percentage of tx fees that are used for dApp rewards [0.0, 1.0].
-   * If set to 0.0, no fee rewards are distributed.
+   * tx_fee_rebate_ratio defines the percentage of tx fees that are used for
+   * dApp rewards [0.0, 1.0]. If set to 0.0, no fee rewards are distributed.
    */
   txFeeRebateRatio: string;
-  /** max_withdraw_records defines the maximum number of RewardsRecord objects used for the withdrawal operation. */
+  /**
+   * max_withdraw_records defines the maximum number of RewardsRecord objects
+   * used for the withdrawal operation.
+   */
   maxWithdrawRecords: Long;
+  /**
+   * min_price_of_gas defines the minimum price for each single unit of gas in
+   * the network. during the min consensus fee ante handler we will be taking
+   * the max between min consensus fee and minimum price of gas to compute the
+   * minimum tx computational fees, which are independent from contract flat
+   * fees (premiums)
+   */
+  minPriceOfGas?: DecCoin;
 }
-/** ContractMetadata defines the contract rewards distribution options for a particular contract. */
+/**
+ * ContractMetadata defines the contract rewards distribution options for a
+ * particular contract.
+ */
 export interface ContractMetadata {
   /** contract_address defines the contract address (bech32 encoded). */
   contractAddress: string;
   /**
-   * owner_address is the contract owner address that can modify contract reward options (bech32 encoded).
-   * That could be the contract admin or the contract itself.
-   * If owner_address is set to contract address, contract can modify the metadata on its own using WASM bindings.
+   * owner_address is the contract owner address that can modify contract reward
+   * options (bech32 encoded). That could be the contract admin or the contract
+   * itself. If owner_address is set to contract address, contract can modify
+   * the metadata on its own using WASM bindings.
    */
   ownerAddress: string;
   /**
@@ -40,12 +56,18 @@ export interface BlockRewards {
   height: Long;
   /** inflation_rewards is the rewards to be distributed. */
   inflationRewards?: Coin;
-  /** max_gas defines the maximum gas for the block that is used to distribute inflation rewards (consensus parameter). */
+  /**
+   * max_gas defines the maximum gas for the block that is used to distribute
+   * inflation rewards (consensus parameter).
+   */
   maxGas: Long;
 }
 /** TxRewards defines transaction related rewards distribution data. */
 export interface TxRewards {
-  /** tx_id is the tracking transaction ID (x/tracking is the data source for this value). */
+  /**
+   * tx_id is the tracking transaction ID (x/tracking is the data source for
+   * this value).
+   */
   txId: Long;
   /** height defines the block height. */
   height: Long;
@@ -53,11 +75,12 @@ export interface TxRewards {
   feeRewards: Coin[];
 }
 /**
- * RewardsRecord defines a record that is used to distribute rewards later (lazy distribution).
- * This record is being created by the x/rewards EndBlocker and pruned after the rewards are distributed.
- * An actual rewards x/bank transfer might be triggered by a Tx (via CLI for example) or by a contract via WASM bindings.
- * For a contract to trigger rewards transfer, contract address must be set as the rewards_address in a
- * corresponding ContractMetadata.
+ * RewardsRecord defines a record that is used to distribute rewards later (lazy
+ * distribution). This record is being created by the x/rewards EndBlocker and
+ * pruned after the rewards are distributed. An actual rewards x/bank transfer
+ * might be triggered by a Tx (via CLI for example) or by a contract via WASM
+ * bindings. For a contract to trigger rewards transfer, contract address must
+ * be set as the rewards_address in a corresponding ContractMetadata.
  */
 export interface RewardsRecord {
   /** id is the unique ID of the record. */
@@ -82,7 +105,8 @@ function createBaseParams(): Params {
   return {
     inflationRewardsRatio: "",
     txFeeRebateRatio: "",
-    maxWithdrawRecords: Long.UZERO
+    maxWithdrawRecords: Long.UZERO,
+    minPriceOfGas: undefined
   };
 }
 export const Params = {
@@ -95,6 +119,9 @@ export const Params = {
     }
     if (!message.maxWithdrawRecords.isZero()) {
       writer.uint32(24).uint64(message.maxWithdrawRecords);
+    }
+    if (message.minPriceOfGas !== undefined) {
+      DecCoin.encode(message.minPriceOfGas, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -114,6 +141,9 @@ export const Params = {
         case 3:
           message.maxWithdrawRecords = (reader.uint64() as Long);
           break;
+        case 4:
+          message.minPriceOfGas = DecCoin.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -125,7 +155,8 @@ export const Params = {
     return {
       inflationRewardsRatio: isSet(object.inflationRewardsRatio) ? String(object.inflationRewardsRatio) : "",
       txFeeRebateRatio: isSet(object.txFeeRebateRatio) ? String(object.txFeeRebateRatio) : "",
-      maxWithdrawRecords: isSet(object.maxWithdrawRecords) ? Long.fromValue(object.maxWithdrawRecords) : Long.UZERO
+      maxWithdrawRecords: isSet(object.maxWithdrawRecords) ? Long.fromValue(object.maxWithdrawRecords) : Long.UZERO,
+      minPriceOfGas: isSet(object.minPriceOfGas) ? DecCoin.fromJSON(object.minPriceOfGas) : undefined
     };
   },
   toJSON(message: Params): unknown {
@@ -133,6 +164,7 @@ export const Params = {
     message.inflationRewardsRatio !== undefined && (obj.inflationRewardsRatio = message.inflationRewardsRatio);
     message.txFeeRebateRatio !== undefined && (obj.txFeeRebateRatio = message.txFeeRebateRatio);
     message.maxWithdrawRecords !== undefined && (obj.maxWithdrawRecords = (message.maxWithdrawRecords || Long.UZERO).toString());
+    message.minPriceOfGas !== undefined && (obj.minPriceOfGas = message.minPriceOfGas ? DecCoin.toJSON(message.minPriceOfGas) : undefined);
     return obj;
   },
   fromPartial(object: Partial<Params>): Params {
@@ -140,6 +172,7 @@ export const Params = {
     message.inflationRewardsRatio = object.inflationRewardsRatio ?? "";
     message.txFeeRebateRatio = object.txFeeRebateRatio ?? "";
     message.maxWithdrawRecords = object.maxWithdrawRecords !== undefined && object.maxWithdrawRecords !== null ? Long.fromValue(object.maxWithdrawRecords) : Long.UZERO;
+    message.minPriceOfGas = object.minPriceOfGas !== undefined && object.minPriceOfGas !== null ? DecCoin.fromPartial(object.minPriceOfGas) : undefined;
     return message;
   }
 };

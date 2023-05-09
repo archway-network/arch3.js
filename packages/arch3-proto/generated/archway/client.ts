@@ -2,12 +2,12 @@
 import { GeneratedType, Registry, OfflineSigner } from "@cosmjs/proto-signing";
 import { defaultRegistryTypes, AminoTypes, SigningStargateClient } from "@cosmjs/stargate";
 import { HttpEndpoint } from "@cosmjs/tendermint-rpc";
-import * as archwayRewardsV1beta1TxRegistry from "./rewards/v1beta1/tx.registry";
-import * as archwayRewardsV1beta1TxAmino from "./rewards/v1beta1/tx.amino";
+import * as archwayRewardsV1TxRegistry from "./rewards/v1/tx.registry";
+import * as archwayRewardsV1TxAmino from "./rewards/v1/tx.amino";
 export const archwayAminoConverters = {
-  ...archwayRewardsV1beta1TxAmino.AminoConverter
+  ...archwayRewardsV1TxAmino.AminoConverter
 };
-export const archwayProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...archwayRewardsV1beta1TxRegistry.registry];
+export const archwayProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...archwayRewardsV1TxRegistry.registry];
 export const getSigningArchwayClientOptions = ({
   defaultTypes = defaultRegistryTypes
 }: {

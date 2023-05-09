@@ -208,7 +208,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       }
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
-    const metadataAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1beta1.ContractMetadataSetEvent', 'metadata');
+    const metadataAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.ContractMetadataSetEvent', 'metadata');
     /* eslint-disable @typescript-eslint/naming-convention */
     const contractMetadata = JSON.parse(metadataAttr.value) as {
       contract_address: string,
@@ -254,7 +254,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       flatFeeAmount: flatFee,
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
-    const flatFeeAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1beta1.ContractFlatFeeSetEvent', 'flat_fee');
+    const flatFeeAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.ContractFlatFeeSetEvent', 'flat_fee');
     return {
       ...buildResult(response),
       premium: {
@@ -296,7 +296,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       }
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
-    const rewardsAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1beta1.RewardsWithdrawEvent', 'rewards');
+    const rewardsAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.RewardsWithdrawEvent', 'rewards');
     const rewards = JSON.parse(rewardsAttr.value) as Coin[];
     return {
       ...buildResult(response),

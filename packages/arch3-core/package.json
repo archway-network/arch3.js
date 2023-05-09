@@ -37,6 +37,10 @@
   ],
   "main": "build/arch3-core/src/index.js",
   "types": "build/arch3-core/src/index.d.ts",
+  "exports": {
+    ".": "./build/arch3-core/index.js",
+    "./*": "./build/arch3-core/*.js"
+  },
   "scripts": {
     "prepack": "yarn run build",
     "clean": "rimraf ./build",

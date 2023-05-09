@@ -17,7 +17,10 @@ export interface GenesisState {
   minConsensusFee?: DecCoin;
   /** rewards_record_last_id defines the last unique ID for a RewardsRecord objs. */
   rewardsRecordLastId: Long;
-  /** rewards_records defines a list of all active (undistributed) rewards records. */
+  /**
+   * rewards_records defines a list of all active (undistributed) rewards
+   * records.
+   */
   rewardsRecords: RewardsRecord[];
   /** flat_fees defines a list of contract flat fee. */
   flatFees: FlatFee[];

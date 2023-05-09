@@ -16,7 +16,7 @@ export class QueryClientImpl implements Query {
   }
   blockGasTracking(request: QueryBlockGasTrackingRequest = {}): Promise<QueryBlockGasTrackingResponse> {
     const data = QueryBlockGasTrackingRequest.encode(request).finish();
-    const promise = this.rpc.request("archway.tracking.v1beta1.Query", "BlockGasTracking", data);
+    const promise = this.rpc.request("archway.tracking.v1.Query", "BlockGasTracking", data);
     return promise.then(data => QueryBlockGasTrackingResponse.decode(new _m0.Reader(data)));
   }
 }

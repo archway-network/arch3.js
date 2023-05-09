@@ -3,7 +3,7 @@ import { AminoMsg } from "@cosmjs/amino";
 import { Long } from "../../../helpers";
 import { MsgSetContractMetadata, MsgWithdrawRewards, MsgSetFlatFee } from "./tx";
 export interface MsgSetContractMetadataAminoType extends AminoMsg {
-  type: "/archway.rewards.v1beta1.MsgSetContractMetadata";
+  type: "/archway.rewards.v1.MsgSetContractMetadata";
   value: {
     sender_address: string;
     metadata: {
@@ -14,7 +14,7 @@ export interface MsgSetContractMetadataAminoType extends AminoMsg {
   };
 }
 export interface MsgWithdrawRewardsAminoType extends AminoMsg {
-  type: "/archway.rewards.v1beta1.MsgWithdrawRewards";
+  type: "/archway.rewards.v1.MsgWithdrawRewards";
   value: {
     rewards_address: string;
     records_limit: {
@@ -26,7 +26,7 @@ export interface MsgWithdrawRewardsAminoType extends AminoMsg {
   };
 }
 export interface MsgSetFlatFeeAminoType extends AminoMsg {
-  type: "/archway.rewards.v1beta1.MsgSetFlatFee";
+  type: "/archway.rewards.v1.MsgSetFlatFee";
   value: {
     sender_address: string;
     contract_address: string;
@@ -37,8 +37,8 @@ export interface MsgSetFlatFeeAminoType extends AminoMsg {
   };
 }
 export const AminoConverter = {
-  "/archway.rewards.v1beta1.MsgSetContractMetadata": {
-    aminoType: "/archway.rewards.v1beta1.MsgSetContractMetadata",
+  "/archway.rewards.v1.MsgSetContractMetadata": {
+    aminoType: "/archway.rewards.v1.MsgSetContractMetadata",
     toAmino: ({
       senderAddress,
       metadata
@@ -66,8 +66,8 @@ export const AminoConverter = {
       };
     }
   },
-  "/archway.rewards.v1beta1.MsgWithdrawRewards": {
-    aminoType: "/archway.rewards.v1beta1.MsgWithdrawRewards",
+  "/archway.rewards.v1.MsgWithdrawRewards": {
+    aminoType: "/archway.rewards.v1.MsgWithdrawRewards",
     toAmino: ({
       rewardsAddress,
       recordsLimit,
@@ -99,8 +99,8 @@ export const AminoConverter = {
       };
     }
   },
-  "/archway.rewards.v1beta1.MsgSetFlatFee": {
-    aminoType: "/archway.rewards.v1beta1.MsgSetFlatFee",
+  "/archway.rewards.v1.MsgSetFlatFee": {
+    aminoType: "/archway.rewards.v1.MsgSetFlatFee",
     toAmino: ({
       senderAddress,
       contractAddress,

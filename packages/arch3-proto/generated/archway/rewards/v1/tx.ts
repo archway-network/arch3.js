@@ -20,8 +20,8 @@ export interface MsgWithdrawRewards {
   /** rewards_address is the address to distribute rewards to (bech32 encoded). */
   rewardsAddress: string;
   /**
-   * records_limit defines the maximum number of RewardsRecord objects to process.
-   * If provided limit is 0, the default limit is used.
+   * records_limit defines the maximum number of RewardsRecord objects to
+   * process. If provided limit is 0, the default limit is used.
    */
   recordsLimit?: MsgWithdrawRewards_RecordsLimit;
   /** record_ids defines specific RewardsRecord object IDs to process. */

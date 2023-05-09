@@ -3,18 +3,27 @@ import { ContractMetadata } from "./rewards";
 import { Coin, DecCoin } from "../../../cosmos/base/v1beta1/coin";
 import { Long, isSet } from "../../../helpers";
 import * as _m0 from "protobufjs/minimal";
-/** ContractMetadataSetEvent is emitted when the contract metadata is created or updated. */
+/**
+ * ContractMetadataSetEvent is emitted when the contract metadata is created or
+ * updated.
+ */
 export interface ContractMetadataSetEvent {
   /** contract_address defines the contract address. */
   contractAddress: string;
   /** metadata defines the new contract metadata state. */
   metadata?: ContractMetadata;
 }
-/** ContractRewardCalculationEvent is emitted when the contract reward is calculated. */
+/**
+ * ContractRewardCalculationEvent is emitted when the contract reward is
+ * calculated.
+ */
 export interface ContractRewardCalculationEvent {
   /** contract_address defines the contract address. */
   contractAddress: string;
-  /** gas_consumed defines the total gas consumption by all WASM operations within one transaction. */
+  /**
+   * gas_consumed defines the total gas consumption by all WASM operations
+   * within one transaction.
+   */
   gasConsumed: Long;
   /** inflation_rewards defines the inflation rewards portions of the rewards. */
   inflationRewards?: Coin;
@@ -24,8 +33,9 @@ export interface ContractRewardCalculationEvent {
   metadata?: ContractMetadata;
 }
 /**
- * RewardsWithdrawEvent is emitted when credited rewards for a specific rewards_address are distributed.
- * Event could be triggered by a transaction (via CLI for example) or by a contract via WASM bindings.
+ * RewardsWithdrawEvent is emitted when credited rewards for a specific
+ * rewards_address are distributed. Event could be triggered by a transaction
+ * (via CLI for example) or by a contract via WASM bindings.
  */
 export interface RewardsWithdrawEvent {
   /** rewards_address defines the rewards address rewards are distributed to. */
@@ -40,9 +50,15 @@ export interface MinConsensusFeeSetEvent {
 }
 /** ContractFlatFeeSetEvent is emitted when the contract flat fee is updated */
 export interface ContractFlatFeeSetEvent {
-  /** contract_address defines the bech32 address of the contract for which the flat fee is set */
+  /**
+   * contract_address defines the bech32 address of the contract for which the
+   * flat fee is set
+   */
   contractAddress: string;
-  /** flat_fee defines the amount that has been set as the minimum fee for the contract */
+  /**
+   * flat_fee defines the amount that has been set as the minimum fee for the
+   * contract
+   */
   flatFee?: Coin;
 }
 function createBaseContractMetadataSetEvent(): ContractMetadataSetEvent {

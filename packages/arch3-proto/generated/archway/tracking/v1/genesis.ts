@@ -8,7 +8,10 @@ export interface GenesisState {
   txInfoLastId: Long;
   /** tx_infos defines a list of all the tracked transactions. */
   txInfos: TxInfo[];
-  /** contract_op_info_last_id defines the last unique ID for ContractOperationInfo objs. */
+  /**
+   * contract_op_info_last_id defines the last unique ID for
+   * ContractOperationInfo objs.
+   */
   contractOpInfoLastId: Long;
   /** contract_op_infos defines a list of all the tracked contract operations. */
   contractOpInfos: ContractOperationInfo[];

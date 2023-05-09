@@ -110,8 +110,9 @@ export interface ContractOperationInfo {
    */
   vmGas: Long;
   /**
-   * sdk_gas is the gas consumption reported by the SDK gas meter and the WASM GasRegister (cost of Execute/Query/etc).
-   * Value is adjusted by this module (CalculateUpdatedGas func).
+   * sdk_gas is the gas consumption reported by the SDK gas meter and the WASM
+   * GasRegister (cost of Execute/Query/etc). Value is adjusted by this module
+   * (CalculateUpdatedGas func).
    */
   sdkGas: Long;
 }
@@ -124,7 +125,10 @@ export interface BlockTracking {
 export interface TxTracking {
   /** info defines the transaction details. */
   info?: TxInfo;
-  /** contract_operations defines the list of contract operations consumed by the transaction. */
+  /**
+   * contract_operations defines the list of contract operations consumed by the
+   * transaction.
+   */
   contractOperations: ContractOperationInfo[];
 }
 function createBaseTxInfo(): TxInfo {
