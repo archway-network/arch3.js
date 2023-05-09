@@ -7,8 +7,8 @@ import {
   QueryParamsResponse,
   QueryRewardsPoolResponse,
   QueryRewardsRecordsResponse
-} from '@archwayhq/arch3-proto/archway/rewards/v1beta1/query';
-import { createRpcQueryExtension } from '@archwayhq/arch3-proto/archway/rewards/v1beta1/query.rpc.Query';
+} from '@archwayhq/arch3-proto/archway/rewards/v1/query';
+import { createRpcQueryExtension } from '@archwayhq/arch3-proto/archway/rewards/v1/query.rpc.Query';
 import { Long } from '@archwayhq/arch3-proto/helpers';
 import { createPagination, QueryClient } from '@cosmjs/stargate';
 
