@@ -10,7 +10,7 @@ const archwayd = {
   chainId: 'local-1',
   endpoint: 'http://localhost:26657',
   prefix: 'archway',
-  denom: 'uarch',
+  denom: process.env.DENOM || 'aarch',
 };
 
 const contracts = {
@@ -38,7 +38,7 @@ const flatFee = coin(1000, archwayd.denom);
 const defaultSigningClientOptions: SigningCosmWasmClientOptions = {
   broadcastPollIntervalMs: 200,
   broadcastTimeoutMs: 8_000,
-  gasPrice: GasPrice.fromString('0.2uarch'),
+  gasPrice: GasPrice.fromString(`900${archwayd.denom}`),
 };
 
 async function assertGasPriceEstimation(

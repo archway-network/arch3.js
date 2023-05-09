@@ -9,7 +9,7 @@ set -eu
 ARCHWAY_HOME="${ARCHWAY_HOME:-$HOME/.archway}"
 
 CHAIN_ID="${CHAIN_ID:-local-1}"
-DENOM="${DENOM:-uarch}"
+DENOM="${DENOM:-aarch}"
 
 MONIKER="${MONIKER:-docker-node}"
 VALIDATOR_MNEMONIC="${VALIDATOR_MNEMONIC:-$(archwayd keys mnemonic)}"
@@ -17,7 +17,10 @@ GENESIS_ACCOUNTS="${GENESIS_ACCOUNTS:-}"
 
 GENESIS_FILE="${ARCHWAY_HOME}/config/genesis.json"
 
-TOTAL_SUPPLY_AMOUNT=${TOTAL_SUPPLY_AMOUNT:-1000000000000000}
+# Defaults to 1b tokens
+TOTAL_SUPPLY=${TOTAL_SUPPLY:-1000000000}
+ATTO_PAD="$(printf "%09d" 0)"
+TOTAL_SUPPLY_AMOUNT="${TOTAL_SUPPLY}${ATTO_PAD}"
 
 # shellcheck disable=SC2139
 alias archwayd="archwayd --home ${ARCHWAY_HOME}"
@@ -47,25 +50,12 @@ if [ ! -f "${GENESIS_FILE}" ]; then
   echo "Creating validator key..."
   echo "${VALIDATOR_MNEMONIC}" | archwayd keys add validator --recover
 
-  echo "Configuring genesis accounts and total supply..."
-  ADDRESSES=0
-  GENESIS_ACCOUNTS_BALANCE=$((TOTAL_SUPPLY_AMOUNT / 20))
-  for account in $(echo "${GENESIS_ACCOUNTS}" | awk -F',' '{ for( i=1; i<=NF; i++ ) print $i }'); do
-    [ -n "${account}" ] || break
-    echo "Adding account ${account} with ${GENESIS_ACCOUNTS_BALANCE}${DENOM}"
-    archwayd add-genesis-account "${account}" "${GENESIS_ACCOUNTS_BALANCE}${DENOM}"
-    ADDRESSES=$((ADDRESSES + 1))
-  done
-
-  VALIDATOR_ACCOUNT_BALANCE=$((TOTAL_SUPPLY_AMOUNT - (ADDRESSES * GENESIS_ACCOUNTS_BALANCE)))
-  if ! [ ${VALIDATOR_ACCOUNT_BALANCE} -gt 0 ]; then
-    echo "Not enough tokens left for the validator. Please, remove some genesis accounts."
-  fi
-  echo "Adding validator account with ${VALIDATOR_ACCOUNT_BALANCE}${DENOM}"
-  archwayd add-genesis-account validator "${VALIDATOR_ACCOUNT_BALANCE}${DENOM}"
+  set -x
+  echo "Adding validator account with ${TOTAL_SUPPLY_AMOUNT}${DENOM}"
+  archwayd add-genesis-account validator "${TOTAL_SUPPLY_AMOUNT}${DENOM}"
 
   ACTUAL_SUPPLY_AMOUNT=$(jq -r '.app_state.bank.supply[0].amount' "${GENESIS_FILE}")
-  [ "${ACTUAL_SUPPLY_AMOUNT}" -eq "${TOTAL_SUPPLY_AMOUNT}" ] || {
+  [ "${ACTUAL_SUPPLY_AMOUNT}" = "${TOTAL_SUPPLY_AMOUNT}" ] || {
     echo "Genesis supply amount of ${ACTUAL_SUPPLY_AMOUNT}${DENOM} is not equal to ${TOTAL_SUPPLY_AMOUNT}${DENOM}"
     exit 1
   }
@@ -74,24 +64,27 @@ if [ ! -f "${GENESIS_FILE}" ]; then
   # shellcheck disable=SC2016
   GENESIS_PARAMS='
     .app_state.crisis.constant_fee.denom = $denom |
+    .app_state.distribution.params.community_tax = "0.060000000000000000" |
     .app_state.gov.deposit_params.min_deposit[0].denom = $denom |
-    .app_state.gov.deposit_params.min_deposit[0].amount = "1000" |
+    .app_state.gov.deposit_params.min_deposit[0].amount = "1000000000000" |
     .app_state.gov.deposit_params.max_deposit_period = "10s" |
     .app_state.gov.voting_params.voting_period = "2h" |
     .app_state.mint.params.mint_denom = $denom |
-    .app_state.mint.params.inflation_max = "0.100000000000000000" |
-    .app_state.mint.params.inflation_min = "0.100000000000000000" |
-    .app_state.mint.params.blocks_per_year = "31557600" |
+    .app_state.mint.params.inflation_max = "0.1" |
+    .app_state.mint.params.inflation_min = "0.0999999999" |
+    .app_state.mint.params.blocks_per_year = "5259600" |
     .app_state.rewards.min_consensus_fee.denom = $denom |
+    .app_state.rewards.params.min_price_of_gas.amount = "900" |
+    .app_state.rewards.params.min_price_of_gas.denom = $denom |
     .app_state.staking.params.bond_denom = $denom |
     .consensus_params.block.max_gas = "10000000"
   '
   jq --arg denom "${DENOM}" "${GENESIS_PARAMS}" "${GENESIS_FILE}" |
     sponge "${GENESIS_FILE}"
 
-  DELEGATION_AMOUNT=$((VALIDATOR_ACCOUNT_BALANCE / 2))
+  DELEGATION_AMOUNT="$((TOTAL_SUPPLY / 2))${ATTO_PAD}"
   echo "Generating the genesis tx with delegation of ${DELEGATION_AMOUNT}${DENOM}..."
-  archwayd gentx validator "${DELEGATION_AMOUNT}${DENOM}" --chain-id "${CHAIN_ID}"
+  archwayd gentx validator "${DELEGATION_AMOUNT}${DENOM}" --chain-id "${CHAIN_ID}" --fees 180000000aarch
 
   archwayd collect-gentxs
   archwayd validate-genesis

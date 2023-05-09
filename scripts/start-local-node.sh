@@ -234,7 +234,7 @@ docker compose up --remove-orphans -d
 echo
 echo "Waiting for the node to generate the first block..."
 if ! curl --retry 30 -f --retry-all-errors --retry-delay 1 -s "http://localhost:26657/block?height=1" | jq -e '.error == null' >/dev/null; then
-  docker compose logs node --tail 100
+  docker compose logs node --tail 300
   error "node failed to start!"
 fi
 ok "node started"
@@ -256,7 +256,7 @@ for i in {0..4}; do
 
   address="$(archwayd keys show -a "${key_name}")"
 
-  if archwayd q bank balances "${address}" | jq -e '.balances[0].amount // "0" | tonumber < 1000000' >/dev/null; then
+  if archwayd q bank balances "${address}" | jq -e '.balances[0].amount // "0" | tonumber < 1000000000000' >/dev/null; then
     "${SCRIPT_DIR}"/faucet.sh "${address}"
   fi
 
@@ -269,6 +269,7 @@ echo "Deploying voter contract..."
 # Source: https://github.com/archway-network/archway/tree/main/contracts/go/voter
 
 denom="$(archwayd q staking params | jq -r '.bond_denom')"
+dotenv-add DENOM "${denom}"
 
 echo
 echo "[‣] storing..."

@@ -7,7 +7,7 @@ const archwayd = {
   chainId: 'local-1',
   endpoint: 'http://localhost:26657',
   prefix: 'archway',
-  denom: 'uarch',
+  denom: process.env.DENOM || 'aarch',
 };
 
 const contracts = {
@@ -60,8 +60,6 @@ describe('ArchwayClient', () => {
         denom: archwayd.denom,
         amount: expect.any(Decimal),
       });
-      const gasUnitPriceAmount = response.gasUnitPrice?.amount;
-      expect(gasUnitPriceAmount?.isLessThan(Decimal.one(gasUnitPriceAmount?.fractionalDigits))).toBeTruthy();
       expect(response.contractAddress).toBeUndefined();
       expect(response.estimatedFee).toHaveLength(0);
 
@@ -77,10 +75,11 @@ describe('ArchwayClient', () => {
         denom: archwayd.denom,
         amount: expect.any(Decimal),
       });
-      const gasUnitPriceAmount = response.gasUnitPrice?.amount;
-      expect(gasUnitPriceAmount?.isLessThan(Decimal.one(gasUnitPriceAmount?.fractionalDigits))).toBeTruthy();
       expect(response.contractAddress).toBe(contractAddress);
-      expect(response.estimatedFee).toContainEqual(coin(1000, archwayd.denom));
+      expect(response.estimatedFee).toContainEqual({
+        denom: archwayd.denom,
+        amount: expect.stringMatching(/^\d+$/),
+      });
 
       client.disconnect();
     });
