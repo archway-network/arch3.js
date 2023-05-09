@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+[ -z "$(head -1 <"${1}")" ] && exit
+
 echo "Checking conventional commit message..."
-npx --no -- commitlint --edit ${1}
+npx --no -- commitlint --edit "${1}"
