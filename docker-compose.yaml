@@ -1,6 +1,7 @@
 services:
   node:
-    image: archwaynetwork/archwayd:sha-c9ef7ad
+    # TODO: use a tag instead of the commit hash when archwayd gets released
+    image: archwaynetwork/archwayd:sha-2a7aee9
     command: start --x-crisis-skip-assert-invariants
     entrypoint: /docker-entrypoint.sh
     ports:
@@ -13,8 +14,6 @@ services:
       - ./scripts/docker-entrypoint.sh:/docker-entrypoint.sh:ro
       - ./scripts/contracts:/contracts:ro
       - data:/root/.archway
-    environment:
-      - VALIDATOR_MNEMONIC
     healthcheck:
       test:
         curl --retry 5 --retry-delay 1 --retry-all-errors -sf 'http://localhost:26657/status' |
