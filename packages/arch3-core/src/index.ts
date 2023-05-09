@@ -1,6 +1,17 @@
 export * from '@cosmjs/cosmwasm-stargate';
 
 export { ArchwayClient } from './archwayclient';
+
+export {
+  createRewardsAminoConverters,
+  RewardsExtension,
+  RewardsMsgEncoder,
+  rewardsTypes,
+  setupRewardsExtension,
+} from './modules';
+
+export * from './queryclient';
+
 export {
   SetContractMetadataResult,
   SetContractPremiumResult,
@@ -9,6 +20,4 @@ export {
   WithdrawContractRewardsResult,
 } from './signingarchwayclient';
 
-export * from './modules';
 export * from './types';
-export * from './queryclient';
