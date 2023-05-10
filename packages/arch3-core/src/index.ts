@@ -1,5 +1,3 @@
-export * from '@cosmjs/cosmwasm-stargate';
-
 export { ArchwayClient } from './archwayclient';
 
 export {
