@@ -1,8 +1,10 @@
 # arch3.js
 
-[![npm (scoped)](https://img.shields.io/npm/v/archwayhq/arch3.js)](https://www.npmjs.com/package/@archwayhq/arch3.js) ![Tests](https://github.com/archway-network/arch3.js/actions/workflows/test.yml/badge.svg) ![CodeQL](https://github.com/archway-network/arch3.js/actions/workflows/codeql.yml/badge.svg) [![License](https://img.shields.io/github/license/archway-network/arch3.js?label=License&logo=opensourceinitiative&logoColor=white&color=informational)](https://opensource.org/licenses/Apache-2.0)
+[![npm (scoped)](https://img.shields.io/npm/v/@archwayhq/arch3.js)](https://www.npmjs.com/package/@archwayhq/arch3.js) ![Tests](https://github.com/archway-network/arch3.js/actions/workflows/test.yml/badge.svg) ![CodeQL](https://github.com/archway-network/arch3.js/actions/workflows/codeql.yml/badge.svg) [![License](https://img.shields.io/github/license/archway-network/arch3.js?label=License&logo=opensourceinitiative&logoColor=white&color=informational)](https://opensource.org/licenses/Apache-2.0)
 
-`arch3.js` is an all-in-one library to interact with the Archway Protocol. It works as a drop-in replacement of [CosmJS](https://github.com/cosmos/cosmjs) clients, extending its functionalities to connect with Archway's reward system.
+`arch3.js` is an all-in-one library to interact with the Archway Protocol. It extends [CosmJS](https://github.com/cosmos/cosmjs) CosmWasm Stargate clients' functionalities to connect with Archway's reward system. It automatically calculates the network's [minimum consensus fee](https://github.com/archway-network/archway/tree/main/x/rewards/spec#minimum-consensus-fee) and [contract premiums](https://github.com/archway-network/archway/tree/main/x/rewards/spec#contract-flat-fee) before broadcasting transactions to the chain.
+
+This package **is not** a replacement for CosmJS and is intended to work in conjunction with the other modules available in `@cosmjs/*`.
 
 ## Installation
 
@@ -18,67 +20,106 @@ npm install --save @archwayhq/arch3.js
 yarn add @archwayhq/arch3.js
 ```
 
+## Documentation
+
+For a complete reference on the classes and methods available, please check the [API docs](https://archway-network.github.io/arch3.js).
+
 ## Sample Usage
 
-Both examples suppose you deployed the [increment](https://github.com/archway-network/archway-templates/tree/f5860a7/increment) contract template to Constantine.
+The examples suppose you deployed the [increment](https://github.com/archway-network/archway-templates/tree/caaa5ef/increment) contract template to Constantine.
 
-### Querying
+You can also take a look on the [test specs](https://github.com/archway-network/arch3.js/tree/main/packages/arch3-core/src) for more examples on how to use each of the methods available in the clients.
+
+### Query
+
+For quering the chain, use the `ArchwayClient`:
 
 ```typescript
 import { ArchwayClient } from '@archwayhq/arch3.js';
 
-const client = await ArchwayClient.connect('https://rpc.constantine-1.archway.tech');
+const endpoint = 'https://rpc.constantine-3.archway.tech';
+const client = await ArchwayClient.connect(endpoint);
+```
 
+#### Querying a contract
+
+```typescript
 const contractAddress = 'archway14v952t75xgnufzlrft52ekltt8nsu9gxqh4xz55qfm6wqslc0spqspc5lm';
 const msg = {
   get_count: {},
 };
-const { count } = await client.queryContractSmart(
-  contractAddress,
-  msg
-);
+const { count } = await client.queryContractSmart(contractAddress, msg);
 ```
 
-### Executing a transaction
+#### Querying outstanding rewards
+
+```typescript
+const rewardsAddress = 'archway14v952t75xgnufzlrft52ekltt8nsu9gxqh4xz55qfm6wqslc0spqspc5lm';
+const { totalRewards, totalRecords } = await client.getOutstandingRewards(aliceAddress);
+```
+
+### Execute transactions
+
+For signing and broadcasting transactions, create a `SigningArchwayClient` using a signing wallet:
 
 ```typescript
 import { SigningArchwayClient } from '@archwayhq/arch3.js';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 
 const network = {
-  chainId: 'constantine-1',
-  endpoint: 'https://rpc.constantine-1.archway.tech',
+  endpoint: 'https://rpc.constantine-3.archway.tech',
   prefix: 'archway',
 };
 
-const alice = {
-  // This is an incomplete mnemonic used for demo purposes only. Please, never hard code your seed phrases.
-  mnemonic: 'culture blossom ten thing bar ...',
-  address0: 'archway1cw3vd33zxyy5jk38azn3l8ytw53dwh8h73jugf',
-};
+const walletMnemonic = 'culture blossom ten thing bar ...';
 
-const wallet = await DirectSecp256k1HdWallet.fromMnemonic(alice.mnemonic, { prefix: network.prefix });
-const client = await SigningArchwayClient.connectWithSigner(network.endpoint, wallet, {
-  ...defaultSigningClientOptions,
-  prefix: network.prefix,
-});
+const wallet = await DirectSecp256k1HdWallet.fromMnemonic(walletMnemonic, { prefix: network.prefix });
+const client = await SigningArchwayClient.connectWithSigner(network.endpoint, wallet);
+```
 
+#### Executing an action in a smart contract
+
+```typescript
+const accounts = await wallet.getAccounts();
 const contractAddress = 'archway14v952t75xgnufzlrft52ekltt8nsu9gxqh4xz55qfm6wqslc0spqspc5lm';
 const msg = {
   increment: {},
 };
-const { transactionHash } = await client.execute(
-  alice.address0,
-  contractAddress,
-  msg,
-  'auto'
-);
+
+const { transactionHash } = await client.execute(accounts[0].address, contractAddress, msg, 'auto');
+```
+
+#### Setting a contract metadata
+
+```typescript
+const accounts = await wallet.getAccounts();
+const metadata = {
+  contractAddress: 'archway14v952t75xgnufzlrft52ekltt8nsu9gxqh4xz55qfm6wqslc0spqspc5lm',
+  ownerAddress: accounts[0].address,
+  rewardsAddress: accounts[0].address,
+};
+
+const { transactionHash } = await client.setContractMetadata(accounts[0].address, metadata, 'auto');
+```
+
+#### Withdrawing rewards
+
+```typescript
+const accounts = await wallet.getAccounts();
+const contractAddress = 'archway14v952t75xgnufzlrft52ekltt8nsu9gxqh4xz55qfm6wqslc0spqspc5lm';
+
+// The address withdrawing the rewards should be the same
+// as the `rewardsAddress` set in the contract metadata
+const {
+  transactionHash,
+  rewards
+} = await client.withdrawContractRewards(accounts[0].address, contractAddress, msg, 'auto');
 ```
 
 ## Development
 
-See [HACKING.md](./HACKING.md).
+See [HACKING.md](https://github.com/archway-network/arch3.js/blob/main/HACKING.md).
 
 ## License
 
-This project is licensed under the Apache-2.0 License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the Apache-2.0 License - see the [LICENSE](https://github.com/archway-network/arch3.js/blob/main/LICENSE) file for details.
