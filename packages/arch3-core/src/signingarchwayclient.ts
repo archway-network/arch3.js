@@ -130,7 +130,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param options - Options for the signing client.
    * @returns A {@link SigningArchwayClient} connected to the endpoint.
    *
-   * @see {@link SigningCosmWasmClient.createWithSigner} if you need Tendermint 0.37 support.
+   * @see {@link SigningArchwayClient.createWithSigner} if you need Tendermint 0.37 support.
    */
   public static override async connectWithSigner(
     endpoint: string | HttpEndpoint,
@@ -161,6 +161,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   /**
    * Creates a client in offline mode.
    *
+   * @remarks
    * This should only be used in niche cases where you know exactly what you're doing,
    * e.g. when building an offline signing application.
    *
@@ -186,7 +187,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param metadata - The rewards metadata.
    * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
    * @param memo - Optional memo to add to the transaction.
-   * @returns A transaction result with the contract's metadata.
+   * @returns A {@link SetContractMetadataResult} with the contract's metadata.
    * @throws Error if the transaction fails.
    *
    * @see {@link SigningArchwayClient.withdrawContractRewards} for details on how to withdraw rewards.
@@ -234,7 +235,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param flatFee - The contract premium fee. To disable the fee, set its `amount` to `0`.
    * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
    * @param memo - Optional memo to add to the transaction.
-   * @returns A transaction result with the contract's premium fee.
+   * @returns A {@link SetContractPremiumResult} with the contract's premium fee.
    * @throws Error if the transaction fails.
    *
    * @see {@link SigningArchwayClient.withdrawContractRewards} for details on how to withdraw rewards.
@@ -269,6 +270,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * If the limit is set to `0`, it will use the default limit from the protocol.
    * The default limit is a parameter on the rewards module and it can be updated via governance.
    *
+   * @remarks
    * This method is useful when the contract has a large number of rewards to withdraw,
    * so they can be processed in batches.
    *
@@ -276,7 +278,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param limit - Maximum number of rewards to withdraw.
    * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
    * @param memo - Optional memo to add to the transaction.
-   * @returns A transaction result with information about the rewards withdrawn.
+   * @returns A {@link WithdrawContractRewardsResult} with information about the rewards withdrawn.
    * @throws Error if the transaction fails.
    *
    * @see Check the [Archway Bindings](https://github.com/archway-network/archway-bindings) repository
@@ -374,6 +376,24 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       ...response,
       parsedLogs,
     };
+  }
+
+  /**
+   * Withdraws staking rewards.
+   *
+   * @param delegatorAddress - Address of the delegator withdrawing the staking rewards.
+   * @param validatorAddress - Address of the validator in the format `archwayval` + hex encoded public key.
+   * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
+   * @param memo - Optional memo to add to the transaction.
+   * @returns A {@link DeliverTxResponse} with information about the the withdraw tx.
+   */
+  public override async withdrawRewards(
+    delegatorAddress: string,
+    validatorAddress: string,
+    fee: number | StdFee | 'auto',
+    memo?: string
+  ): Promise<DeliverTxResponse> {
+    return await super.withdrawRewards(delegatorAddress, validatorAddress, fee, memo);
   }
 
   public async getBlockRewardsTracking(): Promise<BlockTracking> {

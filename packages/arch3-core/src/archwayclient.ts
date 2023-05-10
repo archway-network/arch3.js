@@ -1,5 +1,5 @@
-import { CosmWasmClient, HttpEndpoint } from '@cosmjs/cosmwasm-stargate';
-import { Tendermint34Client, TendermintClient } from '@cosmjs/tendermint-rpc';
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { Tendermint34Client, TendermintClient, HttpEndpoint } from '@cosmjs/tendermint-rpc';
 
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
 import {
@@ -26,7 +26,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
   /**
    * Creates an instance by connecting to the given Tendermint RPC endpoint.
    *
-   * @param endpoint - String URL of the RPC endpoint to connect or an `HttpEndpoint` object.
+   * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
    * @returns An {@link ArchwayClient} connected to the endpoint.
    *
    * @see Use {@link ArchwayClient.create} if you need Tendermint 0.37 support.
@@ -38,7 +38,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
 
   /**
    * Creates an instance from a manually created Tendermint client.
-   * Use this to use `Tendermint37Client instead of {@link Tendermint34Client}.
+   * Use this to use {@link Tendermint37Client} instead of {@link Tendermint34Client}.
    *
    * @param tmClient - A Tendermint client for a given endpoint.
    * @returns An {@link ArchwayClient} connected to the endpoint.
