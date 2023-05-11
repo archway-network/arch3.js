@@ -1,12 +1,11 @@
-import { AminoConverter } from '@archwayhq/arch3-proto/archway/rewards/v1/tx.amino';
-import { MessageComposer } from '@archwayhq/arch3-proto/archway/rewards/v1/tx.registry';
+import { archway } from '@archwayhq/arch3-proto';
 import type { AminoConverters } from '@cosmjs/stargate';
 
-export { registry as rewardsTypes } from '@archwayhq/arch3-proto/archway/rewards/v1/tx.registry';
+export const rewardsTypes = archway.rewards.v1.registry;
 
-export const createRewardsAminoConverters: () => AminoConverters = () => AminoConverter;
+export const createRewardsAminoConverters: () => AminoConverters = () => archway.rewards.v1.AminoConverter;
 
 /**
  * Encodes the transaction messages for the `x/rewards` module.
  */
-export const RewardsMsgEncoder = MessageComposer.fromPartial;
+export const RewardsMsgEncoder = archway.rewards.v1.MessageComposer.fromPartial;

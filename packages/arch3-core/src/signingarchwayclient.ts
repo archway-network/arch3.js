@@ -1,4 +1,3 @@
-import { Long } from '@archwayhq/arch3-proto/helpers';
 import { Coin, addCoins } from '@cosmjs/amino';
 import {
   createWasmAminoConverters,
@@ -22,6 +21,7 @@ import {
 } from '@cosmjs/stargate';
 import { Tendermint34Client, TendermintClient } from '@cosmjs/tendermint-rpc';
 import _ from 'lodash';
+import Long from 'long';
 
 import { createRewardsAminoConverters, RewardsMsgEncoder, rewardsTypes } from './modules';
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';

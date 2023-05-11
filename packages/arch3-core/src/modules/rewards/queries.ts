@@ -1,3 +1,4 @@
+import { archway } from '@archwayhq/arch3-proto';
 import {
   QueryBlockRewardsTrackingResponse,
   QueryContractMetadataResponse,
@@ -7,10 +8,9 @@ import {
   QueryParamsResponse,
   QueryRewardsPoolResponse,
   QueryRewardsRecordsResponse
-} from '@archwayhq/arch3-proto/archway/rewards/v1/query';
-import { createRpcQueryExtension } from '@archwayhq/arch3-proto/archway/rewards/v1/query.rpc.Query';
-import { Long } from '@archwayhq/arch3-proto/helpers';
+} from '@archwayhq/arch3-proto/build/archway/rewards/v1/query';
 import { createPagination, QueryClient } from '@cosmjs/stargate';
+import Long from 'long';
 
 export interface RewardsExtension {
   readonly rewards: {
@@ -32,7 +32,7 @@ export interface RewardsExtension {
  * @returns A {@link RewardsExtension}.
  */
 export function setupRewardsExtension(base: QueryClient): RewardsExtension {
-  const queryService = createRpcQueryExtension(base);
+  const queryService = archway.rewards.v1.createRpcQueryExtension(base);
 
   return {
     rewards: {
