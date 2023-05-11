@@ -2,19 +2,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "build",
-    "rootDirs": [
-      "src",
-      "packages/arch3-core/src",
-      "packages/arch3-proto/src",
-      "packages/arch3-proto/generated"
-    ],
     "paths": {
       "@archwayhq/arch3-core/*": [
-        "./packages/arch3-core/src/*"
+        "packages/arch3-core/src/*"
       ],
       "@archwayhq/arch3-proto/*": [
-        "./packages/arch3-proto/src/*",
-        "./packages/arch3-proto/generated/*"
+        "packages/arch3-proto/src/*",
+        "packages/arch3-proto/generated/*"
       ]
     },
     "declaration": true,
