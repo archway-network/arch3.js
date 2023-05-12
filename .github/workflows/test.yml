@@ -29,7 +29,7 @@ jobs:
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           # comma-separated list for multiple reports
-          # coverage-reports: <PATH_TO_REPORT>, <PATH_TO_REPORT>
+          coverage-reports: packages/arch3-core/coverage/lcov.info
 
   eslint:
     name: ESLint
