@@ -31,7 +31,9 @@ export const baseConfig: JestConfigWithTsJest = {
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
     'lcov',
-    'html-spa',
+    'clover',
+    'text',
+    'html',
   ],
 
   // An object that configures minimum threshold enforcement for coverage results
@@ -58,6 +60,7 @@ export const baseConfig: JestConfigWithTsJest = {
     '.history',
     '__mocks__',
     'node_modules',
+    'generated',
   ],
 
   // Default timeout of a test in milliseconds.

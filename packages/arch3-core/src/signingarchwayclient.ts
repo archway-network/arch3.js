@@ -310,6 +310,10 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   /**
    * Creates a transaction with the given messages, fee and memo. Then signs and broadcasts the transaction.
    *
+   * When setting the fee to 'auto', the fee will be calculated automatically based on the messages and the
+   * minimum consensus fee. If the messages include a contract execution or migration, the contract premium
+   * fee will be added to the transaction fee.
+   *
    * @param signerAddress - The address that will sign transactions using this instance.
    *                        The signer must be able to sign with this address.
    * @param messages - The messages to include in the transaction. The messages types should be registered in the
@@ -387,6 +391,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param memo - Optional memo to add to the transaction.
    * @returns A {@link DeliverTxResponse} with information about the the withdraw tx.
    */
+  /* istanbul ignore next */
   public override async withdrawRewards(
     delegatorAddress: string,
     validatorAddress: string,
@@ -396,30 +401,37 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     return await super.withdrawRewards(delegatorAddress, validatorAddress, fee, memo);
   }
 
+  /* istanbul ignore next */
   public async getBlockRewardsTracking(): Promise<BlockTracking> {
     return await this.archwayQueryClient.getBlockRewardsTracking();
   }
 
+  /* istanbul ignore next */
   public async getContractMetadata(contractAddress: string): Promise<ContractMetadata | undefined> {
     return await this.archwayQueryClient.getContractMetadata(contractAddress);
   }
 
+  /* istanbul ignore next */
   public async getContractPremium(contractAddress: string): Promise<ContractPremium> {
     return await this.archwayQueryClient.getContractPremium(contractAddress);
   }
 
+  /* istanbul ignore next */
   public async getEstimateTxFees(gasLimit?: number, contractAddress?: string): Promise<EstimateTxFees> {
     return await this.archwayQueryClient.getEstimateTxFees(gasLimit, contractAddress);
   }
 
+  /* istanbul ignore next */
   public async getOutstandingRewards(rewardsAddress: string): Promise<OutstandingRewards> {
     return await this.archwayQueryClient.getOutstandingRewards(rewardsAddress);
   }
 
+  /* istanbul ignore next */
   public async getRewardsPool(): Promise<RewardsPool> {
     return await this.archwayQueryClient.getRewardsPool();
   }
 
+  /* istanbul ignore next */
   public async getAllRewardsRecords(rewardsAddress: string): Promise<readonly RewardsRecord[]> {
     return await this.archwayQueryClient.getAllRewardsRecords(rewardsAddress);
   }

@@ -1,7 +1,7 @@
 import { coin } from '@cosmjs/amino';
 import { Decimal } from '@cosmjs/math';
 
-import { ArchwayClient } from './archwayclient';
+import { ArchwayClient } from '.';
 
 const archwayd = {
   chainId: 'local-1',

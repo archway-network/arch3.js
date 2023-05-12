@@ -109,7 +109,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
   }
 
   protected forceGetQueryClient(): ExtendedQueryClient {
-    if (!this.queryClient) {
+    if (!this.getQueryClient()) {
       throw new Error('Query client not available. You cannot use online functionality in offline mode.');
     }
     return this.queryClient;
