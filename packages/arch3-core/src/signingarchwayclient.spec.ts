@@ -1,10 +1,9 @@
 import { Coin, addCoins, coin, coins } from '@cosmjs/amino';
 import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { AccountData, DirectSecp256k1HdWallet, decodeTxRaw, makeCosmoshubPath } from '@cosmjs/proto-signing';
-import { GasPrice, calculateFee } from '@cosmjs/stargate';
+import { GasPrice, StdFee, calculateFee } from '@cosmjs/stargate';
 
-import { SigningArchwayClient } from './signingarchwayclient';
-import { ContractMetadata } from './types';
+import { ContractMetadata, SigningArchwayClient } from '.';
 
 const archwayd = {
   chainId: 'local-1',
@@ -70,6 +69,15 @@ describe('SigningArchwayClient', () => {
     });
   });
 
+  describe('offline', () => {
+    it('can be constructed', async () => {
+      const wallet = await DirectSecp256k1HdWallet.generate(12, { prefix: archwayd.prefix });
+      const client = await SigningArchwayClient.offline(wallet, defaultSigningClientOptions);
+      expect(client).toBeDefined();
+      client.disconnect();
+    });
+  });
+
   describe('minimum gas fee estimation', () => {
     const clientOptions: SigningCosmWasmClientOptions = {
       broadcastPollIntervalMs: 200,
@@ -89,6 +97,49 @@ describe('SigningArchwayClient', () => {
       );
 
       await assertGasPriceEstimation(client, transactionHash, gasWanted, gasUnitPrice);
+
+      client.disconnect();
+    });
+
+    it('works for base transactions with a custom multiplier', async () => {
+      const [wallet, accounts] = await getWalletWithAccounts();
+      const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+      const { gasUnitPrice } = await client.getEstimateTxFees();
+      const { transactionHash, gasWanted } = await client.sendTokens(
+        accounts[4].address,
+        accounts[1].address,
+        coins(1, archwayd.denom),
+        1.5
+      );
+
+      await assertGasPriceEstimation(client, transactionHash, gasWanted, gasUnitPrice);
+
+      client.disconnect();
+    });
+
+    it('allows overriding the fees', async () => {
+      const [wallet, accounts] = await getWalletWithAccounts();
+      const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+      const fee: StdFee = {
+        amount: coins(900 * 200000, archwayd.denom),
+        gas: '200000',
+      };
+      const { transactionHash } = await client.sendTokens(
+        accounts[4].address,
+        accounts[1].address,
+        coins(1, archwayd.denom),
+        fee
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const txResponse = (await client.getTx(transactionHash))!;
+      const tx = decodeTxRaw(txResponse.tx);
+
+      const txFee = tx.authInfo.fee;
+      expect(txFee?.amount).toStrictEqual(fee.amount);
+      expect(txFee?.gasLimit.toString()).toBe(fee.gas);
 
       client.disconnect();
     });
@@ -199,6 +250,33 @@ describe('SigningArchwayClient', () => {
           gasWanted: expect.any(Number),
           gasUsed: expect.any(Number),
           metadata,
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
+
+      it('do not modify the metadata when both owner and rewards are empty', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+
+        const contractAddress = contracts.voter.addresses[1];
+        const ownerAddress = accounts[1].address;
+        const rewardsAddress = accounts[4].address;
+
+        const result = await client.setContractMetadata(ownerAddress, { contractAddress }, 'auto');
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          metadata: {
+            contractAddress,
+            ownerAddress,
+            rewardsAddress,
+          },
         });
         expect(result.logs).not.toHaveLength(0);
         expect(result.events).not.toHaveLength(0);
