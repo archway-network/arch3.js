@@ -1,7 +1,6 @@
 services:
   node:
-    # TODO: use a tag instead of the commit hash when archwayd gets released
-    image: archwaynetwork/archwayd:sha-2a7aee9
+    image: archwaynetwork/archwayd:v0.5.1
     command: start --x-crisis-skip-assert-invariants
     entrypoint: /docker-entrypoint.sh
     ports:
