@@ -60,6 +60,7 @@ export const baseConfig: JestConfigWithTsJest = {
     '.history',
     '__mocks__',
     'node_modules',
+    'generated',
   ],
 
   // Default timeout of a test in milliseconds.
