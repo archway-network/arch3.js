@@ -33,6 +33,12 @@ List of Archway [protocol versions](https://github.com/archway-network/archway/r
 |  `>=0.5.0` |   `0.2.0`  |
 |  `<0.5.0`  |   `0.1.0`  |
 
+To query the current version of a node, you can run:
+
+```sh
+curl -sfL 'https://rpc.constantine.archway.tech/abci_info' | jq -r '.result.response.version'
+```
+
 ## Sample Usage
 
 The examples suppose you deployed the [increment](https://github.com/archway-network/archway-templates/tree/caaa5ef/increment) contract template to Constantine.
