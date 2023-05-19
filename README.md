@@ -24,6 +24,21 @@ yarn add @archwayhq/arch3.js
 
 For a complete reference on the classes and methods available, please check the [API docs](https://archway-network.github.io/arch3.js).
 
+## Compatibility table
+
+List of Archway [protocol versions](https://github.com/archway-network/archway/releases) compatible with `arch3.js`:
+
+| `archwayd` | `arch3.js` |
+|:----------:|:----------:|
+|  `>=0.5.0` |   `0.2.0`  |
+|  `<0.5.0`  |   `0.1.0`  |
+
+To query the current version of a node, you can run:
+
+```sh
+curl -sfL 'https://rpc.constantine.archway.tech/abci_info' | jq -r '.result.response.version'
+```
+
 ## Sample Usage
 
 The examples suppose you deployed the [increment](https://github.com/archway-network/archway-templates/tree/caaa5ef/increment) contract template to Constantine.

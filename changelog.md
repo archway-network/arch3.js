@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## v0.2.0 (2023-05-17)
 
 ### New feature
 
@@ -31,8 +31,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   `@archwayhq/arch-core` anymore
 
 ## v0.1.0 (2022-09-23)
-
-Alpha release of arch3.js
 
 ### New feature
 
