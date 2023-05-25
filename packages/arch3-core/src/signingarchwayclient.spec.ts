@@ -34,10 +34,9 @@ async function getWalletWithAccounts(): Promise<[DirectSecp256k1HdWallet, readon
 
 const flatFee = coin(1000, archwayd.denom);
 
-const defaultSigningClientOptions: SigningCosmWasmClientOptions = {
+const clientOptions: SigningCosmWasmClientOptions = {
   broadcastPollIntervalMs: 200,
   broadcastTimeoutMs: 8_000,
-  gasPrice: GasPrice.fromString(`900${archwayd.denom}`),
 };
 
 async function assertGasPriceEstimation(
@@ -63,7 +62,7 @@ describe('SigningArchwayClient', () => {
   describe('connectWithSigner', () => {
     it('can be constructed', async () => {
       const wallet = await DirectSecp256k1HdWallet.generate(12, { prefix: archwayd.prefix });
-      const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+      const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
       expect(client).toBeDefined();
       client.disconnect();
     });
@@ -72,18 +71,13 @@ describe('SigningArchwayClient', () => {
   describe('offline', () => {
     it('can be constructed', async () => {
       const wallet = await DirectSecp256k1HdWallet.generate(12, { prefix: archwayd.prefix });
-      const client = await SigningArchwayClient.offline(wallet, defaultSigningClientOptions);
+      const client = await SigningArchwayClient.offline(wallet, clientOptions);
       expect(client).toBeDefined();
       client.disconnect();
     });
   });
 
   describe('minimum gas fee estimation', () => {
-    const clientOptions: SigningCosmWasmClientOptions = {
-      broadcastPollIntervalMs: 200,
-      broadcastTimeoutMs: 8_000,
-    };
-
     it('works for base transactions', async () => {
       const [wallet, accounts] = await getWalletWithAccounts();
       const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
@@ -231,7 +225,7 @@ describe('SigningArchwayClient', () => {
     describe('contract metadata', () => {
       it('sets both owner and rewards', async () => {
         const [wallet, accounts] = await getWalletWithAccounts();
-        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
         const contractAddress = contracts.voter.addresses[1];
         const ownerAddress = accounts[1].address;
@@ -259,7 +253,7 @@ describe('SigningArchwayClient', () => {
 
       it('do not modify the metadata when both owner and rewards are empty', async () => {
         const [wallet, accounts] = await getWalletWithAccounts();
-        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
         const contractAddress = contracts.voter.addresses[1];
         const ownerAddress = accounts[1].address;
@@ -288,7 +282,7 @@ describe('SigningArchwayClient', () => {
     describe('contract premium', () => {
       it('sets the contract premium', async () => {
         const [wallet, accounts] = await getWalletWithAccounts();
-        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
         const ownerAddress = accounts[1].address;
         const contractAddress = contracts.voter.addresses[1];
@@ -318,7 +312,7 @@ describe('SigningArchwayClient', () => {
 
       it('disables the contract premium', async () => {
         const [wallet, accounts] = await getWalletWithAccounts();
-        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
         const contractAddress = contracts.voter.addresses[2];
         const ownerAddress = accounts[2].address;
@@ -350,7 +344,7 @@ describe('SigningArchwayClient', () => {
     describe('withdraw', () => {
       it('withdraws rewards by limit', async () => {
         const [wallet, accounts] = await getWalletWithAccounts();
-        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, defaultSigningClientOptions);
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
         const contractAddress = contracts.voter.addresses[3];
         const rewardsAddress = accounts[3].address;
