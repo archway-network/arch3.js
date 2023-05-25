@@ -55,13 +55,18 @@ describe('ArchwayClient', () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);
       const response = await client.getEstimateTxFees();
 
-      expect(response.gasLimit).toBeUndefined();
       expect(response.gasUnitPrice).toMatchObject({
         denom: archwayd.denom,
         amount: expect.any(Decimal),
       });
       expect(response.contractAddress).toBeUndefined();
-      expect(response.estimatedFee).toHaveLength(0);
+      expect(response.estimatedFee).toMatchObject({
+        gas: '1',
+        amount: expect.objectContaining([{
+          denom: archwayd.denom,
+          amount: expect.stringMatching(/^\d+$/),
+        }])
+      });
 
       client.disconnect();
     });
@@ -70,15 +75,17 @@ describe('ArchwayClient', () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);
       const response = await client.getEstimateTxFees(1, contractAddress);
 
-      expect(response.gasLimit).toBe(1);
       expect(response.gasUnitPrice).toMatchObject({
         denom: archwayd.denom,
         amount: expect.any(Decimal),
       });
       expect(response.contractAddress).toBe(contractAddress);
-      expect(response.estimatedFee).toContainEqual({
-        denom: archwayd.denom,
-        amount: expect.stringMatching(/^\d+$/),
+      expect(response.estimatedFee).toMatchObject({
+        gas: '1',
+        amount: expect.objectContaining([{
+          denom: archwayd.denom,
+          amount: expect.stringMatching(/^\d+$/),
+        }])
       });
 
       client.disconnect();
