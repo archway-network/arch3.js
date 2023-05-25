@@ -128,6 +128,7 @@ module.exports = {
     '@typescript-eslint/ban-types': 'warn',
     '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
     '@typescript-eslint/explicit-member-accessibility': 'error',
+    '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/naming-convention': [
       'error',
       {
