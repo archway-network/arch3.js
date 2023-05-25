@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### New feature
+
+#### **arch3-core**
+
+- method to `calculateFees` for multiple messages on `SigningArchwayClient` (#86)
+
+### Changes
+
+#### **arch3-core**
+
+- deprecated the default `gasPrice` option on `SigningArchwayClient` (#86)
+
+### BREAKING CHANGES
+
+- modified the response of `ArchwayCLient.getEstimateTxFees` to change the
+  `estimatedFee` type from `Coin[]` to `StdFee` and moved the `gasLimit`
+  into `estimatedFee.gas`
+
 ## v0.2.0 (2023-05-17)
 
 ### New feature
