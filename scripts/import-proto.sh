@@ -15,7 +15,7 @@ cp -r "$TMPDIR/third_party/proto" "$PROTO_ROOT"
 
 cat <<EOF
 
-$(tput setaf 2)✔$(tput sgr0) Proto files imported from archway-network/archway@${ARCHWAY_BRANCH}.
+$(tput setaf 2)✔$(tput sgr0) Proto files imported from archway-network/archway@${ARCHWAY_BRANCH}
 
 $(tput setaf 6)To re-generate the client files, run the codegen script:
 $(tput setaf 7)

@@ -41,7 +41,8 @@ telescope({
           'cosmos.vesting.v1beta1',
           'google.api',
           'ibc.core.port.v1',
-          'ibc.core.types.v1'
+          'ibc.core.types.v1',
+          'archway.genmsg.v1'
         ]
       },
       includePackageVar: false,
