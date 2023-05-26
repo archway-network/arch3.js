@@ -167,25 +167,27 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
     }
   }
 
-  public async getEstimateTxFees(gasLimit?: number, contractAddress?: string): Promise<EstimateTxFees> {
+  public async getEstimateTxFees(gasLimit: number = 1, contractAddress?: string): Promise<EstimateTxFees> {
     const client = this.forceGetQueryClient();
     const {
       estimatedFee,
-      gasUnitPrice: { amount: gasAmount, denom: gasDenom }
-    } = await client.rewards.estimateTxFees(gasLimit ?? 0, contractAddress ?? '');
+      gasUnitPrice: { amount: gasPriceAmount, denom: gasPriceDenom }
+    } = await client.rewards.estimateTxFees(gasLimit, contractAddress ?? '');
 
     // The RPC queries do not include the decimal precision fot types.Dec,
     // so we need to manually decode the gas amount from the proto, as suggested in
     // https://github.com/osmosis-labs/telescope/issues/247#issuecomment-1292407464
     // See also: https://github.com/cosmos/cosmos-sdk/issues/10863
-    const gasUnitPriceAmount = decodeCosmosSdkDecFromProto(gasAmount);
-    const gasUnitPrice = new GasPrice(gasUnitPriceAmount, gasDenom);
+    const gasUnitPriceAmount = decodeCosmosSdkDecFromProto(gasPriceAmount);
+    const gasUnitPrice = new GasPrice(gasUnitPriceAmount, gasPriceDenom);
 
     return {
-      gasLimit,
       contractAddress,
-      estimatedFee,
       gasUnitPrice,
+      estimatedFee: {
+        amount: estimatedFee,
+        gas: gasLimit.toString(),
+      }
     };
   }
 

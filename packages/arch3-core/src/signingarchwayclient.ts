@@ -10,7 +10,6 @@ import { EncodeObject, OfflineSigner, Registry } from '@cosmjs/proto-signing';
 import {
   AminoTypes,
   assertIsDeliverTxSuccess,
-  calculateFee,
   createDefaultAminoConverters,
   defaultRegistryTypes,
   DeliverTxResponse,
@@ -34,6 +33,25 @@ import {
   RewardsPool,
   RewardsRecord
 } from './types';
+
+export interface SigningArchwayClientOptions extends SigningCosmWasmClientOptions {
+  /**
+   * @deprecated
+   * The Archway protocol has built-in mechanisms for calculating the optimal gas price based on network
+   * usage and contract premiums. Specifying a gasPrice can cause unintended behaviour when calculating tx fees.
+   */
+  readonly gasPrice?: GasPrice;
+
+  /**
+   * Default adjustment factor to be multiplied against the estimate returned by the tx simulation.
+   * If the gas limit is set manually in the transaction, this option is ignored.
+   *
+   * @default 1.3
+   */
+  readonly gasAdjustment?: number;
+}
+
+const defaultGasAdjustment = 1.3;
 
 interface DeliverTxResponseWithLogs extends DeliverTxResponse {
   readonly parsedLogs: readonly logs.Log[];
@@ -105,9 +123,9 @@ const flatFeeRequiredTypes: readonly string[] = [
  */
 export class SigningArchwayClient extends SigningCosmWasmClient implements IArchwayQueryClient {
   private readonly archwayQueryClient: IArchwayQueryClient;
-  private readonly defaultGasPrice?: GasPrice;
+  private readonly gasAdjustment: number;
 
-  protected constructor(tmClient: TendermintClient | undefined, signer: OfflineSigner, options: SigningCosmWasmClientOptions) {
+  protected constructor(tmClient: TendermintClient | undefined, signer: OfflineSigner, options: SigningArchwayClientOptions) {
     const {
       registry = new Registry([...defaultRegistryTypes, ...wasmTypes, ...rewardsTypes]),
       aminoTypes = new AminoTypes({
@@ -115,11 +133,13 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         ...createWasmAminoConverters(),
         ...createRewardsAminoConverters(),
       }),
-      gasPrice,
+      gasAdjustment = defaultGasAdjustment,
     } = options;
+
     super(tmClient, signer, { ...options, registry, aminoTypes });
+
     this.archwayQueryClient = createArchwayQueryClient(tmClient);
-    this.defaultGasPrice = gasPrice;
+    this.gasAdjustment = gasAdjustment;
   }
 
   /**
@@ -185,7 +205,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    *
    * @param senderAddress - Address of the message sender.
    * @param metadata - The rewards metadata.
-   * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
+   * @param fee - Fee to pay for the transaction. Use 'auto' or a number to calculate the fees automatically.
+   *              When a number is set, it will be used as a gas adjustment multiplier for the estimated fees.
    * @param memo - Optional memo to add to the transaction.
    * @returns A {@link SetContractMetadataResult} with the contract's metadata.
    * @throws Error if the transaction fails.
@@ -233,7 +254,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param senderAddress - Address of the message sender.
    * @param contractAddress - Contract address to set the premium fee.
    * @param flatFee - The contract premium fee. To disable the fee, set its `amount` to `0`.
-   * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
+   * @param fee - Fee to pay for the transaction. Use 'auto' or a number to calculate the fees automatically.
+   *              When a number is set, it will be used as a gas adjustment multiplier for the estimated fees.
    * @param memo - Optional memo to add to the transaction.
    * @returns A {@link SetContractPremiumResult} with the contract's premium fee.
    * @throws Error if the transaction fails.
@@ -276,7 +298,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    *
    * @param senderAddress - Address of the message sender and rewards destination.
    * @param limit - Maximum number of rewards to withdraw.
-   * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
+   * @param fee - Fee to pay for the transaction. Use 'auto' or a number to calculate the fees automatically.
+   *              When a number is set, it will be used as a gas adjustment multiplier for the estimated fees.
    * @param memo - Optional memo to add to the transaction.
    * @returns A {@link WithdrawContractRewardsResult} with information about the rewards withdrawn.
    * @throws Error if the transaction fails.
@@ -310,17 +333,20 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   /**
    * Creates a transaction with the given messages, fee and memo. Then signs and broadcasts the transaction.
    *
-   * When setting the fee to 'auto', the fee will be calculated automatically based on the messages and the
-   * minimum consensus fee. If the messages include a contract execution or migration, the contract premium
-   * fee will be added to the transaction fee.
+   * When setting the fee to 'auto' or a number, the fee will be calculated automatically based on the messages,
+   * the minimum price of gas (mPoG) and the minimum consensus fee. If the messages include a contract execution
+   * or migration, the contract premium fee will be added to the transaction fee.
    *
    * @param signerAddress - The address that will sign transactions using this instance.
    *                        The signer must be able to sign with this address.
    * @param messages - The messages to include in the transaction. The messages types should be registered in the
    *                  {@link SigningArchwayClient.registry} when the client is instantiated.
-   * @param fee - Fee to pay for the transaction. Use 'auto' to calculate the fee automatically.
+   * @param fee - Fee to pay for the transaction. Use 'auto' or a number to calculate the fees automatically.
+   *              When a number is set, it will be used as a gas adjustment multiplier for the estimated fees.
    * @param memo - Optional memo to add to the transaction.
    * @returns A {@link DeliverTxResponse} after successfully broadcasting the transaction.
+   *
+   * @see {@link SigningArchwayClient.calculateFee} for calculating the fees before broadcasting.
    */
   public override async signAndBroadcast(
     signerAddress: string,
@@ -330,38 +356,71 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   ): Promise<DeliverTxResponse> {
     let usedFee: StdFee;
     if (fee === 'auto' || typeof fee === 'number') {
-      const gasEstimation = await this.simulate(signerAddress, messages, memo);
-      const gasPrice = this.defaultGasPrice ?? (await this.getEstimateTxFees(gasEstimation)).gasUnitPrice;
-      const multiplier = typeof fee === 'number' ? fee : 1.3;
-      const estimatedFee = calculateFee(Math.round(gasEstimation * multiplier), gasPrice);
-      usedFee = await this.calculateFlatFee(messages, estimatedFee);
+      const gasAdjustment = typeof fee === 'number' ? fee : this.gasAdjustment;
+      usedFee = await this.calculateFee(signerAddress, messages, memo, gasAdjustment);
     } else {
       usedFee = fee;
     }
     return super.signAndBroadcast(signerAddress, messages, usedFee, memo);
   }
 
-  private async calculateFlatFee(messages: readonly EncodeObject[], estimatedFee: StdFee): Promise<StdFee> {
+  /**
+   * Calculates tx fees by simulating the execution of a transaction with the given messages.
+   * The fee will be calculated based on the  minimum price of gas (mPoG) and the minimum consensus
+   * fee of the network. If the messages include a contract execution or migration, the contract
+   * premium fee will be added to the calculation.
+   *
+   * @param signerAddress - Address used in the gas simulation that will sign transactions.
+   *                        The signer must be able to sign with this address.
+   * @param messages - The messages to include in the transaction for simulating the gas wanted.
+   *                   The messages types should be registered in the {@link SigningArchwayClient.registry}
+   *                   when the client is instantiated.
+   * @param memo - Optional memo to add to the transaction.
+   * @param gasAdjustment - Adjustment factor to be multiplied against the gas estimate.
+   * @param granter - The granter address that is used for paying with feegrants.
+   * @param payer - The fee payer address. The payer must have signed the transaction.
+   * @returns A {@link StdFee} with the estimated fee for the transaction.
+   *
+   * @see {@link SigningCosmWasmClient.simulate} for simulating the execution of a transaction.
+   * @see {@link SigningArchwayClient.getEstimateTxFees} for getting the minimum price of gas (mPoG) and the minimum
+   * consensus fee of the network.
+   */
+  public async calculateFee(
+    signerAddress: string,
+    messages: readonly EncodeObject[],
+    memo?: string,
+    gasAdjustment: number = this.gasAdjustment,
+    granter?: string,
+    payer?: string,
+  ): Promise<StdFee> {
+    const gasEstimation = await this.simulate(signerAddress, messages, memo);
+    const gas = Math.round(gasEstimation * gasAdjustment);
+    const { estimatedFee } = await this.getEstimateTxFees(gas);
+    const fee = await this.includeFlatFees(messages, estimatedFee);
+    return {
+      ...fee,
+      granter,
+      payer
+    };
+  }
+
+  private async includeFlatFees(messages: readonly EncodeObject[], fee: StdFee): Promise<StdFee> {
+    // We memoize the contract premium fee to avoid querying the same contract multiple times.
     const _getContractPremium = _.memoize((contractAddress: string) => this.getContractPremium(contractAddress));
     const flatFees = await Promise.all(
       messages
         .filter(({ typeUrl }) => flatFeeRequiredTypes.includes(typeUrl))
-        .map(({ value }) => {
+        .map(async ({ value }) => {
           const contractAddress = _.get(value, 'contract') as string;
-          return _getContractPremium(contractAddress);
+          const { flatFee } = await _getContractPremium(contractAddress);
+          return flatFee;
         })
-    );
-    const cleanedFlatFees = _.compact(flatFees.map(({ flatFee }) => flatFee));
-    if (_.isEmpty(cleanedFlatFees)) {
-      return estimatedFee;
-    }
+    ).then(_.compact); // eslint-disable-line @typescript-eslint/unbound-method
 
-    const totalFee = [...estimatedFee.amount, ...cleanedFlatFees]
-      .reduce((acc, fee) => addCoins(acc, fee));
-
+    const amount = [...fee.amount, ...flatFees].reduce(addCoins);
     return {
-      ...estimatedFee,
-      amount: [totalFee]
+      ...fee,
+      amount: [amount]
     };
   }
 

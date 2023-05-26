@@ -14,6 +14,7 @@ export {
   SetContractMetadataResult,
   SetContractPremiumResult,
   SigningArchwayClient,
+  SigningArchwayClientOptions,
   TxResult,
   WithdrawContractRewardsResult,
 } from './signingarchwayclient';
