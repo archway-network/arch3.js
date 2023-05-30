@@ -28,9 +28,9 @@ For a complete reference on the classes and methods available, please check the 
 
 List of Archway [protocol versions](https://github.com/archway-network/archway/releases) compatible with `arch3.js`:
 
-| `archwayd` | `arch3.js` |
+|  archwayd  |  arch3.js  |
 |:----------:|:----------:|
-|  `>=0.5.0` |   `0.2.0`  |
+|  `>=0.5.0` |  `>=0.2.0` |
 |  `<0.5.0`  |   `0.1.0`  |
 
 To query the current version of a node, you can run:

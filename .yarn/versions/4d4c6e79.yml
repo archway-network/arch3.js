@@ -1,6 +1,0 @@
-releases:
-  "@archwayhq/arch3-core": minor
-  "@archwayhq/arch3.js": minor
-
-declined:
-  - "@archwayhq/arch3-proto"
