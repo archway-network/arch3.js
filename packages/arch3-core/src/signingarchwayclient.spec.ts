@@ -1,9 +1,8 @@
 import { Coin, addCoins, coin, coins } from '@cosmjs/amino';
-import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { AccountData, DirectSecp256k1HdWallet, decodeTxRaw, makeCosmoshubPath } from '@cosmjs/proto-signing';
 import { GasPrice, StdFee, calculateFee } from '@cosmjs/stargate';
 
-import { ContractMetadata, SigningArchwayClient } from '.';
+import { ContractMetadata, SigningArchwayClient, SigningArchwayClientOptions } from '.';
 
 const archwayd = {
   chainId: 'local-1',
@@ -34,7 +33,7 @@ async function getWalletWithAccounts(): Promise<[DirectSecp256k1HdWallet, readon
 
 const flatFee = coin(1000, archwayd.denom);
 
-const clientOptions: SigningCosmWasmClientOptions = {
+const clientOptions: SigningArchwayClientOptions = {
   broadcastPollIntervalMs: 200,
   broadcastTimeoutMs: 8_000,
 };
