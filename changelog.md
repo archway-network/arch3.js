@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Fixes
+
+#### **arch3-core**
+
+- use the type `SigningArchwayClientOptions` for the `options` in all factory
+  methods of the `SigningArchwayClient` (#89)
+
 ## v0.3.0 (2023-05-30)
 
 ### New feature

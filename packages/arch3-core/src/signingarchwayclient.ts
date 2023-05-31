@@ -155,7 +155,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   public static override async connectWithSigner(
     endpoint: string | HttpEndpoint,
     signer: OfflineSigner,
-    options: SigningCosmWasmClientOptions = {},
+    options: SigningArchwayClientOptions = {},
   ): Promise<SigningArchwayClient> {
     const tmClient = await Tendermint34Client.connect(endpoint);
     return SigningArchwayClient.createWithSigner(tmClient, signer, options);
@@ -173,7 +173,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   public static override async createWithSigner(
     tmClient: TendermintClient,
     signer: OfflineSigner,
-    options: SigningCosmWasmClientOptions = {},
+    options: SigningArchwayClientOptions = {},
   ): Promise<SigningArchwayClient> {
     return new SigningArchwayClient(tmClient, signer, options);
   }
@@ -195,7 +195,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   /* eslint-disable-next-line @typescript-eslint/require-await */
   public static override async offline(
     signer: OfflineSigner,
-    options: SigningCosmWasmClientOptions = {},
+    options: SigningArchwayClientOptions = {},
   ): Promise<SigningArchwayClient> {
     return new SigningArchwayClient(undefined, signer, options);
   }
