@@ -1,6 +1,6 @@
 {
   "name": "@archwayhq/arch3-proto",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Archway Protobuf client",
   "homepage": "https://github.com/jsoneaday/arch3-proto#readme",
   "repository": "https://github.com/jsoneaday/arch3-proto",
