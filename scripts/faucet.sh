@@ -49,7 +49,7 @@ if [[ -z "${ADDRESS}" ]]; then
   exit 1
 fi
 
-amount="10$(printf "%09d" 0)"
+amount="${2:-10}$(printf "%018d" 0)"
 denom="$(archwayd q staking params | jq -r '.bond_denom')"
 
 echo "Requesting ${amount}${denom} for ${ADDRESS}..."
