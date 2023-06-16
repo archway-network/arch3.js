@@ -321,8 +321,16 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       }
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
-    const rewardsAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.RewardsWithdrawEvent', 'rewards');
-    const rewards = JSON.parse(rewardsAttr.value) as Coin[];
+
+    let rewards: Coin[];
+
+    try {
+      const rewardsAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.RewardsWithdrawEvent', 'rewards');
+      rewards = JSON.parse(rewardsAttr.value) as Coin[];
+    } catch {
+      rewards = [];
+    }
+
     return {
       ...buildResult(response),
       rewardsAddress,
