@@ -327,8 +327,11 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     try {
       const rewardsAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.RewardsWithdrawEvent', 'rewards');
       rewards = JSON.parse(rewardsAttr.value) as Coin[];
-    } catch {
-      rewards = [];
+    } catch (error) {
+      if ((error as Error)?.message?.includes("Could not find attribute 'rewards' in first event of type 'archway.rewards.v1.RewardsWithdrawEvent' in first log")) {
+        rewards = [];
+      }
+      else { throw error; }
     }
 
     return {
