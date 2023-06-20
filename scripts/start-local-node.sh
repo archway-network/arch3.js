@@ -256,7 +256,7 @@ for i in {0..4}; do
 
   address="$(archwayd keys show -a "${key_name}")"
 
-  if archwayd q bank balances "${address}" | jq -e '.balances[0].amount // "0" | tonumber < 1000000000000' >/dev/null; then
+  if archwayd q bank balances "${address}" | jq -e --argjson min_amount "5$(printf "%018d" 0)" '.balances[0].amount // "0" | tonumber < $min_amount' >/dev/null; then
     "${SCRIPT_DIR}"/faucet.sh "${address}"
   fi
 

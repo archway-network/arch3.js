@@ -18,8 +18,8 @@ GENESIS_ACCOUNTS="${GENESIS_ACCOUNTS:-}"
 GENESIS_FILE="${ARCHWAY_HOME}/config/genesis.json"
 
 # Defaults to 1b tokens
-TOTAL_SUPPLY=${TOTAL_SUPPLY:-1000000000}
-ATTO_PAD="$(printf "%09d" 0)"
+TOTAL_SUPPLY=${TOTAL_SUPPLY:-1000000000} #1b
+ATTO_PAD="$(printf "%018d" 0)"
 TOTAL_SUPPLY_AMOUNT="${TOTAL_SUPPLY}${ATTO_PAD}"
 
 # shellcheck disable=SC2139
@@ -66,7 +66,7 @@ if [ ! -f "${GENESIS_FILE}" ]; then
     .app_state.crisis.constant_fee.denom = $denom |
     .app_state.distribution.params.community_tax = "0.060000000000000000" |
     .app_state.gov.deposit_params.min_deposit[0].denom = $denom |
-    .app_state.gov.deposit_params.min_deposit[0].amount = "1000000000000" |
+    .app_state.gov.deposit_params.min_deposit[0].amount = "10000000000000000" |
     .app_state.gov.deposit_params.max_deposit_period = "10s" |
     .app_state.gov.voting_params.voting_period = "2h" |
     .app_state.mint.params.mint_denom = $denom |
@@ -74,27 +74,27 @@ if [ ! -f "${GENESIS_FILE}" ]; then
     .app_state.mint.params.inflation_min = "0.0999999999" |
     .app_state.mint.params.blocks_per_year = "5259600" |
     .app_state.rewards.min_consensus_fee.denom = $denom |
-    .app_state.rewards.params.min_price_of_gas.amount = "900" |
+    .app_state.rewards.params.min_price_of_gas.amount = "900000000000" |
     .app_state.rewards.params.min_price_of_gas.denom = $denom |
     .app_state.staking.params.bond_denom = $denom |
-    .consensus_params.block.max_gas = "10000000"
+    .consensus_params.block.max_gas = "300000000"
   '
   jq --arg denom "${DENOM}" "${GENESIS_PARAMS}" "${GENESIS_FILE}" |
     sponge "${GENESIS_FILE}"
 
   DELEGATION_AMOUNT="$((TOTAL_SUPPLY / 2))${ATTO_PAD}"
   echo "Generating the genesis tx with delegation of ${DELEGATION_AMOUNT}${DENOM}..."
-  archwayd gentx validator "${DELEGATION_AMOUNT}${DENOM}" --chain-id "${CHAIN_ID}" --fees 180000000aarch
+  archwayd gentx validator "${DELEGATION_AMOUNT}${DENOM}" --chain-id "${CHAIN_ID}" --fees 180000000000000000aarch
 
   archwayd collect-gentxs
   archwayd validate-genesis
 
-  dasel put -r toml -t string -v "0.0001${DENOM}" 'minimum-gas-prices' <"${ARCHWAY_HOME}/config/app.toml" |
+  dasel put -r toml -t string -v "900000000000${DENOM}" 'minimum-gas-prices' <"${ARCHWAY_HOME}/config/app.toml" |
     dasel put -r toml -t bool -v true 'api.enable' |
     dasel put -r toml -t bool -v true 'grpc-web.enable-unsafe-cors' |
     sponge "${ARCHWAY_HOME}/config/app.toml"
 
-  dasel put -r toml -t string -v 'tcp://0.0.0.0:26658' 'proxy_app' <"${ARCHWAY_HOME}/config/app.toml" |
+  dasel put -r toml -t string -v 'tcp://0.0.0.0:26658' 'proxy_app' <"${ARCHWAY_HOME}/config/config.toml" |
     dasel put -r toml -t string -v 'tcp://0.0.0.0:26657' 'rpc.laddr' |
     dasel put -r toml -t string -v '*' 'rpc.cors_allowed_origins.[]' |
     dasel put -r toml -t bool -v true 'rpc.unsafe' |
