@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Fixes
+
+#### **arch3-core**
+
+- gracefully handle withdrawing reward contracts when no rewards exist (#91)
+
 ## v0.3.1 (2023-06-02)
 
 ### Fixes
@@ -66,4 +74,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 #### **arch3-core**
 
 - added the `ArchwayClient` (#18)
+- added the `SigningArchwayClient` (#22)
 - added the `SigningArchwayClient` (#22)
