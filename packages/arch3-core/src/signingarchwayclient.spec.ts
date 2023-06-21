@@ -380,5 +380,27 @@ describe('SigningArchwayClient', () => {
         client.disconnect();
       });
     });
+
+    it('gracefully handles withdrawing when no rewards found', async () => {
+      const [wallet, accounts] = await getWalletWithAccounts();
+      const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+      const rewardsAddress = accounts[1].address;
+
+      const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
+
+      expect(result).toMatchObject({
+        height: expect.any(Number),
+        transactionHash: expect.any(String),
+        gasWanted: expect.any(Number),
+        gasUsed: expect.any(Number),
+        rewardsAddress: rewardsAddress,
+        rewards: expect.arrayContaining([]),
+      });
+      expect(result.logs).not.toHaveLength(0);
+      expect(result.events).not.toHaveLength(0);
+
+      client.disconnect();
+    });
   });
 });
