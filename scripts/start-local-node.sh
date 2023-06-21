@@ -233,7 +233,7 @@ docker compose up --remove-orphans -d
 
 echo
 echo "Waiting for the node to generate the first block..."
-if ! curl --retry 30 -f --retry-all-errors --retry-delay 1 -s "http://localhost:26657/block?height=1" | jq -e '.error == null' >/dev/null; then
+if ! curl --retry 15 --retry-all-errors --retry-delay 2 -sfSL "http://$(docker compose port node 26657)/block?height=1" | jq -e '.error == null' >/dev/null; then
   docker compose logs node --tail 300
   error "node failed to start!"
 fi
