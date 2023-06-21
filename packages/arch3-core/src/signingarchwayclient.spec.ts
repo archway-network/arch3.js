@@ -115,9 +115,11 @@ describe('SigningArchwayClient', () => {
       const [wallet, accounts] = await getWalletWithAccounts();
       const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
+      const gasPrice = BigInt(900000000000);
+      const gas = BigInt(200000);
       const fee: StdFee = {
-        amount: coins(900 * 200000, archwayd.denom),
-        gas: '200000',
+        amount: coins((gasPrice * gas).toString(), archwayd.denom),
+        gas: gas.toString(),
       };
       const { transactionHash } = await client.sendTokens(
         accounts[4].address,
