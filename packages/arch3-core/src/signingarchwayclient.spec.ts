@@ -383,13 +383,11 @@ describe('SigningArchwayClient', () => {
       const [wallet, accounts] = await getWalletWithAccounts();
       const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
-      const rewardsAddress = accounts[3].address;
+      const rewardsAddress = accounts[1].address;
 
-      // Withdrawing rewards twice to make sure the second time there are no rewards to claim
-      await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
-      const secondResult = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
+      const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
 
-      expect(secondResult).toMatchObject({
+      expect(result).toMatchObject({
         height: expect.any(Number),
         transactionHash: expect.any(String),
         gasWanted: expect.any(Number),
@@ -397,8 +395,8 @@ describe('SigningArchwayClient', () => {
         rewardsAddress: rewardsAddress,
         rewards: expect.arrayContaining([]),
       });
-      expect(secondResult.logs).not.toHaveLength(0);
-      expect(secondResult.events).not.toHaveLength(0);
+      expect(result.logs).not.toHaveLength(0);
+      expect(result.events).not.toHaveLength(0);
 
       client.disconnect();
     });

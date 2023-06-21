@@ -322,17 +322,12 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
 
-    let rewards: Coin[];
-
-    try {
-      const rewardsAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.RewardsWithdrawEvent', 'rewards');
-      rewards = JSON.parse(rewardsAttr.value) as Coin[];
-    } catch (error) {
-      if ((error as Error)?.message?.includes("Could not find attribute 'rewards' in first event of type 'archway.rewards.v1.RewardsWithdrawEvent' in first log")) {
-        rewards = [];
-      }
-      else { throw error; }
-    }
+    const firstLogs = response.parsedLogs.find(() => true);
+    const rewardsAttr = firstLogs?.events
+      .find(event => event.type === 'archway.rewards.v1.RewardsWithdrawEvent')
+      ?.attributes.find(attr => attr.key === 'rewards')
+      ?.value;
+    const rewards: Coin[] = rewardsAttr ? JSON.parse(rewardsAttr) as Coin[] : [];
 
     return {
       ...buildResult(response),
