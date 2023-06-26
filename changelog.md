@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Changes
+
+#### **arch3-core**
+
+- bump `@cosmjs/*` to `0.31.0` (#95)
+
 ### Fixes
 
 #### **arch3-core**
