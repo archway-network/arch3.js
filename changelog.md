@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 #### **arch3-core**
 
+- added support to create an `SigningArchwayClient` using an
+  `HttpBatchClient` (#97)
 - added support to create an `ArchwayClient` using an `HttpBatchClient` (#96)
 
 ### Changes
@@ -40,7 +42,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 #### **arch3-core**
 
-- method to `calculateFees` for multiple messages on `SigningArchwayClient` (#86)
+- method to `calculateFees` for multiple messages on
+  `SigningArchwayClient` (#86)
 
 ### Changes
 
