@@ -67,6 +67,15 @@ describe('SigningArchwayClient', () => {
     });
   });
 
+  describe('connectWithSignerAndBatchClient', () => {
+    it('can be constructed', async () => {
+      const wallet = await DirectSecp256k1HdWallet.generate(12, { prefix: archwayd.prefix });
+      const client = await SigningArchwayClient.connectWithSignerAndBatchClient(archwayd.endpoint, wallet, clientOptions);
+      expect(client).toBeDefined();
+      client.disconnect();
+    });
+  });
+
   describe('offline', () => {
     it('can be constructed', async () => {
       const wallet = await DirectSecp256k1HdWallet.generate(12, { prefix: archwayd.prefix });

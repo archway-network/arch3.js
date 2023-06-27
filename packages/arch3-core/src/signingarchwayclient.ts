@@ -18,7 +18,13 @@ import {
   logs,
   StdFee
 } from '@cosmjs/stargate';
-import { Tendermint34Client, TendermintClient } from '@cosmjs/tendermint-rpc';
+import {
+  HttpBatchClient,
+  HttpBatchClientOptions,
+  RpcClient,
+  Tendermint34Client,
+  TendermintClient
+} from '@cosmjs/tendermint-rpc';
 import _ from 'lodash';
 import Long from 'long';
 
@@ -158,6 +164,31 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     options: SigningArchwayClientOptions = {},
   ): Promise<SigningArchwayClient> {
     const tmClient = await Tendermint34Client.connect(endpoint);
+    return SigningArchwayClient.createWithSigner(tmClient, signer, options);
+  }
+
+  /**
+   * Creates an instance by connecting to the given Tendermint RPC endpoint using an {@link HttpBatchClient} to batch
+   * multiple requests and reduce queries to the server.
+   *
+   * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
+   * @param signer - The transaction signer configuration.
+   * @param options - Options for the signing client.
+   * @param batchClientOptions - Optional configuration to control how the {@link HttpBatchClient} will batch requests.
+   * @returns A {@link SigningArchwayClient} connected to the endpoint.
+   *
+   * @remarks This factory method doesn't support WebSocket endpoints.
+   *
+   * @see {@link SigningArchwayClient.createWithSigner} if you need Tendermint 0.37 support.
+   */
+  public static async connectWithSignerAndBatchClient(
+    endpoint: string | HttpEndpoint,
+    signer: OfflineSigner,
+    options?: SigningArchwayClientOptions,
+    batchClientOptions?: Partial<HttpBatchClientOptions>
+  ): Promise<SigningArchwayClient> {
+    const rpcClient: RpcClient = new HttpBatchClient(endpoint, batchClientOptions);
+    const tmClient = await Tendermint34Client.create(rpcClient);
     return SigningArchwayClient.createWithSigner(tmClient, signer, options);
   }
 
