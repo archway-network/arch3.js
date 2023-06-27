@@ -28,6 +28,14 @@ describe('ArchwayClient', () => {
     });
   });
 
+  describe('connectWithBatchClient', () => {
+    it('can be constructed', async () => {
+      const client = await ArchwayClient.connectWithBatchClient(archwayd.endpoint);
+      expect(client).toBeDefined();
+      client.disconnect();
+    });
+  });
+
   describe('rewards', () => {
     it('gets the block rewards tracking', async () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### New feature
+
+#### **arch3-core**
+
+- added support to create an `ArchwayClient` using an `HttpBatchClient` (#96)
+
 ### Changes
 
 #### **arch3-core**
