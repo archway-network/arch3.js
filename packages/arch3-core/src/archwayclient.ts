@@ -1,5 +1,12 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Tendermint34Client, TendermintClient, HttpEndpoint } from '@cosmjs/tendermint-rpc';
+import {
+  Tendermint34Client,
+  TendermintClient,
+  HttpEndpoint,
+  RpcClient,
+  HttpBatchClient,
+  HttpBatchClientOptions
+} from '@cosmjs/tendermint-rpc';
 
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
 import {
@@ -33,6 +40,24 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    */
   public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
     const tmClient = await Tendermint34Client.connect(endpoint);
+    return ArchwayClient.create(tmClient);
+  }
+
+  /**
+   * Creates an instance by connecting to the given Tendermint RPC endpoint using an {@link HttpBatchClient} to batch
+   * multiple requests and increase the app performance.
+   *
+   * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
+   * @param options - Optional configuration to control how the {@link HttpBatchClient} will batch requests.
+   * @returns An {@link ArchwayClient} connected to the endpoint.
+   *
+   * @remarks This factory method doesn't support WebSocket endpoints.
+   *
+   * @see Use {@link ArchwayClient.create} if you need Tendermint 0.37 support.
+   */
+  public static async connectWithBatchClient(endpoint: string | HttpEndpoint, options?: Partial<HttpBatchClientOptions>): Promise<ArchwayClient> {
+    const rpcClient: RpcClient = new HttpBatchClient(endpoint, options);
+    const tmClient = await Tendermint34Client.create(rpcClient);
     return ArchwayClient.create(tmClient);
   }
 

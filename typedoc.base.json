@@ -7,7 +7,7 @@
     "protected": true,
     "private": false,
     "inherited": true,
-    "external": true,
+    "external": true
   },
   "validation": {
     "notExported": true,
@@ -42,7 +42,9 @@
       "TendermintClient": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/interfaces/TendermintClient.html",
       "Tendermint34Client": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/classes/tendermint34.Tendermint34Client.html",
       "Tendermint37Client": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/classes/tendermint37.Tendermint37Client.html",
-      "HttpEndpoint": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/interfaces/HttpEndpoint.html"
+      "HttpEndpoint": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/interfaces/HttpEndpoint.html",
+      "HttpBatchClient": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/classes/HttpBatchClient.html",
+      "HttpBatchClientOptions": "https://cosmos.github.io/cosmjs/latest/tendermint-rpc/interfaces/HttpBatchClientOptions.html"
     },
     "@cosmjs/proto-signing": {
       "EncodeObject": "https://cosmos.github.io/cosmjs/latest/proto-signing/interfaces/EncodeObject.html",
@@ -51,7 +53,7 @@
       "Registry": "https://cosmos.github.io/cosmjs/latest/proto-signing/interfaces/Registry.html"
     },
     "@cosmjs/amino": {
-      "Coin": "https://cosmos.github.io/cosmjs/latest/amino/interfaces/Coin.html",
+      "Coin": "https://cosmos.github.io/cosmjs/latest/amino/interfaces/Coin.html"
     }
   }
 }
