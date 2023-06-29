@@ -61,8 +61,35 @@ if [ ! -f "${GENESIS_FILE}" ]; then
   }
 
   echo "Defining genesis parameters..."
+  DENOM_METADATA='[
+		{
+			"description": "The native staking token of the Archway blockchain.",
+			"denom_units": [
+				{
+					"denom": "aarch",
+					"exponent": 0,
+					"aliases": []
+				},
+				{
+					"denom": "uarch",
+					"exponent": 12,
+					"aliases": []
+				},
+				{
+					"denom": "arch",
+					"exponent": 18,
+					"aliases": []
+				}
+			],
+			"base": "aarch",
+			"display": "arch",
+			"name": "Archway Network Token",
+			"symbol": "ARCH"
+		}
+	]'
   # shellcheck disable=SC2016
   GENESIS_PARAMS='
+    .app_state.bank.denom_metadata = $denom_metadata |
     .app_state.crisis.constant_fee.denom = $denom |
     .app_state.distribution.params.community_tax = "0.060000000000000000" |
     .app_state.gov.deposit_params.min_deposit[0].denom = $denom |
@@ -79,7 +106,7 @@ if [ ! -f "${GENESIS_FILE}" ]; then
     .app_state.staking.params.bond_denom = $denom |
     .consensus_params.block.max_gas = "300000000"
   '
-  jq --arg denom "${DENOM}" "${GENESIS_PARAMS}" "${GENESIS_FILE}" |
+  jq --arg denom "${DENOM}" --argjson denom_metadata "${DENOM_METADATA}" "${GENESIS_PARAMS}" "${GENESIS_FILE}" |
     sponge "${GENESIS_FILE}"
 
   DELEGATION_AMOUNT="$((TOTAL_SUPPLY / 2))${ATTO_PAD}"
