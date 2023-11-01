@@ -45,11 +45,11 @@ async function assertGasPriceEstimation(
   gasUnitPrice?: GasPrice,
   flatFees: readonly Coin[] = [],
 ): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   const txResponse = (await client.getTx(transactionHash))!;
   const tx = decodeTxRaw(txResponse.tx);
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/no-non-null-assertion
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const { amount: calculatedAmount, gas: expectedGas } = calculateFee(gasWanted, gasUnitPrice!);
   const expectedAmount = [...calculatedAmount, ...flatFees].reduce(addCoins);
   const txFee = tx.authInfo.fee;
@@ -137,7 +137,7 @@ describe('SigningArchwayClient', () => {
         fee
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       const txResponse = (await client.getTx(transactionHash))!;
       const tx = decodeTxRaw(txResponse.tx);
 

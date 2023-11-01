@@ -136,6 +136,11 @@ module.exports = {
         format: ['strictCamelCase'],
       },
       {
+        selector: 'import',
+        format: ['camelCase', 'PascalCase'],
+        leadingUnderscore: 'allow',
+      },
+      {
         selector: 'typeLike',
         format: ['StrictPascalCase'],
       },
@@ -156,6 +161,7 @@ module.exports = {
         selector: 'variable',
         modifiers: ['const', 'exported'],
         format: ['strictCamelCase', 'StrictPascalCase'],
+        leadingUnderscore: 'allow',
       },
       {
         selector: 'parameter',
