@@ -39,12 +39,12 @@ __metadata:
   resolution: "@archwayhq/arch3-core@workspace:packages/arch3-core"
   dependencies:
     "@archwayhq/arch3-proto": "workspace:^"
-    "@cosmjs/amino": ^0.31.0
-    "@cosmjs/cosmwasm-stargate": ^0.31.0
-    "@cosmjs/math": ^0.31.0
-    "@cosmjs/proto-signing": ^0.31.0
-    "@cosmjs/stargate": ^0.31.0
-    "@cosmjs/tendermint-rpc": ^0.31.0
+    "@cosmjs/amino": ^0.31.3
+    "@cosmjs/cosmwasm-stargate": ^0.31.3
+    "@cosmjs/math": ^0.31.3
+    "@cosmjs/proto-signing": ^0.31.3
+    "@cosmjs/stargate": ^0.31.3
+    "@cosmjs/tendermint-rpc": ^0.31.3
     "@microsoft/eslint-formatter-sarif": ^3.0
     "@types/jest": ^29.5.1
     "@types/node": ^18.15.13
@@ -76,10 +76,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@archwayhq/arch3-proto@workspace:packages/arch3-proto"
   dependencies:
-    "@cosmjs/amino": ^0.31.0
-    "@cosmjs/proto-signing": ^0.31.0
-    "@cosmjs/stargate": ^0.31.0
-    "@cosmjs/tendermint-rpc": ^0.31.0
+    "@cosmjs/amino": ^0.31.3
+    "@cosmjs/proto-signing": ^0.31.3
+    "@cosmjs/stargate": ^0.31.3
+    "@cosmjs/tendermint-rpc": ^0.31.3
     "@osmonauts/telescope": ^0.94.0
     "@types/jest": ^29.5.1
     "@types/node": ^18.15.13
