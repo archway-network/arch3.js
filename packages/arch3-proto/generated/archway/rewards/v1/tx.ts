@@ -11,7 +11,7 @@ export interface MsgSetContractMetadata {
    * metadata is the contract metadata to set / update.
    * If metadata exists, non-empty fields will be updated.
    */
-  metadata?: ContractMetadata;
+  metadata: ContractMetadata;
 }
 /** MsgSetContractMetadataResponse is the response for Msg.SetContractMetadata. */
 export interface MsgSetContractMetadataResponse {}
@@ -47,14 +47,14 @@ export interface MsgSetFlatFee {
   /** contract_address is the contract address (bech32 encoded). */
   contractAddress: string;
   /** flat_fee_amount defines the minimum flat fee set by the contract_owner */
-  flatFeeAmount?: Coin;
+  flatFeeAmount: Coin;
 }
 /** MsgSetFlatFeeResponse is the response for Msg.SetFlatFee. */
 export interface MsgSetFlatFeeResponse {}
 function createBaseMsgSetContractMetadata(): MsgSetContractMetadata {
   return {
     senderAddress: "",
-    metadata: undefined
+    metadata: ContractMetadata.fromPartial({})
   };
 }
 export const MsgSetContractMetadata = {
@@ -370,7 +370,7 @@ function createBaseMsgSetFlatFee(): MsgSetFlatFee {
   return {
     senderAddress: "",
     contractAddress: "",
-    flatFeeAmount: undefined
+    flatFeeAmount: Coin.fromPartial({})
   };
 }
 export const MsgSetFlatFee = {

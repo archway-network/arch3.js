@@ -6,7 +6,7 @@ import * as _m0 from "protobufjs/minimal";
 /** GenesisState defines the initial state of the tracking module. */
 export interface GenesisState {
   /** params defines all the module parameters. */
-  params?: Params;
+  params: Params;
   /** contracts_metadata defines a list of all contracts metadata. */
   contractsMetadata: ContractMetadata[];
   /** block_rewards defines a list of all block rewards objects. */
@@ -14,7 +14,7 @@ export interface GenesisState {
   /** tx_rewards defines a list of all tx rewards objects. */
   txRewards: TxRewards[];
   /** min_consensus_fee defines the minimum gas unit price. */
-  minConsensusFee?: DecCoin;
+  minConsensusFee: DecCoin;
   /** rewards_record_last_id defines the last unique ID for a RewardsRecord objs. */
   rewardsRecordLastId: Long;
   /**
@@ -27,11 +27,11 @@ export interface GenesisState {
 }
 function createBaseGenesisState(): GenesisState {
   return {
-    params: undefined,
+    params: Params.fromPartial({}),
     contractsMetadata: [],
     blockRewards: [],
     txRewards: [],
-    minConsensusFee: undefined,
+    minConsensusFee: DecCoin.fromPartial({}),
     rewardsRecordLastId: Long.UZERO,
     rewardsRecords: [],
     flatFees: []

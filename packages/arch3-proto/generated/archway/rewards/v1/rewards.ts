@@ -28,7 +28,7 @@ export interface Params {
    * minimum tx computational fees, which are independent from contract flat
    * fees (premiums)
    */
-  minPriceOfGas?: DecCoin;
+  minPriceOfGas: DecCoin;
 }
 /**
  * ContractMetadata defines the contract rewards distribution options for a
@@ -55,7 +55,7 @@ export interface BlockRewards {
   /** height defines the block height. */
   height: Long;
   /** inflation_rewards is the rewards to be distributed. */
-  inflationRewards?: Coin;
+  inflationRewards: Coin;
   /**
    * max_gas defines the maximum gas for the block that is used to distribute
    * inflation rewards (consensus parameter).
@@ -92,21 +92,21 @@ export interface RewardsRecord {
   /** calculated_height defines the block height of rewards calculation event. */
   calculatedHeight: Long;
   /** calculated_time defines the block time of rewards calculation event. */
-  calculatedTime?: Timestamp;
+  calculatedTime: Timestamp;
 }
 /** FlatFee defines the flat fee for a particular contract. */
 export interface FlatFee {
   /** contract_address defines the contract address (bech32 encoded). */
   contractAddress: string;
   /** flat_fee defines the minimum flat fee set by the contract_owner */
-  flatFee?: Coin;
+  flatFee: Coin;
 }
 function createBaseParams(): Params {
   return {
     inflationRewardsRatio: "",
     txFeeRebateRatio: "",
     maxWithdrawRecords: Long.UZERO,
-    minPriceOfGas: undefined
+    minPriceOfGas: DecCoin.fromPartial({})
   };
 }
 export const Params = {
@@ -244,7 +244,7 @@ export const ContractMetadata = {
 function createBaseBlockRewards(): BlockRewards {
   return {
     height: Long.ZERO,
-    inflationRewards: undefined,
+    inflationRewards: Coin.fromPartial({}),
     maxGas: Long.UZERO
   };
 }
@@ -381,7 +381,7 @@ function createBaseRewardsRecord(): RewardsRecord {
     rewardsAddress: "",
     rewards: [],
     calculatedHeight: Long.ZERO,
-    calculatedTime: undefined
+    calculatedTime: Timestamp.fromPartial({})
   };
 }
 export const RewardsRecord = {
@@ -467,7 +467,7 @@ export const RewardsRecord = {
 function createBaseFlatFee(): FlatFee {
   return {
     contractAddress: "",
-    flatFee: undefined
+    flatFee: Coin.fromPartial({})
   };
 }
 export const FlatFee = {

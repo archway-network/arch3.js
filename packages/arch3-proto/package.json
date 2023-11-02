@@ -62,7 +62,7 @@
     "protobufjs": "^6.11.3"
   },
   "devDependencies": {
-    "@osmonauts/telescope": "^0.94.0",
+    "@cosmology/telescope": "^0.109.4",
     "@types/jest": "^29.5.7",
     "@types/node": "^20.8.10",
     "@types/webgl2": "^0.0.9",

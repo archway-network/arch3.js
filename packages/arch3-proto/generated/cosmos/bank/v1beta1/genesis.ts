@@ -6,7 +6,7 @@ import { isSet } from "../../../helpers";
 /** GenesisState defines the bank module's genesis state. */
 export interface GenesisState {
   /** params defines all the paramaters of the module. */
-  params?: Params;
+  params: Params;
   /** balances is an array containing the balances of all the accounts. */
   balances: Balance[];
   /** supply represents the total supply. */
@@ -26,7 +26,7 @@ export interface Balance {
 }
 function createBaseGenesisState(): GenesisState {
   return {
-    params: undefined,
+    params: Params.fromPartial({}),
     balances: [],
     supply: [],
     denomMetadata: []
