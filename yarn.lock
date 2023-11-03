@@ -58,7 +58,7 @@ __metadata:
     eslint-plugin-node: ^11.1.0
     jest: ^29.7.0
     lodash: ^4.17.21
-    long: ^5.2.0
+    long: ^5.2.3
     prettier: ^3.0.3
     prettier-eslint: ^16.1.2
     rimraf: ^5.0.5
@@ -91,10 +91,10 @@ __metadata:
     eslint-plugin-node: ^11.1.0
     eslint-plugin-prettier: ^5.0.1
     jest: ^29.7.0
-    long: ^5.2.0
+    long: ^5.2.3
     prettier: ^3.0.3
     prettier-eslint: ^16.1.2
-    protobufjs: ^6.11.3
+    protobufjs: ^7.2.5
     regenerator-runtime: ^0.14.0
     rimraf: ^5.0.5
     ts-jest: ^29.1.1
@@ -9914,7 +9914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:^6.11.3, protobufjs@npm:^6.8.8, protobufjs@npm:~6.11.2, protobufjs@npm:~6.11.3":
+"protobufjs@npm:^6.8.8, protobufjs@npm:~6.11.2, protobufjs@npm:~6.11.3":
   version: 6.11.3
   resolution: "protobufjs@npm:6.11.3"
   dependencies:
@@ -9935,6 +9935,26 @@ __metadata:
     pbjs: bin/pbjs
     pbts: bin/pbts
   checksum: 4a6ce1964167e4c45c53fd8a312d7646415c777dd31b4ba346719947b88e61654912326101f927da387d6b6473ab52a7ea4f54d6f15d63b31130ce28e2e15070
+  languageName: node
+  linkType: hard
+
+"protobufjs@npm:^7.2.5":
+  version: 7.2.5
+  resolution: "protobufjs@npm:7.2.5"
+  dependencies:
+    "@protobufjs/aspromise": ^1.1.2
+    "@protobufjs/base64": ^1.1.2
+    "@protobufjs/codegen": ^2.0.4
+    "@protobufjs/eventemitter": ^1.1.0
+    "@protobufjs/fetch": ^1.1.0
+    "@protobufjs/float": ^1.0.2
+    "@protobufjs/inquire": ^1.1.0
+    "@protobufjs/path": ^1.1.2
+    "@protobufjs/pool": ^1.1.0
+    "@protobufjs/utf8": ^1.1.0
+    "@types/node": ">=13.7.0"
+    long: ^5.0.0
+  checksum: 3770a072114061faebbb17cfd135bc4e187b66bc6f40cd8bac624368b0270871ec0cfb43a02b9fb4f029c8335808a840f1afba3c2e7ede7063b98ae6b98a703f
   languageName: node
   linkType: hard
 
