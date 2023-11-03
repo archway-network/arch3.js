@@ -8,7 +8,7 @@ import * as _m0 from "protobufjs/minimal";
 export interface QueryParamsRequest {}
 /** QueryParamsResponse is the response for Query.Params. */
 export interface QueryParamsResponse {
-  params?: Params;
+  params: Params;
 }
 /** QueryContractMetadataRequest is the request for Query.ContractMetadata. */
 export interface QueryContractMetadataRequest {
@@ -17,7 +17,7 @@ export interface QueryContractMetadataRequest {
 }
 /** QueryContractMetadataResponse is the response for Query.ContractMetadata. */
 export interface QueryContractMetadataResponse {
-  metadata?: ContractMetadata;
+  metadata: ContractMetadata;
 }
 /**
  * QueryBlockRewardsTrackingRequest is the request for
@@ -29,7 +29,7 @@ export interface QueryBlockRewardsTrackingRequest {}
  * Query.BlockRewardsTracking.
  */
 export interface QueryBlockRewardsTrackingResponse {
-  block?: BlockTracking;
+  block: BlockTracking;
 }
 /** QueryRewardsPoolRequest is the request for Query.RewardsPool. */
 export interface QueryRewardsPoolRequest {}
@@ -54,14 +54,14 @@ export interface QueryEstimateTxFeesRequest {
 /** QueryEstimateTxFeesResponse is the response for Query.EstimateTxFees. */
 export interface QueryEstimateTxFeesResponse {
   /** gas_unit_price defines the minimum transaction fee per gas unit. */
-  gasUnitPrice?: DecCoin;
+  gasUnitPrice: DecCoin;
   /** estimated_fee is the estimated transaction fee for a given gas limit. */
   estimatedFee: Coin[];
 }
 /** BlockTracking is the tracking information for a block. */
 export interface BlockTracking {
   /** inflation_rewards defines the inflation rewards for the block. */
-  inflationRewards?: BlockRewards;
+  inflationRewards: BlockRewards;
   /** tx_rewards defines the transaction rewards for the block. */
   txRewards: TxRewards[];
 }
@@ -73,14 +73,14 @@ export interface QueryRewardsRecordsRequest {
    */
   rewardsAddress: string;
   /** pagination is an optional pagination options for the request. */
-  pagination?: PageRequest;
+  pagination: PageRequest;
 }
 /** QueryRewardsRecordsResponse is the response for Query.RewardsRecords. */
 export interface QueryRewardsRecordsResponse {
   /** records is the list of rewards records. */
   records: RewardsRecord[];
   /** pagination is the pagination details in the response. */
-  pagination?: PageResponse;
+  pagination: PageResponse;
 }
 /** QueryOutstandingRewardsRequest is the request for Query.OutstandingRewards. */
 export interface QueryOutstandingRewardsRequest {
@@ -111,7 +111,7 @@ export interface QueryFlatFeeResponse {
    * flat_fee_amount defines the minimum flat fee set by the contract_owner per
    * contract execution.
    */
-  flatFeeAmount?: Coin;
+  flatFeeAmount: Coin;
 }
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
@@ -148,7 +148,7 @@ export const QueryParamsRequest = {
 };
 function createBaseQueryParamsResponse(): QueryParamsResponse {
   return {
-    params: undefined
+    params: Params.fromPartial({})
   };
 }
 export const QueryParamsResponse = {
@@ -238,7 +238,7 @@ export const QueryContractMetadataRequest = {
 };
 function createBaseQueryContractMetadataResponse(): QueryContractMetadataResponse {
   return {
-    metadata: undefined
+    metadata: ContractMetadata.fromPartial({})
   };
 }
 export const QueryContractMetadataResponse = {
@@ -316,7 +316,7 @@ export const QueryBlockRewardsTrackingRequest = {
 };
 function createBaseQueryBlockRewardsTrackingResponse(): QueryBlockRewardsTrackingResponse {
   return {
-    block: undefined
+    block: BlockTracking.fromPartial({})
   };
 }
 export const QueryBlockRewardsTrackingResponse = {
@@ -512,7 +512,7 @@ export const QueryEstimateTxFeesRequest = {
 };
 function createBaseQueryEstimateTxFeesResponse(): QueryEstimateTxFeesResponse {
   return {
-    gasUnitPrice: undefined,
+    gasUnitPrice: DecCoin.fromPartial({}),
     estimatedFee: []
   };
 }
@@ -571,7 +571,7 @@ export const QueryEstimateTxFeesResponse = {
 };
 function createBaseBlockTracking(): BlockTracking {
   return {
-    inflationRewards: undefined,
+    inflationRewards: BlockRewards.fromPartial({}),
     txRewards: []
   };
 }
@@ -631,7 +631,7 @@ export const BlockTracking = {
 function createBaseQueryRewardsRecordsRequest(): QueryRewardsRecordsRequest {
   return {
     rewardsAddress: "",
-    pagination: undefined
+    pagination: PageRequest.fromPartial({})
   };
 }
 export const QueryRewardsRecordsRequest = {
@@ -686,7 +686,7 @@ export const QueryRewardsRecordsRequest = {
 function createBaseQueryRewardsRecordsResponse(): QueryRewardsRecordsResponse {
   return {
     records: [],
-    pagination: undefined
+    pagination: PageResponse.fromPartial({})
   };
 }
 export const QueryRewardsRecordsResponse = {
@@ -893,7 +893,7 @@ export const QueryFlatFeeRequest = {
 };
 function createBaseQueryFlatFeeResponse(): QueryFlatFeeResponse {
   return {
-    flatFeeAmount: undefined
+    flatFeeAmount: Coin.fromPartial({})
   };
 }
 export const QueryFlatFeeResponse = {

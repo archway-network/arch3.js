@@ -11,7 +11,7 @@ export interface ContractMetadataSetEvent {
   /** contract_address defines the contract address. */
   contractAddress: string;
   /** metadata defines the new contract metadata state. */
-  metadata?: ContractMetadata;
+  metadata: ContractMetadata;
 }
 /**
  * ContractRewardCalculationEvent is emitted when the contract reward is
@@ -26,11 +26,11 @@ export interface ContractRewardCalculationEvent {
    */
   gasConsumed: Long;
   /** inflation_rewards defines the inflation rewards portions of the rewards. */
-  inflationRewards?: Coin;
+  inflationRewards: Coin;
   /** fee_rebate_rewards defines the fee rebate rewards portions of the rewards. */
   feeRebateRewards: Coin[];
   /** metadata defines the contract metadata (if set). */
-  metadata?: ContractMetadata;
+  metadata: ContractMetadata;
 }
 /**
  * RewardsWithdrawEvent is emitted when credited rewards for a specific
@@ -46,7 +46,7 @@ export interface RewardsWithdrawEvent {
 /** MinConsensusFeeSetEvent is emitted when the minimum consensus fee is updated. */
 export interface MinConsensusFeeSetEvent {
   /** fee defines the updated minimum gas unit price. */
-  fee?: DecCoin;
+  fee: DecCoin;
 }
 /** ContractFlatFeeSetEvent is emitted when the contract flat fee is updated */
 export interface ContractFlatFeeSetEvent {
@@ -59,12 +59,12 @@ export interface ContractFlatFeeSetEvent {
    * flat_fee defines the amount that has been set as the minimum fee for the
    * contract
    */
-  flatFee?: Coin;
+  flatFee: Coin;
 }
 function createBaseContractMetadataSetEvent(): ContractMetadataSetEvent {
   return {
     contractAddress: "",
-    metadata: undefined
+    metadata: ContractMetadata.fromPartial({})
   };
 }
 export const ContractMetadataSetEvent = {
@@ -120,9 +120,9 @@ function createBaseContractRewardCalculationEvent(): ContractRewardCalculationEv
   return {
     contractAddress: "",
     gasConsumed: Long.UZERO,
-    inflationRewards: undefined,
+    inflationRewards: Coin.fromPartial({}),
     feeRebateRewards: [],
-    metadata: undefined
+    metadata: ContractMetadata.fromPartial({})
   };
 }
 export const ContractRewardCalculationEvent = {
@@ -266,7 +266,7 @@ export const RewardsWithdrawEvent = {
 };
 function createBaseMinConsensusFeeSetEvent(): MinConsensusFeeSetEvent {
   return {
-    fee: undefined
+    fee: DecCoin.fromPartial({})
   };
 }
 export const MinConsensusFeeSetEvent = {
@@ -312,7 +312,7 @@ export const MinConsensusFeeSetEvent = {
 function createBaseContractFlatFeeSetEvent(): ContractFlatFeeSetEvent {
   return {
     contractAddress: "",
-    flatFee: undefined
+    flatFee: Coin.fromPartial({})
   };
 }
 export const ContractFlatFeeSetEvent = {

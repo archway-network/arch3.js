@@ -10,14 +10,14 @@ export interface IdentifiedClientState {
   /** client identifier */
   clientId: string;
   /** client state */
-  clientState?: Any;
+  clientState: Any;
 }
 /** ConsensusStateWithHeight defines a consensus state with an additional height field. */
 export interface ConsensusStateWithHeight {
   /** consensus state height */
-  height?: Height;
+  height: Height;
   /** consensus state */
-  consensusState?: Any;
+  consensusState: Any;
 }
 /**
  * ClientConsensusStates defines all the stored consensus states for a given
@@ -42,7 +42,7 @@ export interface ClientUpdateProposal {
   /** the client identifier for the client to be updated if the proposal passes */
   clientId: string;
   /** the header used to update the client if the proposal passes */
-  header?: Any;
+  header: Any;
 }
 /**
  * Height is a monotonically increasing data type
@@ -69,7 +69,7 @@ export interface Params {
 function createBaseIdentifiedClientState(): IdentifiedClientState {
   return {
     clientId: "",
-    clientState: undefined
+    clientState: Any.fromPartial({})
   };
 }
 export const IdentifiedClientState = {
@@ -123,8 +123,8 @@ export const IdentifiedClientState = {
 };
 function createBaseConsensusStateWithHeight(): ConsensusStateWithHeight {
   return {
-    height: undefined,
-    consensusState: undefined
+    height: Height.fromPartial({}),
+    consensusState: Any.fromPartial({})
   };
 }
 export const ConsensusStateWithHeight = {
@@ -240,7 +240,7 @@ function createBaseClientUpdateProposal(): ClientUpdateProposal {
     title: "",
     description: "",
     clientId: "",
-    header: undefined
+    header: Any.fromPartial({})
   };
 }
 export const ClientUpdateProposal = {

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { default: telescope } = require('@osmonauts/telescope');
+const { default: telescope } = require('@cosmology/telescope');
 const { join } = require('node:path');
 const { sync: rimraf } = require('rimraf');
 

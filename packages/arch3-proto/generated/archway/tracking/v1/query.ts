@@ -6,7 +6,7 @@ import { isSet } from "../../../helpers";
 export interface QueryBlockGasTrackingRequest {}
 /** QueryBlockGasTrackingResponse is the response for Query.BlockGasTracking. */
 export interface QueryBlockGasTrackingResponse {
-  block?: BlockTracking;
+  block: BlockTracking;
 }
 function createBaseQueryBlockGasTrackingRequest(): QueryBlockGasTrackingRequest {
   return {};
@@ -43,7 +43,7 @@ export const QueryBlockGasTrackingRequest = {
 };
 function createBaseQueryBlockGasTrackingResponse(): QueryBlockGasTrackingResponse {
   return {
-    block: undefined
+    block: BlockTracking.fromPartial({})
   };
 }
 export const QueryBlockGasTrackingResponse = {

@@ -124,7 +124,7 @@ export interface BlockTracking {
 /** TxTracking is the tracking information for a single transaction. */
 export interface TxTracking {
   /** info defines the transaction details. */
-  info?: TxInfo;
+  info: TxInfo;
   /**
    * contract_operations defines the list of contract operations consumed by the
    * transaction.
@@ -265,7 +265,7 @@ export const ContractOperationInfo = {
       id: isSet(object.id) ? Long.fromValue(object.id) : Long.UZERO,
       txId: isSet(object.txId) ? Long.fromValue(object.txId) : Long.UZERO,
       contractAddress: isSet(object.contractAddress) ? String(object.contractAddress) : "",
-      operationType: isSet(object.operationType) ? contractOperationFromJSON(object.operationType) : 0,
+      operationType: isSet(object.operationType) ? contractOperationFromJSON(object.operationType) : -1,
       vmGas: isSet(object.vmGas) ? Long.fromValue(object.vmGas) : Long.UZERO,
       sdkGas: isSet(object.sdkGas) ? Long.fromValue(object.sdkGas) : Long.UZERO
     };
@@ -342,7 +342,7 @@ export const BlockTracking = {
 };
 function createBaseTxTracking(): TxTracking {
   return {
-    info: undefined,
+    info: TxInfo.fromPartial({}),
     contractOperations: []
   };
 }
