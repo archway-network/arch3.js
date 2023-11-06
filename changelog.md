@@ -5,9 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Changed
+
+- upgraded project to Typescript 5.2.2 (#104)
+
+#### **arch3-proto**
+
+- switched to `@cosmology/telescope` package to compile proto files (#104)
+
 ## v0.4.0 (2023-06-27)
 
-### New feature
+### Added
 
 #### **arch3-core**
 
@@ -15,13 +25,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   `HttpBatchClient` (#97)
 - added support to create an `ArchwayClient` using an `HttpBatchClient` (#96)
 
-### Changes
+### Changed
 
 #### **arch3-core**
 
 - bump `@cosmjs/*` to `0.31.0` (#95)
 
-### Fixes
+### Fixed
 
 #### **arch3-core**
 
@@ -29,7 +39,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v0.3.1 (2023-06-02)
 
-### Fixes
+### Added
 
 #### **arch3-core**
 
@@ -38,7 +48,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v0.3.0 (2023-05-30)
 
-### New feature
+### BREAKING CHANGES
+
+- modified the response of `ArchwayCLient.getEstimateTxFees` to change the
+  `estimatedFee` type from `Coin[]` to `StdFee` and moved the `gasLimit`
+  into `estimatedFee.gas`
+
+### Added
 
 #### **arch3-core**
 
@@ -51,15 +67,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - deprecated the default `gasPrice` option on `SigningArchwayClient` (#86)
 
-### BREAKING CHANGES
-
-- modified the response of `ArchwayCLient.getEstimateTxFees` to change the
-  `estimatedFee` type from `Coin[]` to `StdFee` and moved the `gasLimit`
-  into `estimatedFee.gas`
-
 ## v0.2.0 (2023-05-17)
 
-### New feature
+### BREAKING CHANGES
+
+- the package `@cosmjs/cosmwasm-stargate` is not re-exported with
+  `@archwayhq/arch-core` anymore
+
+### Added
 
 #### **arch3-core**
 
@@ -73,18 +88,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add protobuf deps (#39)
 - generate protobuf clients using telescope (#37)
 
-### Bugs fixed
+### Fixed
 
 - release process (#33)
 
-### BREAKING CHANGES
-
-- the package `@cosmjs/cosmwasm-stargate` is not re-exported with
-  `@archwayhq/arch-core` anymore
-
 ## v0.1.0 (2022-09-23)
 
-### New feature
+### Added
 
 #### **arch3-core**
 
