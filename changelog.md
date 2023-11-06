@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 #### **arch3-proto**
 
 - switched to `@cosmology/telescope` package to compile proto files (#104)
+- updated to the version `5.0.1` of the protocol (#106)
 
 ## v0.4.0 (2023-06-27)
 
