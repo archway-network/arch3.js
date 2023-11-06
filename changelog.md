@@ -5,11 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## v0.5.0 (Unreleased)
+
+### BREAKING CHANGES
+
+- the new version of `arch3.js` will, by default, be compatible only with the
+  Archway protocol version `5.0.0` and above.
 
 ### Changed
 
-- upgraded project to Typescript 5.2.2 (#104)
+- upgraded project to Typescript `5.2.2` (#104)
+
+#### **arch3-core**
+
+- changed the default Tendermint client to `0.37` (#106)
+- increased the default gas adjustment to `1.5` (#106)
 
 #### **arch3-proto**
 
