@@ -5,49 +5,10 @@
 
 set -euo pipefail
 
-command -v jq >/dev/null 2>&1 || {
-  echo >&2 "jq is required but not installed. Aborting."
-  exit 1
-}
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-function ok() {
-  echo " ✔ $1"
-}
-
-function error() {
-  echo " 𝗑 Error: $1" >&2
-  exit 1
-}
-
-function archwayd() {
-  docker compose exec node archwayd "$@"
-}
-
-function gas-prices-estimate() {
-  archwayd q rewards estimate-fees 1 --output json |
-    jq -r '.gas_unit_price | (.amount + .denom)'
-}
-
-function archwayd-tx() {
-  archwayd tx "$@" \
-    --gas auto \
-    --gas-prices "$(gas-prices-estimate)" \
-    --gas-adjustment 1.3 \
-    --broadcast-mode block \
-    --output json \
-    --yes
-}
-
-function validate-tx() {
-  local tx_result="${1:-}"
-  local error_message="${2:-}"
-  if [[ -z "${tx_result}" ]] || ! jq -e '.code == 0' >/dev/null 2>&1 <<<"${tx_result}"; then
-    [[ -n "${tx_result}" ]] && jq -r '.raw_log' <<<"${tx_result}" >&2
-    error "${error_message}"
-  fi
-}
+# shellcheck source=./_shared.sh
+source "${SCRIPT_DIR}/_shared.sh"
 
 function store-contract() {
   local name="${1:-}"
@@ -66,11 +27,7 @@ function store-contract() {
   local tx_hash
 
   if [[ -z "${code_id}" ]]; then
-    tx_result="$(
-      archwayd-tx --from validator wasm store /"${wasm}"
-    )"
-    validate-tx "${tx_result}" "failed to store contract!"
-
+    tx_result="$(archwayd-tx --from validator wasm store /"${wasm}")"
     tx_hash="$(jq -r '.txhash' <<<"${tx_result}")"
     code_id="$(jq -r '.logs[].events[] | select(.type == "store_code") | .attributes[] | select(.key == "code_id") | .value' <<<"${tx_result}")"
   fi
@@ -137,7 +94,6 @@ function instantiate-contract() {
         "${instantiate_params}" \
         "${salt}"
     )"
-    validate-tx "$tx_result" "failed to instantiate contract!"
     tx_hash="$(jq -r '.txhash' <<<"${tx_result}")"
     tx_contract_address="$(jq -r '.logs[].events[] | select(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") | .value' <<<"${tx_result}")"
     [[ "${contract_address}" == "${tx_contract_address}" ]] || error "contract address mismatch: expected ${contract_address}, got ${tx_contract_address}"
@@ -167,29 +123,14 @@ function execute-contract() {
 
   local tx_result
   tx_result="$(
-    if [[ -n "${amount}" ]]; then
-      archwayd tx wasm execute \
-        --from "${address}" \
-        --amount "${amount}" \
-        --gas ${gas} \
-        --fees "${fees}" \
-        --broadcast-mode block \
-        --output json \
-        --yes \
-        "${contract_address}" \
-        "${msg}"
-    else
-      archwayd tx wasm execute \
-        --from "${address}" \
-        --fees "${fees}" \
-        --broadcast-mode block \
-        --output json \
-        --yes \
-        "${contract_address}" \
-        "${msg}"
-    fi
+    archwayd-tx wasm execute \
+      --from "${address}" \
+      --amount "${amount}" \
+      --gas ${gas} \
+      --fees "${fees}" \
+      "${contract_address}" \
+      "${msg}"
   )"
-  validate-tx "${tx_result}" "failed to execute contract!"
 
   jq --null-input \
     --arg tx_hash "$(jq -r '.txhash' <<<"${tx_result}")" \
@@ -228,27 +169,25 @@ function cleanup() {
 
 trap cleanup ERR
 
-echo "Starting the node..."
+topic "Starting the node"
 docker compose up --remove-orphans -d
 
-echo
-echo "Waiting for the node to generate the first block..."
+topic "Waiting for the node to generate the first block..."
 if ! curl --retry 15 --retry-all-errors --retry-delay 2 -sfSL "http://$(docker compose port node 26657)/block?height=1" | jq -e '.error == null' >/dev/null; then
   docker compose logs node --tail 300
   error "node failed to start!"
 fi
 ok "node started"
 
-echo
-echo "Preparing test wallets..."
+topic "Preparing test wallets"
 ALICE_MNEMONIC="culture ten bar chase cross obey margin owner recycle trim valid logic forward mixed render have patrol dynamic tuition choose thing salute inside blossom"
 dotenv-add ALICE_MNEMONIC "${ALICE_MNEMONIC}"
 
 declare -a alice_addresses=()
 for i in {0..4}; do
   key_name="alice-$i"
-  echo
-  echo "[‣] $key_name"
+
+  action "$key_name"
   if ! archwayd keys list --output json | jq --arg key_name "${key_name}" -e '.[] | select(.name == $key_name) | any' >/dev/null; then
     docker compose exec -e ALICE_MNEMONIC="${ALICE_MNEMONIC}" node \
       sh -c "echo \$ALICE_MNEMONIC | archwayd keys add --recover --index $i $key_name"
@@ -264,15 +203,13 @@ for i in {0..4}; do
   ok "account created: ${address}"
 done
 
-echo
-echo "Deploying voter contract..."
+topic "Deploying voter contract"
 # Source: https://github.com/archway-network/archway/tree/main/contracts/go/voter
 
 denom="$(archwayd q staking params | jq -r '.bond_denom')"
 dotenv-add DENOM "${denom}"
 
-echo
-echo "[‣] storing..."
+action "storing"
 store_result="$(store-contract voter)"
 IFS=, read -r code_id checksum tx_hash < <(jq -r '"\(.code_id),\(.checksum),\(.tx_hash)"' <<<"${store_result}")
 if [[ -z "${tx_hash}" ]]; then
@@ -286,14 +223,13 @@ echo "   checksum: ${checksum}"
 dotenv-add VOTER_CONTRACT_CODE_ID "$code_id"
 ok "contract stored"
 
-echo
-echo "[‣] instantiating..."
+action "instantiating"
 
 declare -a contract_addresses=()
 for i in "${!alice_addresses[@]}"; do
   label="voter-$i"
 
-  echo " • ${label}..."
+  step "${label}"
   instantiate_result="$(
     instantiate-contract \
       "${label}" \
@@ -316,10 +252,20 @@ done
 dotenv-add "VOTER_CONTRACT_ADDRESSES" "${contract_addresses[*]}"
 ok "contracts instantiated"
 
-echo
-echo "[‣] setting metadata..."
+action "setting metadata"
 for i in {0..3}; do
-  echo " • voter-$i"
+  step "voter-$i"
+
+  if archwayd q rewards contract-metadata "${contract_addresses[i]}" 2>/dev/null |
+    jq -e \
+      --arg contract_address "${contract_addresses[i]}" \
+      --arg owner_address "${alice_addresses[i]}" \
+      --arg rewards_address "${alice_addresses[i]}" \
+      '.contract_address == $contract_address and .owner_address == $owner_address and .rewards_address == $rewards_address' &>/dev/null; then
+    echo "   metadata already set!"
+    continue
+  fi
+
   tx_result="$(
     archwayd-tx rewards set-contract-metadata \
       --from "${alice_addresses[i]}" \
@@ -327,32 +273,39 @@ for i in {0..3}; do
       --rewards-address "${alice_addresses[i]}" \
       "${contract_addresses[i]}"
   )"
-  validate-tx "$tx_result" "failed to set metadata!"
   tx_hash="$(jq -r '.txhash' <<<"${tx_result}")"
   echo "   tx: ${tx_hash}"
 done
 ok "contract metadata set"
 
-echo
-echo "[‣] setting contract premium..."
+action "setting contract premium"
+flat_fee_amount="1000"
 for i in {0..1}; do
-  echo " • voter-$i..."
+  step "voter-$i"
+
+  if archwayd q rewards flat-fee "${contract_addresses[i]}" 2>/dev/null | \
+    jq -e \
+      --arg amount "${flat_fee_amount}" \
+      --arg denom "${denom}" \
+      '.amount == $amount and .denom == $denom' &>/dev/null; then
+    echo "   contract premium already set!"
+    continue
+  fi
+
   tx_result="$(
     archwayd-tx rewards set-flat-fee \
       --from "${alice_addresses[i]}" \
       "${contract_addresses[i]}" \
-      "1000${denom}"
+      "${flat_fee_amount}${denom}"
   )"
-  validate-tx "$tx_result" "failed to set flat fee!"
   tx_hash="$(jq -r '.txhash' <<<"${tx_result}")"
   echo "   tx: ${tx_hash}"
 done
 ok "contract premium set"
 
-echo
-echo "[‣] generating rewards..."
+action "generating rewards"
 i=0
-echo " • voter-$i..."
+step "voter-$i"
 execute_result="$(
   execute-contract \
     "${alice_addresses[i]}" \

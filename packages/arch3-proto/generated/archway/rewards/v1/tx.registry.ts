@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { GeneratedType, Registry } from "@cosmjs/proto-signing";
-import { MsgSetContractMetadata, MsgWithdrawRewards, MsgSetFlatFee } from "./tx";
-export const registry: ReadonlyArray<[string, GeneratedType]> = [["/archway.rewards.v1.MsgSetContractMetadata", MsgSetContractMetadata], ["/archway.rewards.v1.MsgWithdrawRewards", MsgWithdrawRewards], ["/archway.rewards.v1.MsgSetFlatFee", MsgSetFlatFee]];
+import { MsgSetContractMetadata, MsgWithdrawRewards, MsgSetFlatFee, MsgUpdateParams } from "./tx";
+export const registry: ReadonlyArray<[string, GeneratedType]> = [["/archway.rewards.v1.MsgSetContractMetadata", MsgSetContractMetadata], ["/archway.rewards.v1.MsgWithdrawRewards", MsgWithdrawRewards], ["/archway.rewards.v1.MsgSetFlatFee", MsgSetFlatFee], ["/archway.rewards.v1.MsgUpdateParams", MsgUpdateParams]];
 export const load = (protoRegistry: Registry) => {
   registry.forEach(([typeUrl, mod]) => {
     protoRegistry.register(typeUrl, mod);
@@ -26,6 +26,12 @@ export const MessageComposer = {
         typeUrl: "/archway.rewards.v1.MsgSetFlatFee",
         value: MsgSetFlatFee.encode(value).finish()
       };
+    },
+    updateParams(value: MsgUpdateParams) {
+      return {
+        typeUrl: "/archway.rewards.v1.MsgUpdateParams",
+        value: MsgUpdateParams.encode(value).finish()
+      };
     }
   },
   withTypeUrl: {
@@ -44,6 +50,12 @@ export const MessageComposer = {
     setFlatFee(value: MsgSetFlatFee) {
       return {
         typeUrl: "/archway.rewards.v1.MsgSetFlatFee",
+        value
+      };
+    },
+    updateParams(value: MsgUpdateParams) {
+      return {
+        typeUrl: "/archway.rewards.v1.MsgUpdateParams",
         value
       };
     }
@@ -66,6 +78,12 @@ export const MessageComposer = {
         typeUrl: "/archway.rewards.v1.MsgSetFlatFee",
         value: MsgSetFlatFee.toJSON(value)
       };
+    },
+    updateParams(value: MsgUpdateParams) {
+      return {
+        typeUrl: "/archway.rewards.v1.MsgUpdateParams",
+        value: MsgUpdateParams.toJSON(value)
+      };
     }
   },
   fromJSON: {
@@ -86,6 +104,12 @@ export const MessageComposer = {
         typeUrl: "/archway.rewards.v1.MsgSetFlatFee",
         value: MsgSetFlatFee.fromJSON(value)
       };
+    },
+    updateParams(value: any) {
+      return {
+        typeUrl: "/archway.rewards.v1.MsgUpdateParams",
+        value: MsgUpdateParams.fromJSON(value)
+      };
     }
   },
   fromPartial: {
@@ -105,6 +129,12 @@ export const MessageComposer = {
       return {
         typeUrl: "/archway.rewards.v1.MsgSetFlatFee",
         value: MsgSetFlatFee.fromPartial(value)
+      };
+    },
+    updateParams(value: MsgUpdateParams) {
+      return {
+        typeUrl: "/archway.rewards.v1.MsgUpdateParams",
+        value: MsgUpdateParams.fromPartial(value)
       };
     }
   }

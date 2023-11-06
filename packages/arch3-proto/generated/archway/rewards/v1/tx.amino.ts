@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { AminoMsg } from "@cosmjs/amino";
 import { Long } from "../../../helpers";
-import { MsgSetContractMetadata, MsgWithdrawRewards, MsgSetFlatFee } from "./tx";
+import { MsgSetContractMetadata, MsgWithdrawRewards, MsgSetFlatFee, MsgUpdateParams } from "./tx";
 export interface MsgSetContractMetadataAminoType extends AminoMsg {
   type: "/archway.rewards.v1.MsgSetContractMetadata";
   value: {
@@ -33,6 +33,21 @@ export interface MsgSetFlatFeeAminoType extends AminoMsg {
     flat_fee_amount: {
       denom: string;
       amount: string;
+    };
+  };
+}
+export interface MsgUpdateParamsAminoType extends AminoMsg {
+  type: "/archway.rewards.v1.MsgUpdateParams";
+  value: {
+    authority: string;
+    params: {
+      inflation_rewards_ratio: string;
+      tx_fee_rebate_ratio: string;
+      max_withdraw_records: string;
+      min_price_of_gas: {
+        denom: string;
+        amount: string;
+      };
     };
   };
 }
@@ -126,6 +141,43 @@ export const AminoConverter = {
         flatFeeAmount: {
           denom: flat_fee_amount.denom,
           amount: flat_fee_amount.amount
+        }
+      };
+    }
+  },
+  "/archway.rewards.v1.MsgUpdateParams": {
+    aminoType: "/archway.rewards.v1.MsgUpdateParams",
+    toAmino: ({
+      authority,
+      params
+    }: MsgUpdateParams): MsgUpdateParamsAminoType["value"] => {
+      return {
+        authority,
+        params: {
+          inflation_rewards_ratio: params.inflationRewardsRatio,
+          tx_fee_rebate_ratio: params.txFeeRebateRatio,
+          max_withdraw_records: params.maxWithdrawRecords.toString(),
+          min_price_of_gas: {
+            denom: params.minPriceOfGas.denom,
+            amount: params.minPriceOfGas.amount
+          }
+        }
+      };
+    },
+    fromAmino: ({
+      authority,
+      params
+    }: MsgUpdateParamsAminoType["value"]): MsgUpdateParams => {
+      return {
+        authority,
+        params: {
+          inflationRewardsRatio: params.inflation_rewards_ratio,
+          txFeeRebateRatio: params.tx_fee_rebate_ratio,
+          maxWithdrawRecords: Long.fromString(params.max_withdraw_records),
+          minPriceOfGas: {
+            denom: params.min_price_of_gas.denom,
+            amount: params.min_price_of_gas.amount
+          }
         }
       };
     }
