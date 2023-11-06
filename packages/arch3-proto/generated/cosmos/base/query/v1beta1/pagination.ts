@@ -35,6 +35,12 @@ export interface PageRequest {
    * is set.
    */
   countTotal: boolean;
+  /**
+   * reverse is set to true if results are to be returned in the descending order.
+   * 
+   * Since: cosmos-sdk 0.43
+   */
+  reverse: boolean;
 }
 /**
  * PageResponse is to be embedded in gRPC response messages where the
@@ -48,7 +54,8 @@ export interface PageRequest {
 export interface PageResponse {
   /**
    * next_key is the key to be passed to PageRequest.key to
-   * query the next page most efficiently
+   * query the next page most efficiently. It will be empty if
+   * there are no more results.
    */
   nextKey: Uint8Array;
   /**
@@ -62,7 +69,8 @@ function createBasePageRequest(): PageRequest {
     key: new Uint8Array(),
     offset: Long.UZERO,
     limit: Long.UZERO,
-    countTotal: false
+    countTotal: false,
+    reverse: false
   };
 }
 export const PageRequest = {
@@ -78,6 +86,9 @@ export const PageRequest = {
     }
     if (message.countTotal === true) {
       writer.uint32(32).bool(message.countTotal);
+    }
+    if (message.reverse === true) {
+      writer.uint32(40).bool(message.reverse);
     }
     return writer;
   },
@@ -100,6 +111,9 @@ export const PageRequest = {
         case 4:
           message.countTotal = reader.bool();
           break;
+        case 5:
+          message.reverse = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -112,7 +126,8 @@ export const PageRequest = {
       key: isSet(object.key) ? bytesFromBase64(object.key) : new Uint8Array(),
       offset: isSet(object.offset) ? Long.fromValue(object.offset) : Long.UZERO,
       limit: isSet(object.limit) ? Long.fromValue(object.limit) : Long.UZERO,
-      countTotal: isSet(object.countTotal) ? Boolean(object.countTotal) : false
+      countTotal: isSet(object.countTotal) ? Boolean(object.countTotal) : false,
+      reverse: isSet(object.reverse) ? Boolean(object.reverse) : false
     };
   },
   toJSON(message: PageRequest): unknown {
@@ -121,6 +136,7 @@ export const PageRequest = {
     message.offset !== undefined && (obj.offset = (message.offset || Long.UZERO).toString());
     message.limit !== undefined && (obj.limit = (message.limit || Long.UZERO).toString());
     message.countTotal !== undefined && (obj.countTotal = message.countTotal);
+    message.reverse !== undefined && (obj.reverse = message.reverse);
     return obj;
   },
   fromPartial(object: Partial<PageRequest>): PageRequest {
@@ -129,6 +145,7 @@ export const PageRequest = {
     message.offset = object.offset !== undefined && object.offset !== null ? Long.fromValue(object.offset) : Long.UZERO;
     message.limit = object.limit !== undefined && object.limit !== null ? Long.fromValue(object.limit) : Long.UZERO;
     message.countTotal = object.countTotal ?? false;
+    message.reverse = object.reverse ?? false;
     return message;
   }
 };

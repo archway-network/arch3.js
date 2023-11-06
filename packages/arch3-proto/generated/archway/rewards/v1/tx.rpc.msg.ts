@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Rpc } from "../../../helpers";
 import * as _m0 from "protobufjs/minimal";
-import { MsgSetContractMetadata, MsgSetContractMetadataResponse, MsgWithdrawRewards, MsgWithdrawRewardsResponse, MsgSetFlatFee, MsgSetFlatFeeResponse } from "./tx";
+import { MsgSetContractMetadata, MsgSetContractMetadataResponse, MsgWithdrawRewards, MsgWithdrawRewardsResponse, MsgSetFlatFee, MsgSetFlatFeeResponse, MsgUpdateParams, MsgUpdateParamsResponse } from "./tx";
 /** Msg defines the module messaging service. */
 export interface Msg {
   /**
@@ -20,6 +20,13 @@ export interface Msg {
    * contract Method is authorized to the contract owner.
    */
   setFlatFee(request: MsgSetFlatFee): Promise<MsgSetFlatFeeResponse>;
+  /**
+   * UpdateParams defines a governance operation for updating the x/rewards
+   * module parameters. The authority is defined in the keeper.
+   * 
+   * Since: archway v5 && cosmos-sdk 0.47
+   */
+  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: Rpc;
@@ -28,6 +35,7 @@ export class MsgClientImpl implements Msg {
     this.setContractMetadata = this.setContractMetadata.bind(this);
     this.withdrawRewards = this.withdrawRewards.bind(this);
     this.setFlatFee = this.setFlatFee.bind(this);
+    this.updateParams = this.updateParams.bind(this);
   }
   setContractMetadata(request: MsgSetContractMetadata): Promise<MsgSetContractMetadataResponse> {
     const data = MsgSetContractMetadata.encode(request).finish();
@@ -43,5 +51,10 @@ export class MsgClientImpl implements Msg {
     const data = MsgSetFlatFee.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Msg", "SetFlatFee", data);
     return promise.then(data => MsgSetFlatFeeResponse.decode(new _m0.Reader(data)));
+  }
+  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
+    const data = MsgUpdateParams.encode(request).finish();
+    const promise = this.rpc.request("archway.rewards.v1.Msg", "UpdateParams", data);
+    return promise.then(data => MsgUpdateParamsResponse.decode(new _m0.Reader(data)));
   }
 }
