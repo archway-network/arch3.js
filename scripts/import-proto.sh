@@ -2,16 +2,24 @@
 
 set -euo pipefail
 
+if ! command -v buf &> /dev/null; then
+  echo "buf is required to import proto files. See https://docs.buf.build/installation for installation instructions."
+  exit 1
+fi
+
 ARCHWAY_BRANCH="${ARCHWAY_BRANCH:-main}"
 
 TMPDIR="$(mktemp -d)"
 git clone https://github.com/archway-network/archway --depth=1 --single-branch -b "${ARCHWAY_BRANCH}" "$TMPDIR"
 
 PROTO_ROOT="$(git rev-parse --show-toplevel)/packages/arch3-proto"
-[ -d "$PROTO_ROOT/proto" ] && rm -rf "$PROTO_ROOT/proto"
+if [ -d "$PROTO_ROOT/proto" ]; then
+  rm -rf "$PROTO_ROOT/proto"
+  mkdir -p "$PROTO_ROOT/proto"
+fi
 
-cp -r "$TMPDIR/proto" "$PROTO_ROOT"
-cp -r "$TMPDIR/third_party/proto" "$PROTO_ROOT"
+cd "$TMPDIR/proto"
+buf export . --output "$PROTO_ROOT/proto"
 
 cat <<EOF
 
