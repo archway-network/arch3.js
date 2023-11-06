@@ -52,12 +52,12 @@ export interface SigningArchwayClientOptions extends SigningCosmWasmClientOption
    * Default adjustment factor to be multiplied against the estimate returned by the tx simulation.
    * If the gas limit is set manually in the transaction, this option is ignored.
    *
-   * @default 1.3
+   * @default 1.5
    */
   readonly gasAdjustment?: number;
 }
 
-const defaultGasAdjustment = 1.3;
+const defaultGasAdjustment = 1.5;
 
 interface DeliverTxResponseWithLogs extends DeliverTxResponse {
   readonly parsedLogs: readonly logs.Log[];
