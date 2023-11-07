@@ -2,7 +2,7 @@ name: Publish package to npmjs
 
 on:
   release:
-    types: [released]
+    types: [published]
 
 jobs:
   build:
@@ -15,4 +15,4 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - run: yarn install --immutable
       - run: yarn config set -H npmAuthToken "${{ secrets.NPM_TOKEN }}"
-      - run: yarn run publish:all
+      - run: yarn run publish:all --tag ${{ github.event.release.prerelease == true && 'pre' || 'latest' }}
