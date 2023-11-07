@@ -50,21 +50,21 @@
     "prepack": "pinst --disable && yarn run build:all",
     "postpack": "pinst --enable",
     "clean": "rimraf ./build",
-    "clean:all": "yarn workspaces foreach --parallel --verbose run clean",
+    "clean:all": "yarn workspaces foreach --all --parallel --verbose run clean",
     "build": "yarn clean && tsc --build",
-    "build:all": "yarn workspaces foreach --topological-dev --parallel --verbose run build",
+    "build:all": "yarn workspaces foreach --all --topological-dev --parallel --verbose run build",
     "test": "jest",
     "test:watch": "yarn test --watch",
-    "test:all": "yarn workspaces foreach --topological-dev --parallel --verbose run test --passWithNoTests",
+    "test:all": "yarn workspaces foreach --all --parallel --verbose run test --passWithNoTests",
     "lint": "eslint ./src --ext .js,.cjs,.ts --no-error-on-unmatched-pattern",
     "lint:fix": "yarn run lint --fix",
     "lint:sarif": "yarn run lint --format @microsoft/sarif --output-file $(basename $npm_package_name).eslint-results.sarif",
-    "lint:all": "yarn workspaces foreach --parallel --verbose run lint",
-    "lint:fix:all": "yarn workspaces foreach --parallel --verbose run lint:fix",
-    "lint:sarif:all": "yarn workspaces foreach --parallel --verbose run lint:sarif",
+    "lint:all": "yarn workspaces foreach --all --parallel --verbose run lint",
+    "lint:fix:all": "yarn workspaces foreach --all --parallel --verbose run lint:fix",
+    "lint:sarif:all": "yarn workspaces foreach --all --parallel --verbose run lint:sarif",
     "docs": "typedoc",
-    "docs:all": "yarn workspaces foreach --parallel --verbose run docs",
-    "publish:all": "yarn workspaces foreach --topological --no-private --verbose npm publish"
+    "docs:all": "yarn workspaces foreach --all --parallel --verbose run docs",
+    "publish:all": "yarn workspaces foreach --all --topological --no-private --verbose npm publish"
   },
   "lint-staged": {
     "*.ts": [
@@ -118,5 +118,5 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "packageManager": "yarn@3.5.0"
+  "packageManager": "yarn@4.0.1"
 }
