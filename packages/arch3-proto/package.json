@@ -1,9 +1,10 @@
 {
   "name": "@archwayhq/arch3-proto",
-  "version": "0.4.0",
-  "description": "Archway Protobuf client",
-  "homepage": "https://github.com/jsoneaday/arch3-proto#readme",
-  "repository": "https://github.com/jsoneaday/arch3-proto",
+  "version": "0.5.0-beta.1",
+  "stableVersion": "0.4.0",
+  "description": "Protobuf definitions and RPC clients for the Archway Network",
+  "homepage": "https://docs.archway.io",
+  "repository": "github:archway-network/arch3.js",
   "keywords": [
     "archway",
     "cosmos",
