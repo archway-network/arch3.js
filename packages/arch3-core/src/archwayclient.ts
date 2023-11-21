@@ -1,3 +1,4 @@
+import { Coin } from '@cosmjs/amino';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import {
   Tendermint37Client,
@@ -96,5 +97,19 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
 
   public async getAllRewardsRecords(rewardsAddress: string): Promise<readonly RewardsRecord[]> {
     return await this.archwayQueryClient.getAllRewardsRecords(rewardsAddress);
+  }
+
+  /**
+   * Queries all balances for all denoms that belong to this address.
+   *
+   * Uses the grpc queries (which iterates over the store internally), and we cannot get
+   * proofs from such a method.
+   *
+   * @param address - Address to query balances for.
+   *
+   * @returns All balances for all denoms that belong to this address.
+   */
+  public async getAllBalances(address: string): Promise<readonly Coin[]> {
+    return this.forceGetQueryClient().bank.allBalances(address);
   }
 }
