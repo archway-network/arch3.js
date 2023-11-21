@@ -1,6 +1,6 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import {
-  Tendermint34Client,
+  Tendermint37Client,
   TendermintClient,
   HttpEndpoint,
   RpcClient,
@@ -39,7 +39,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    * @see Use {@link ArchwayClient.create} if you need Tendermint 0.37 support.
    */
   public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
-    const tmClient = await Tendermint34Client.connect(endpoint);
+    const tmClient = await Tendermint37Client.connect(endpoint);
     return ArchwayClient.create(tmClient);
   }
 
@@ -52,18 +52,15 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    * @returns An {@link ArchwayClient} connected to the endpoint.
    *
    * @remarks This factory method doesn't support WebSocket endpoints.
-   *
-   * @see Use {@link ArchwayClient.create} if you need Tendermint 0.37 support.
    */
   public static async connectWithBatchClient(endpoint: string | HttpEndpoint, options?: Partial<HttpBatchClientOptions>): Promise<ArchwayClient> {
     const rpcClient: RpcClient = new HttpBatchClient(endpoint, options);
-    const tmClient = await Tendermint34Client.create(rpcClient);
+    const tmClient = await Tendermint37Client.create(rpcClient);
     return ArchwayClient.create(tmClient);
   }
 
   /**
    * Creates an instance from a manually created Tendermint client.
-   * Use this to use {@link Tendermint37Client} instead of {@link Tendermint34Client}.
    *
    * @param tmClient - A Tendermint client for a given endpoint.
    * @returns An {@link ArchwayClient} connected to the endpoint.
