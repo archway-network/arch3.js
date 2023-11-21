@@ -6,6 +6,9 @@ on:
   release:
     types: [published]
 
+  # Allow manual workflow executions
+  workflow_dispatch:
+
 # Allow one concurrent deployment
 concurrency:
   group: "docs"
