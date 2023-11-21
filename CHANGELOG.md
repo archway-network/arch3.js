@@ -5,12 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## v0.5.0 (Unreleased)
+## v0.5.0 (2023-11-21)
 
 ### BREAKING CHANGES
 
 - the new version of `arch3.js` will, by default, be compatible only with the
   Archway protocol version `5.0.0` and above.
+
+### Added
+
+#### **arch3-core**
+
+- added add `getAllBalances` method to the `ArchwayClient` (#110)
 
 ### Changed
 
