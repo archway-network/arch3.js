@@ -10,6 +10,7 @@ export interface MsgSetContractMetadataAminoType extends AminoMsg {
       contract_address: string;
       owner_address: string;
       rewards_address: string;
+      withdraw_to_wallet: boolean;
     };
   };
 }
@@ -63,7 +64,8 @@ export const AminoConverter = {
         metadata: {
           contract_address: metadata.contractAddress,
           owner_address: metadata.ownerAddress,
-          rewards_address: metadata.rewardsAddress
+          rewards_address: metadata.rewardsAddress,
+          withdraw_to_wallet: metadata.withdrawToWallet
         }
       };
     },
@@ -76,7 +78,8 @@ export const AminoConverter = {
         metadata: {
           contractAddress: metadata.contract_address,
           ownerAddress: metadata.owner_address,
-          rewardsAddress: metadata.rewards_address
+          rewardsAddress: metadata.rewards_address,
+          withdrawToWallet: metadata.withdraw_to_wallet
         }
       };
     }
