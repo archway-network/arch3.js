@@ -392,11 +392,11 @@ describe('SigningArchwayClient', () => {
       it('gracefully handles withdrawing when no rewards found', async () => {
         const [wallet, accounts] = await getWalletWithAccounts();
         const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
-  
+
         const rewardsAddress = accounts[1].address;
-  
+
         const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
-  
+
         expect(result).toMatchObject({
           height: expect.any(Number),
           transactionHash: expect.any(String),
@@ -407,39 +407,39 @@ describe('SigningArchwayClient', () => {
         });
         expect(result.logs).not.toHaveLength(0);
         expect(result.events).not.toHaveLength(0);
-  
+
         client.disconnect();
       });
     });
-  
+
     describe('withdrawToWallet', () => {
       it('enables the flag withdrawToWallet in the metadata', async () => {
         const [wallet, accounts] = await getWalletWithAccounts();
-          const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
-          const contractAddress = contracts.voter.addresses[2];
-          const ownerAddress = accounts[2].address;
-          const rewardsAddress = accounts[5].address;
+        const contractAddress = contracts.voter.addresses[2];
+        const ownerAddress = accounts[2].address;
+        const rewardsAddress = accounts[5].address;
 
-          const metadata: ContractMetadata = {
-            contractAddress,
-            ownerAddress,
-            rewardsAddress,
-            withdrawToWallet: true
-          };
-          const result = await client.setContractMetadata(ownerAddress, metadata, 'auto');
+        const metadata: ContractMetadata = {
+          contractAddress,
+          ownerAddress,
+          rewardsAddress,
+          withdrawToWallet: true
+        };
+        const result = await client.setContractMetadata(ownerAddress, metadata, 'auto');
 
-          expect(result).toMatchObject({
-            height: expect.any(Number),
-            transactionHash: expect.any(String),
-            gasWanted: expect.any(Number),
-            gasUsed: expect.any(Number),
-            metadata,
-          });
-          expect(result.logs).not.toHaveLength(0);
-          expect(result.events).not.toHaveLength(0);
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          metadata,
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
 
-          client.disconnect();
+        client.disconnect();
       });
 
       it('doesn\'t generate RewardRecord entries when withdrawToWallet is enabled', async () => {
