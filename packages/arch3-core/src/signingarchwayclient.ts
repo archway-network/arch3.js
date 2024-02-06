@@ -19,14 +19,13 @@ import {
   StdFee
 } from '@cosmjs/stargate';
 import {
+  CometClient,
   HttpBatchClient,
   HttpBatchClientOptions,
   RpcClient,
   Tendermint37Client,
-  TendermintClient
 } from '@cosmjs/tendermint-rpc';
 import _ from 'lodash';
-import Long from 'long';
 
 import { createRewardsAminoConverters, RewardsMsgEncoder, rewardsTypes } from './modules';
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
@@ -76,9 +75,9 @@ export interface TxResult {
   /** Transaction events. */
   readonly events: readonly Event[];
   /** Amount of gas sent with the transaction. */
-  readonly gasWanted: number;
+  readonly gasWanted: bigint;
   /** Amount of gas consumed by the transaction. */
-  readonly gasUsed: number;
+  readonly gasUsed: bigint;
 }
 
 /**
@@ -131,7 +130,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   private readonly archwayQueryClient: IArchwayQueryClient;
   private readonly gasAdjustment: number;
 
-  protected constructor(tmClient: TendermintClient | undefined, signer: OfflineSigner, options: SigningArchwayClientOptions) {
+  protected constructor(cometClient: CometClient | undefined, signer: OfflineSigner, options: SigningArchwayClientOptions) {
     const {
       registry = new Registry([...defaultRegistryTypes, ...wasmTypes, ...rewardsTypes]),
       aminoTypes = new AminoTypes({
@@ -142,9 +141,9 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       gasAdjustment = defaultGasAdjustment,
     } = options;
 
-    super(tmClient, signer, { ...options, registry, aminoTypes });
+    super(cometClient, signer, { ...options, registry, aminoTypes });
 
-    this.archwayQueryClient = createArchwayQueryClient(tmClient);
+    this.archwayQueryClient = createArchwayQueryClient(cometClient);
     this.gasAdjustment = gasAdjustment;
   }
 
@@ -155,8 +154,6 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param signer - The transaction signer configuration.
    * @param options - Options for the signing client.
    * @returns A {@link SigningArchwayClient} connected to the endpoint.
-   *
-   * @see {@link SigningArchwayClient.createWithSigner} if you need Tendermint 0.37 support.
    */
   public static override async connectWithSigner(
     endpoint: string | HttpEndpoint,
@@ -178,8 +175,6 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @returns A {@link SigningArchwayClient} connected to the endpoint.
    *
    * @remarks This factory method doesn't support WebSocket endpoints.
-   *
-   * @see {@link SigningArchwayClient.createWithSigner} if you need Tendermint 0.37 support.
    */
   public static async connectWithSignerAndBatchClient(
     endpoint: string | HttpEndpoint,
@@ -193,20 +188,20 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   }
 
   /**
-   * Creates an instance from a manually created Tendermint client.
+   * Creates an instance from a manually created Comet client.
    *
-   * @param tmClient - A Tendermint client for a given endpoint.
+   * @param cometClient - A Comet client for a given endpoint.
    * @param signer - The transaction signer configuration.
    * @param options - Options for the signing client.
    * @returns A {@link SigningArchwayClient} connected to the endpoint.
    */
   /* eslint-disable-next-line @typescript-eslint/require-await */
   public static override async createWithSigner(
-    tmClient: TendermintClient,
+    cometClient: CometClient,
     signer: OfflineSigner,
     options: SigningArchwayClientOptions = {},
   ): Promise<SigningArchwayClient> {
-    return new SigningArchwayClient(tmClient, signer, options);
+    return new SigningArchwayClient(cometClient, signer, options);
   }
 
   /**
@@ -351,7 +346,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     const message = RewardsMsgEncoder.withdrawRewards({
       rewardsAddress,
       recordsLimit: {
-        limit: Long.fromNumber(limit),
+        limit: BigInt(limit),
       }
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);

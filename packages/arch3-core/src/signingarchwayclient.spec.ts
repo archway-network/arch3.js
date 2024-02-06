@@ -41,7 +41,7 @@ const clientOptions: SigningArchwayClientOptions = {
 async function assertGasPriceEstimation(
   client: SigningArchwayClient,
   transactionHash: string,
-  gasWanted: number,
+  gasWanted: bigint,
   gasUnitPrice?: GasPrice,
   flatFees: readonly Coin[] = [],
 ): Promise<void> {
@@ -50,7 +50,7 @@ async function assertGasPriceEstimation(
   const tx = decodeTxRaw(txResponse.tx);
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  const { amount: calculatedAmount, gas: expectedGas } = calculateFee(gasWanted, gasUnitPrice!);
+  const { amount: calculatedAmount, gas: expectedGas } = calculateFee(Number(gasWanted), gasUnitPrice!);
   const expectedAmount = [...calculatedAmount, ...flatFees].reduce(addCoins);
   const txFee = tx.authInfo.fee;
   expect(txFee?.amount).toContainEqual(expectedAmount);
@@ -251,8 +251,8 @@ describe('SigningArchwayClient', () => {
         expect(result).toMatchObject({
           height: expect.any(Number),
           transactionHash: expect.any(String),
-          gasWanted: expect.any(Number),
-          gasUsed: expect.any(Number),
+          gasWanted: expect.any(BigInt),
+          gasUsed: expect.any(BigInt),
           metadata,
         });
         expect(result.logs).not.toHaveLength(0);
@@ -274,8 +274,8 @@ describe('SigningArchwayClient', () => {
         expect(result).toMatchObject({
           height: expect.any(Number),
           transactionHash: expect.any(String),
-          gasWanted: expect.any(Number),
-          gasUsed: expect.any(Number),
+          gasWanted: expect.any(BigInt),
+          gasUsed: expect.any(BigInt),
           metadata: {
             contractAddress,
             ownerAddress,
@@ -307,8 +307,8 @@ describe('SigningArchwayClient', () => {
         expect(result).toMatchObject({
           height: expect.any(Number),
           transactionHash: expect.any(String),
-          gasWanted: expect.any(Number),
-          gasUsed: expect.any(Number),
+          gasWanted: expect.any(BigInt),
+          gasUsed: expect.any(BigInt),
           premium: {
             contractAddress,
             flatFee,
@@ -337,8 +337,8 @@ describe('SigningArchwayClient', () => {
         expect(result).toMatchObject({
           height: expect.any(Number),
           transactionHash: expect.any(String),
-          gasWanted: expect.any(Number),
-          gasUsed: expect.any(Number),
+          gasWanted: expect.any(BigInt),
+          gasUsed: expect.any(BigInt),
           premium: {
             contractAddress,
             flatFee: coin(0, archwayd.denom),
@@ -375,8 +375,8 @@ describe('SigningArchwayClient', () => {
         expect(result).toMatchObject({
           height: expect.any(Number),
           transactionHash: expect.any(String),
-          gasWanted: expect.any(Number),
-          gasUsed: expect.any(Number),
+          gasWanted: expect.any(BigInt),
+          gasUsed: expect.any(BigInt),
           rewardsAddress: rewardsAddress,
           rewards: [expect.objectContaining({
             amount: expect.any(String),
@@ -400,8 +400,8 @@ describe('SigningArchwayClient', () => {
         expect(result).toMatchObject({
           height: expect.any(Number),
           transactionHash: expect.any(String),
-          gasWanted: expect.any(Number),
-          gasUsed: expect.any(Number),
+          gasWanted: expect.any(BigInt),
+          gasUsed: expect.any(BigInt),
           rewardsAddress: rewardsAddress,
           rewards: expect.arrayContaining([]),
         });
@@ -432,8 +432,8 @@ describe('SigningArchwayClient', () => {
         expect(result).toMatchObject({
           height: expect.any(Number),
           transactionHash: expect.any(String),
-          gasWanted: expect.any(Number),
-          gasUsed: expect.any(Number),
+          gasWanted: expect.any(BigInt),
+          gasUsed: expect.any(BigInt),
           metadata,
         });
         expect(result.logs).not.toHaveLength(0);

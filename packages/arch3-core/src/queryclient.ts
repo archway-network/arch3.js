@@ -10,7 +10,7 @@ import {
   setupTxExtension,
   TxExtension
 } from '@cosmjs/stargate';
-import { fromSeconds, TendermintClient, toRfc3339WithNanoseconds } from '@cosmjs/tendermint-rpc';
+import { fromSeconds, CometClient, toRfc3339WithNanoseconds } from '@cosmjs/tendermint-rpc';
 
 import { RewardsExtension, setupRewardsExtension } from './modules';
 import {
@@ -91,10 +91,10 @@ export interface IArchwayQueryClient {
 class ArchwayQueryClientImpl implements IArchwayQueryClient {
   private readonly queryClient: ExtendedQueryClient | undefined;
 
-  public constructor(tmClient: TendermintClient | undefined) {
-    if (tmClient) {
+  public constructor(cometClient: CometClient | undefined) {
+    if (cometClient) {
       this.queryClient = QueryClient.withExtensions(
-        tmClient,
+        cometClient,
         setupAuthExtension,
         setupBankExtension,
         setupWasmExtension,
@@ -123,17 +123,17 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
 
     const txRewards = txRewardsResponse.map(txReward => {
       return {
-        txId: txReward.txId.toNumber(),
-        height: txReward.height.toNumber(),
+        txId: Number(txReward.txId),
+        height: Number(txReward.height),
         feeRewards: txReward.feeRewards,
       };
     });
 
     return {
       inflationRewards: {
-        height: inflationRewards.height.toNumber(),
+        height: Number(inflationRewards.height),
         inflationRewards: inflationRewards.inflationRewards,
-        maxGas: inflationRewards.maxGas.toNumber(),
+        maxGas: Number(inflationRewards.maxGas),
       },
       txRewards,
     };
@@ -198,7 +198,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
     return {
       rewardsAddress,
       totalRewards,
-      totalRecords: recordsNum.toNumber(),
+      totalRecords: Number(recordsNum),
     };
   }
 
@@ -224,13 +224,13 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
 
       const rewardsRecords = records.map(record => {
         const calculatedTime = fromSeconds(
-          record.calculatedTime.seconds.toNumber(),
+          Number(record.calculatedTime.seconds),
           record.calculatedTime.nanos
         );
         return {
-          id: record.id.toNumber(),
+          id: Number(record.id),
           rewardsAddress: record.rewardsAddress,
-          calculatedHeight: record.calculatedHeight.toNumber(),
+          calculatedHeight: Number(record.calculatedHeight),
           calculatedTime: toRfc3339WithNanoseconds(calculatedTime),
           rewards: record.rewards,
         };
@@ -249,9 +249,9 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
  * Created a facade for querying archway modules using the
  * {@link QueryClient} extended with the {@link RewardsExtension}.
  *
- * @param tmClient - A Tendermint client for a given endpoint.
+ * @param cometClient - A Comet client for a given endpoint.
  * @returns A new {@link IArchwayQueryClient} implementation.
  */
-export function createArchwayQueryClient(tmClient: TendermintClient | undefined): IArchwayQueryClient {
-  return new ArchwayQueryClientImpl(tmClient);
+export function createArchwayQueryClient(cometClient: CometClient | undefined): IArchwayQueryClient {
+  return new ArchwayQueryClientImpl(cometClient);
 }
