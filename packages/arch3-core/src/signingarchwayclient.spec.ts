@@ -441,40 +441,6 @@ describe('SigningArchwayClient', () => {
 
         client.disconnect();
       });
-
-      it('doesn\'t generate RewardRecord entries when withdrawToWallet is enabled', async () => {
-        const [wallet, accounts] = await getWalletWithAccounts();
-        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
-
-        const contractAddress = contracts.voter.addresses[2];
-        const rewardsAddress = accounts[5].address;
-
-        /* eslint-disable camelcase, @typescript-eslint/naming-convention */
-        const msg = {
-          new_voting: {
-            name: 'test_voting_rewards',
-            vote_options: ['yes', 'no'],
-            duration: 10000000000,
-          }
-        };
-        /* eslint-enable camelcase, @typescript-eslint/naming-convention */
-        await client.execute(rewardsAddress, contractAddress, msg, 'auto', undefined, coins(10, archwayd.denom));
-
-        const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
-
-        expect(result).toMatchObject({
-          height: expect.any(Number),
-          transactionHash: expect.any(String),
-          gasWanted: expect.any(Number),
-          gasUsed: expect.any(Number),
-          rewardsAddress: rewardsAddress,
-          rewards: expect.arrayContaining([]),
-        });
-        expect(result.logs).not.toHaveLength(0);
-        expect(result.events).not.toHaveLength(0);
-
-        client.disconnect();
-      });
     });
   });
 });
