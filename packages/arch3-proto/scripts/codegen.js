@@ -53,7 +53,6 @@ telescope({
         duration: 'duration',
         useTelescopeGeneratedType: true
       },
-      enableRegistryLoader: false,
       methods: {
         toJSON: true,
         fromJSON: true
