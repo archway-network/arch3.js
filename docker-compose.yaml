@@ -3,7 +3,6 @@ services:
     image: archwaynetwork/archwayd:v6.0.0
     command: start --x-crisis-skip-assert-invariants
     entrypoint: /docker-entrypoint.sh
-    platform: linux/amd64
     ports:
       - 1317:1317   # API
       - 9090:9090   # gRPC
