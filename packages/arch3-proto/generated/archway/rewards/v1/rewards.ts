@@ -49,6 +49,12 @@ export interface ContractMetadata {
    * If not set (empty), rewards are not distributed for this contract.
    */
   rewardsAddress: string;
+  /**
+   * withdraw_to_wallet is a flag that defines if rewards should be immediately
+   * withdrawn to the wallet instead of creating a rewards record to be lazily
+   * withdrawn after.
+   */
+  withdrawToWallet: boolean;
 }
 /** BlockRewards defines block related rewards distribution data. */
 export interface BlockRewards {
@@ -180,7 +186,8 @@ function createBaseContractMetadata(): ContractMetadata {
   return {
     contractAddress: "",
     ownerAddress: "",
-    rewardsAddress: ""
+    rewardsAddress: "",
+    withdrawToWallet: false
   };
 }
 export const ContractMetadata = {
@@ -193,6 +200,9 @@ export const ContractMetadata = {
     }
     if (message.rewardsAddress !== "") {
       writer.uint32(26).string(message.rewardsAddress);
+    }
+    if (message.withdrawToWallet === true) {
+      writer.uint32(32).bool(message.withdrawToWallet);
     }
     return writer;
   },
@@ -212,6 +222,9 @@ export const ContractMetadata = {
         case 3:
           message.rewardsAddress = reader.string();
           break;
+        case 4:
+          message.withdrawToWallet = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -223,7 +236,8 @@ export const ContractMetadata = {
     return {
       contractAddress: isSet(object.contractAddress) ? String(object.contractAddress) : "",
       ownerAddress: isSet(object.ownerAddress) ? String(object.ownerAddress) : "",
-      rewardsAddress: isSet(object.rewardsAddress) ? String(object.rewardsAddress) : ""
+      rewardsAddress: isSet(object.rewardsAddress) ? String(object.rewardsAddress) : "",
+      withdrawToWallet: isSet(object.withdrawToWallet) ? Boolean(object.withdrawToWallet) : false
     };
   },
   toJSON(message: ContractMetadata): unknown {
@@ -231,6 +245,7 @@ export const ContractMetadata = {
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     message.ownerAddress !== undefined && (obj.ownerAddress = message.ownerAddress);
     message.rewardsAddress !== undefined && (obj.rewardsAddress = message.rewardsAddress);
+    message.withdrawToWallet !== undefined && (obj.withdrawToWallet = message.withdrawToWallet);
     return obj;
   },
   fromPartial(object: Partial<ContractMetadata>): ContractMetadata {
@@ -238,6 +253,7 @@ export const ContractMetadata = {
     message.contractAddress = object.contractAddress ?? "";
     message.ownerAddress = object.ownerAddress ?? "";
     message.rewardsAddress = object.rewardsAddress ?? "";
+    message.withdrawToWallet = object.withdrawToWallet ?? false;
     return message;
   }
 };

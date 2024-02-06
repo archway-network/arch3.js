@@ -24,6 +24,11 @@ export interface ContractMetadata {
    * the rewards using the [WASM bindings](https://github.com/archway-network/archway-bindings).
    */
   readonly rewardsAddress?: string;
+  /**
+   * Flag that defines if rewards should be immediately withdrawn to the wallet
+   * instead of creating a rewards record to be lazily withdrawn after.
+   */
+  readonly withdrawToWallet?: boolean;
 }
 
 /**

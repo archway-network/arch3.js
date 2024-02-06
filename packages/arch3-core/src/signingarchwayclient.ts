@@ -258,6 +258,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         contractAddress: metadata.contractAddress,
         ownerAddress: metadata.ownerAddress ?? '',
         rewardsAddress: metadata.rewardsAddress ?? '',
+        withdrawToWallet: metadata.withdrawToWallet ?? false,
       }
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
@@ -267,6 +268,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       contract_address: string,
       owner_address?: string,
       rewards_address?: string,
+      withdraw_to_wallet?: boolean,
     };
     /* eslint-enable */
     return {
@@ -275,6 +277,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         contractAddress: contractMetadata.contract_address,
         ownerAddress: contractMetadata.owner_address,
         rewardsAddress: contractMetadata.rewards_address,
+        withdrawToWallet: contractMetadata.withdraw_to_wallet,
       },
     };
   }

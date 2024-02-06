@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.6.0 (2023-02-06)
+
+### BREAKING CHANGES
+
+- the new version of `arch3.js` will, by default, be compatible only with the
+  Archway protocol version `6.0.0` and above.
+
+### Added
+
+#### **arch3-core**
+
+- added `withdrawToWallet` property to the `ContractMetadata` interface (#114)
+
+### Changed
+
+#### **arch3-proto**
+
+- updated to the version `6.0.0` of the protocol (#114)
+
 ## v0.5.0 (2023-11-21)
 
 ### BREAKING CHANGES
