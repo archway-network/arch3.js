@@ -141,9 +141,9 @@ describe('ArchwayClient', () => {
 
     it('check does not fail when contract premium is not set', async () => {
       const client = await ArchwayClient.connect(archwayd.endpoint);
-      const response = await client.getContractPremium(contracts.voter.addresses[2]);
+      const response = await client.getContractPremium(contracts.voter.addresses[3]);
 
-      expect(response.contractAddress).toBe(contracts.voter.addresses[2]);
+      expect(response.contractAddress).toBe(contracts.voter.addresses[3]);
       expect(response.flatFee).toBeUndefined();
 
       client.disconnect();

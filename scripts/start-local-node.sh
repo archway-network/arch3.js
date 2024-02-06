@@ -184,7 +184,7 @@ ALICE_MNEMONIC="culture ten bar chase cross obey margin owner recycle trim valid
 dotenv-add ALICE_MNEMONIC "${ALICE_MNEMONIC}"
 
 declare -a alice_addresses=()
-for i in {0..4}; do
+for i in {0..5}; do
   key_name="alice-$i"
 
   action "$key_name"
@@ -253,7 +253,7 @@ dotenv-add "VOTER_CONTRACT_ADDRESSES" "${contract_addresses[*]}"
 ok "contracts instantiated"
 
 action "setting metadata"
-for i in {0..3}; do
+for i in {0..4}; do
   step "voter-$i"
 
   if archwayd q rewards contract-metadata "${contract_addresses[i]}" 2>/dev/null |
@@ -280,7 +280,7 @@ ok "contract metadata set"
 
 action "setting contract premium"
 flat_fee_amount="1000"
-for i in {0..1}; do
+for i in {0..2}; do
   step "voter-$i"
 
   if archwayd q rewards flat-fee "${contract_addresses[i]}" 2>/dev/null | \

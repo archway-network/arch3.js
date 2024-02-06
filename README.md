@@ -30,7 +30,8 @@ List of Archway [protocol versions](https://github.com/archway-network/archway/r
 
 |      archwayd      |      arch3.js      |
 | :----------------: | :----------------: |
-|     `>=5.0.0`      |     `>=0.5.0`      |
+|     `>=6.0.0`      |     `>=0.6.0`      |
+|      `5.0.0`       |      `0.5.0`       |
 | `0.5.0` to `4.0.2` | `0.2.0` to `0.4.0` |
 |      `<0.5.0`      |      `0.1.0`       |
 

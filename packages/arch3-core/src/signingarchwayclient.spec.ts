@@ -24,7 +24,7 @@ const mnemonics = {
 
 async function getWalletWithAccounts(): Promise<[DirectSecp256k1HdWallet, readonly AccountData[]]> {
   const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonics.alice, {
-    hdPaths: [0, 1, 2, 3, 4].map(makeCosmoshubPath),
+    hdPaths: [0, 1, 2, 3, 4, 5].map(makeCosmoshubPath),
     prefix: archwayd.prefix
   });
   const accounts = await wallet.getAccounts();
@@ -153,8 +153,8 @@ describe('SigningArchwayClient', () => {
         const [wallet, accounts] = await getWalletWithAccounts();
         const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
-        const contractAddress = contracts.voter.addresses[2];
-        const ownerAddress = accounts[2].address;
+        const contractAddress = contracts.voter.addresses[3];
+        const ownerAddress = accounts[3].address;
 
         /* eslint-disable camelcase, @typescript-eslint/naming-convention */
         const msg = {
@@ -324,8 +324,8 @@ describe('SigningArchwayClient', () => {
         const [wallet, accounts] = await getWalletWithAccounts();
         const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
-        const contractAddress = contracts.voter.addresses[2];
-        const ownerAddress = accounts[2].address;
+        const contractAddress = contracts.voter.addresses[3];
+        const ownerAddress = accounts[3].address;
 
         const result = await client.setContractPremium(
           ownerAddress,
@@ -356,8 +356,8 @@ describe('SigningArchwayClient', () => {
         const [wallet, accounts] = await getWalletWithAccounts();
         const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
-        const contractAddress = contracts.voter.addresses[3];
-        const rewardsAddress = accounts[3].address;
+        const contractAddress = contracts.voter.addresses[4];
+        const rewardsAddress = accounts[4].address;
 
         /* eslint-disable camelcase, @typescript-eslint/naming-convention */
         const msg = {
@@ -388,28 +388,93 @@ describe('SigningArchwayClient', () => {
 
         client.disconnect();
       });
-    });
 
-    it('gracefully handles withdrawing when no rewards found', async () => {
-      const [wallet, accounts] = await getWalletWithAccounts();
-      const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
-
-      const rewardsAddress = accounts[1].address;
-
-      const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
-
-      expect(result).toMatchObject({
-        height: expect.any(Number),
-        transactionHash: expect.any(String),
-        gasWanted: expect.any(Number),
-        gasUsed: expect.any(Number),
-        rewardsAddress: rewardsAddress,
-        rewards: expect.arrayContaining([]),
+      it('gracefully handles withdrawing when no rewards found', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+  
+        const rewardsAddress = accounts[1].address;
+  
+        const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
+  
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          rewardsAddress: rewardsAddress,
+          rewards: expect.arrayContaining([]),
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+  
+        client.disconnect();
       });
-      expect(result.logs).not.toHaveLength(0);
-      expect(result.events).not.toHaveLength(0);
+    });
+  
+    describe('withdrawToWallet', () => {
+      it('enables the flag withdrawToWallet in the metadata', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+          const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
 
-      client.disconnect();
+          const contractAddress = contracts.voter.addresses[2];
+          const ownerAddress = accounts[2].address;
+          const rewardsAddress = accounts[5].address;
+
+          const metadata: ContractMetadata = {
+            contractAddress,
+            ownerAddress,
+            rewardsAddress,
+            withdrawToWallet: true
+          };
+          const result = await client.setContractMetadata(ownerAddress, metadata, 'auto');
+
+          expect(result).toMatchObject({
+            height: expect.any(Number),
+            transactionHash: expect.any(String),
+            gasWanted: expect.any(Number),
+            gasUsed: expect.any(Number),
+            metadata,
+          });
+          expect(result.logs).not.toHaveLength(0);
+          expect(result.events).not.toHaveLength(0);
+
+          client.disconnect();
+      });
+
+      it('doesn\'t generate RewardRecord entries when withdrawToWallet is enabled', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+        const contractAddress = contracts.voter.addresses[2];
+        const rewardsAddress = accounts[5].address;
+
+        /* eslint-disable camelcase, @typescript-eslint/naming-convention */
+        const msg = {
+          new_voting: {
+            name: 'test_voting_rewards',
+            vote_options: ['yes', 'no'],
+            duration: 10000000000,
+          }
+        };
+        /* eslint-enable camelcase, @typescript-eslint/naming-convention */
+        await client.execute(rewardsAddress, contractAddress, msg, 'auto', undefined, coins(10, archwayd.denom));
+
+        const result = await client.withdrawContractRewards(rewardsAddress, 0, 'auto');
+
+        expect(result).toMatchObject({
+          height: expect.any(Number),
+          transactionHash: expect.any(String),
+          gasWanted: expect.any(Number),
+          gasUsed: expect.any(Number),
+          rewardsAddress: rewardsAddress,
+          rewards: expect.arrayContaining([]),
+        });
+        expect(result.logs).not.toHaveLength(0);
+        expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
     });
   });
 });
