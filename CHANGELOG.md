@@ -19,8 +19,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 #### **arch3-proto**
 
-- update `@cosmology/telescope` to version `1.4.12`, and update codgen config with the option
-  `useTelescopeGeneratedType = true` as a workaround for currently open [telescope issue #482](https://github.com/cosmology-tech/telescope/issues/482) (#115)
+- update `@cosmology/telescope` to version `1.4.12`, and update codgen config
+  with the option `useTelescopeGeneratedType = true` as a workaround for
+  currently open
+  [issue #482](https://github.com/cosmology-tech/telescope/issues/482)
+  of `@cosmology/telescope` (#115)
 - update codegen script and compile proto files (#115)
 
 ## v0.6.0 (2023-02-06)
