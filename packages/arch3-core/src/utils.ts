@@ -7,17 +7,17 @@ import { Tendermint37Client, RpcClient, Comet38Client, Tendermint34Client, Comet
  * @returns Suitable client version of {@link CometClient}.
  */
 export async function connectToRpcClient(rpcClient: RpcClient): Promise<CometClient> {
-  const comet38Client = await Comet38Client.create(rpcClient);
-  const version = (await comet38Client.status()).nodeInfo.version;
-
-  if (version.startsWith("0.38.")) {
-    return comet38Client;
-  }
-
-  comet38Client.disconnect();
+  const tendermint37Client = await Tendermint37Client.create(rpcClient);
+  const version = (await tendermint37Client.status()).nodeInfo.version;
 
   if (version.startsWith("0.37.")) {
-    return await Tendermint37Client.create(rpcClient);
+    return tendermint37Client;
+  }
+
+  tendermint37Client.disconnect();
+
+  if (version.startsWith("0.38.")) {
+    return await Comet38Client.create(rpcClient);
   }
 
   return await Tendermint34Client.create(rpcClient);
