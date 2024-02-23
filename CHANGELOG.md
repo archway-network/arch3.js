@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - change the type of `gasWanted` and `gasUsed`of `TxResult` from `number` to `bigint`,
   to match the new types returned by `@cosmjs/cosmwasm-stargate` (#115)
-- replace deprecated `TendermintClient` with `CosmosClient` (#115)
+- replace deprecated `TendermintClient` with `CometClient` (#115)
 
 #### **arch3-proto**
 
