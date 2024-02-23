@@ -19,7 +19,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 #### **arch3-core**
 
 - replace deprecated `TendermintClient` with `CometClient` (#115)
-- autodetect Tendermint/CometBFT version needed on `ArchwayClient.connectWithBatchClient` and `SigningArchwayClient.connectWithSignerAndBatchClient` (#115)
+- autodetect Tendermint/CometBFT version needed on
+  `ArchwayClient.connectWithBatchClient`and
+  `SigningArchwayClient.connectWithSignerAndBatchClient` (#115)
 
 #### **arch3-proto**
 
