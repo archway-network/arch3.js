@@ -37,7 +37,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
    * @returns An {@link ArchwayClient} connected to the endpoint.
    *
-   * @see Use {@link ArchwayClient.create} if you need Comet 0.38 support.
+   * @see Use {@link ArchwayClient.create} if you need to support a specific CometBFT version.
    */
   public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
     const tmClient = await Tendermint37Client.connect(endpoint);
