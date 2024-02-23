@@ -249,7 +249,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
  * Created a facade for querying archway modules using the
  * {@link QueryClient} extended with the {@link RewardsExtension}.
  *
- * @param cometClient - A Comet client for a given endpoint.
+ * @param cometClient - A CometBFT client for a given endpoint.
  * @returns A new {@link IArchwayQueryClient} implementation.
  */
 export function createArchwayQueryClient(cometClient: CometClient | undefined): IArchwayQueryClient {
