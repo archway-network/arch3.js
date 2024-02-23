@@ -40,7 +40,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    * @see Use {@link ArchwayClient.create} if you need to support a specific CometBFT version.
    */
   public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
-    const tmClient = await Tendermint37Client.connect(endpoint);
+    const cometClient = await connectComet(endpoint);
     return ArchwayClient.create(tmClient);
   }
 
