@@ -188,7 +188,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   }
 
   /**
-   * Creates an instance from a manually created Comet client.
+   * Creates an instance from a manually created CometBFT client.
    *
    * @param cometClient - A CometBFT client for a given endpoint.
    * @param signer - The transaction signer configuration.
