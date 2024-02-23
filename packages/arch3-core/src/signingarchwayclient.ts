@@ -23,7 +23,7 @@ import {
   HttpBatchClient,
   HttpBatchClientOptions,
   RpcClient,
-  Tendermint37Client,
+  connectComet,
 } from '@cosmjs/tendermint-rpc';
 import _ from 'lodash';
 
@@ -38,6 +38,7 @@ import {
   RewardsPool,
   RewardsRecord
 } from './types';
+import { connectToRpcClient } from './utils';
 
 export interface SigningArchwayClientOptions extends SigningCosmWasmClientOptions {
   /**
@@ -160,8 +161,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     signer: OfflineSigner,
     options: SigningArchwayClientOptions = {},
   ): Promise<SigningArchwayClient> {
-    const tmClient = await Tendermint37Client.connect(endpoint);
-    return SigningArchwayClient.createWithSigner(tmClient, signer, options);
+    const cometClient = await connectComet(endpoint);
+    return SigningArchwayClient.createWithSigner(cometClient, signer, options);
   }
 
   /**
@@ -183,8 +184,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     batchClientOptions?: Partial<HttpBatchClientOptions>
   ): Promise<SigningArchwayClient> {
     const rpcClient: RpcClient = new HttpBatchClient(endpoint, batchClientOptions);
-    const tmClient = await Tendermint37Client.create(rpcClient);
-    return SigningArchwayClient.createWithSigner(tmClient, signer, options);
+    const cometBatchClient = await connectToRpcClient(rpcClient);
+    return SigningArchwayClient.createWithSigner(cometBatchClient, signer, options);
   }
 
   /**

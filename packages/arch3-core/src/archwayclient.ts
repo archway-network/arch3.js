@@ -1,12 +1,12 @@
 import { Coin } from '@cosmjs/amino';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import {
-  Tendermint37Client,
   HttpEndpoint,
   RpcClient,
   HttpBatchClient,
   HttpBatchClientOptions,
-  CometClient
+  CometClient,
+  connectComet,
 } from '@cosmjs/tendermint-rpc';
 
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
@@ -19,6 +19,7 @@ import {
   RewardsPool,
   RewardsRecord
 } from './types';
+import { connectToRpcClient } from './utils';
 
 /**
  * Extension to the {@link CosmWasmClient } with queries for Archway's modules.
@@ -41,7 +42,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    */
   public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
     const cometClient = await connectComet(endpoint);
-    return ArchwayClient.create(tmClient);
+    return ArchwayClient.create(cometClient);
   }
 
   /**
@@ -56,8 +57,8 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    */
   public static async connectWithBatchClient(endpoint: string | HttpEndpoint, options?: Partial<HttpBatchClientOptions>): Promise<ArchwayClient> {
     const rpcClient: RpcClient = new HttpBatchClient(endpoint, options);
-    const tmClient = await Tendermint37Client.create(rpcClient);
-    return ArchwayClient.create(tmClient);
+    const cometBatchClient = await connectToRpcClient(rpcClient);
+    return ArchwayClient.create(cometBatchClient);
   }
 
   /**
