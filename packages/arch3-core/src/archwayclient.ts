@@ -45,7 +45,7 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
   }
 
   /**
-   * Creates an instance by connecting to the given Tendermint/Comet RPC endpoint using an {@link HttpBatchClient} to batch
+   * Creates an instance by connecting to the given Tendermint/CometBFT RPC endpoint using an {@link HttpBatchClient} to batch
    * multiple requests and reduce queries to the server.
    *
    * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
