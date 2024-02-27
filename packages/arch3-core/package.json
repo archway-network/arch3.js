@@ -54,14 +54,13 @@
   },
   "dependencies": {
     "@archwayhq/arch3-proto": "workspace:^",
-    "@cosmjs/amino": "^0.31.3",
-    "@cosmjs/cosmwasm-stargate": "^0.31.3",
-    "@cosmjs/math": "^0.31.3",
-    "@cosmjs/proto-signing": "^0.31.3",
-    "@cosmjs/stargate": "^0.31.3",
-    "@cosmjs/tendermint-rpc": "^0.31.3",
-    "lodash": "^4.17.21",
-    "long": "^5.2.3"
+    "@cosmjs/amino": "^0.32.2",
+    "@cosmjs/cosmwasm-stargate": "^0.32.2",
+    "@cosmjs/math": "^0.32.2",
+    "@cosmjs/proto-signing": "^0.32.2",
+    "@cosmjs/stargate": "^0.32.2",
+    "@cosmjs/tendermint-rpc": "^0.32.2",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0.0",

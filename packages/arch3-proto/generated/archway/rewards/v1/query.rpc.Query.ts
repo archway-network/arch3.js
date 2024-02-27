@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Rpc } from "../../../helpers";
-import * as _m0 from "protobufjs/minimal";
+import { TxRpc } from "../../../types";
+import { BinaryReader } from "../../../binary";
 import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryParamsRequest, QueryParamsResponse, QueryContractMetadataRequest, QueryContractMetadataResponse, QueryBlockRewardsTrackingRequest, QueryBlockRewardsTrackingResponse, QueryRewardsPoolRequest, QueryRewardsPoolResponse, QueryEstimateTxFeesRequest, QueryEstimateTxFeesResponse, QueryRewardsRecordsRequest, QueryRewardsRecordsResponse, QueryOutstandingRewardsRequest, QueryOutstandingRewardsResponse, QueryFlatFeeRequest, QueryFlatFeeResponse } from "./query";
 /** Query service for the tracking module. */
@@ -36,8 +36,8 @@ export interface Query {
   flatFee(request: QueryFlatFeeRequest): Promise<QueryFlatFeeResponse>;
 }
 export class QueryClientImpl implements Query {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.params = this.params.bind(this);
     this.contractMetadata = this.contractMetadata.bind(this);
@@ -51,42 +51,42 @@ export class QueryClientImpl implements Query {
   params(request: QueryParamsRequest = {}): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Query", "Params", data);
-    return promise.then(data => QueryParamsResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => QueryParamsResponse.decode(new BinaryReader(data)));
   }
   contractMetadata(request: QueryContractMetadataRequest): Promise<QueryContractMetadataResponse> {
     const data = QueryContractMetadataRequest.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Query", "ContractMetadata", data);
-    return promise.then(data => QueryContractMetadataResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => QueryContractMetadataResponse.decode(new BinaryReader(data)));
   }
   blockRewardsTracking(request: QueryBlockRewardsTrackingRequest = {}): Promise<QueryBlockRewardsTrackingResponse> {
     const data = QueryBlockRewardsTrackingRequest.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Query", "BlockRewardsTracking", data);
-    return promise.then(data => QueryBlockRewardsTrackingResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => QueryBlockRewardsTrackingResponse.decode(new BinaryReader(data)));
   }
   rewardsPool(request: QueryRewardsPoolRequest = {}): Promise<QueryRewardsPoolResponse> {
     const data = QueryRewardsPoolRequest.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Query", "RewardsPool", data);
-    return promise.then(data => QueryRewardsPoolResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => QueryRewardsPoolResponse.decode(new BinaryReader(data)));
   }
   estimateTxFees(request: QueryEstimateTxFeesRequest): Promise<QueryEstimateTxFeesResponse> {
     const data = QueryEstimateTxFeesRequest.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Query", "EstimateTxFees", data);
-    return promise.then(data => QueryEstimateTxFeesResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => QueryEstimateTxFeesResponse.decode(new BinaryReader(data)));
   }
   rewardsRecords(request: QueryRewardsRecordsRequest): Promise<QueryRewardsRecordsResponse> {
     const data = QueryRewardsRecordsRequest.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Query", "RewardsRecords", data);
-    return promise.then(data => QueryRewardsRecordsResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => QueryRewardsRecordsResponse.decode(new BinaryReader(data)));
   }
   outstandingRewards(request: QueryOutstandingRewardsRequest): Promise<QueryOutstandingRewardsResponse> {
     const data = QueryOutstandingRewardsRequest.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Query", "OutstandingRewards", data);
-    return promise.then(data => QueryOutstandingRewardsResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => QueryOutstandingRewardsResponse.decode(new BinaryReader(data)));
   }
   flatFee(request: QueryFlatFeeRequest): Promise<QueryFlatFeeResponse> {
     const data = QueryFlatFeeRequest.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Query", "FlatFee", data);
-    return promise.then(data => QueryFlatFeeResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => QueryFlatFeeResponse.decode(new BinaryReader(data)));
   }
 }
 export const createRpcQueryExtension = (base: QueryClient) => {

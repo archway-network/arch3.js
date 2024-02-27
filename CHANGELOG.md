@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.7.0 (Unreleased)
+
+### BREAKING CHANGES
+
+- change the type of `gasWanted` and `gasUsed`of `TxResult` from `number` to `bigint`,
+  to match the new types returned by `@cosmjs/cosmwasm-stargate` (#115)
+
+### Changed
+
+- removed `long` package (#115)
+
+#### **arch3-core**
+
+- replace deprecated `TendermintClient` with `CometClient` (#115)
+- autodetect Tendermint/CometBFT version needed on
+  `ArchwayClient.connectWithBatchClient`and
+  `SigningArchwayClient.connectWithSignerAndBatchClient` (#115)
+
+#### **arch3-proto**
+
+- update `@cosmology/telescope` to version `1.4.12`, and update codegen config
+  with the option `useTelescopeGeneratedType = true` as a workaround for
+  currently open
+  [issue #482](https://github.com/cosmology-tech/telescope/issues/482)
+  of `@cosmology/telescope` (#115)
+- update codegen script and compile proto files (#115)
+
 ## v0.6.0 (2023-02-06)
 
 ### BREAKING CHANGES

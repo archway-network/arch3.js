@@ -54,15 +54,14 @@
     "docs": "typedoc"
   },
   "dependencies": {
-    "@cosmjs/amino": "^0.31.3",
-    "@cosmjs/proto-signing": "^0.31.3",
-    "@cosmjs/stargate": "^0.31.3",
-    "@cosmjs/tendermint-rpc": "^0.31.3",
-    "long": "^5.2.3",
+    "@cosmjs/amino": "^0.32.2",
+    "@cosmjs/proto-signing": "^0.32.2",
+    "@cosmjs/stargate": "^0.32.2",
+    "@cosmjs/tendermint-rpc": "^0.32.2",
     "protobufjs": "^7.2.5"
   },
   "devDependencies": {
-    "@cosmology/telescope": "^0.109.4",
+    "@cosmology/telescope": "^1.4.12",
     "@types/jest": "^29.5.7",
     "@types/node": "^20.8.10",
     "@types/webgl2": "^0.0.9",

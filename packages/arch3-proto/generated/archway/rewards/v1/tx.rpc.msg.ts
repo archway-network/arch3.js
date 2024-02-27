@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Rpc } from "../../../helpers";
-import * as _m0 from "protobufjs/minimal";
+import { TxRpc } from "../../../types";
+import { BinaryReader } from "../../../binary";
 import { MsgSetContractMetadata, MsgSetContractMetadataResponse, MsgWithdrawRewards, MsgWithdrawRewardsResponse, MsgSetFlatFee, MsgSetFlatFeeResponse, MsgUpdateParams, MsgUpdateParamsResponse } from "./tx";
 /** Msg defines the module messaging service. */
 export interface Msg {
@@ -29,8 +29,8 @@ export interface Msg {
   updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse>;
 }
 export class MsgClientImpl implements Msg {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.setContractMetadata = this.setContractMetadata.bind(this);
     this.withdrawRewards = this.withdrawRewards.bind(this);
@@ -40,21 +40,21 @@ export class MsgClientImpl implements Msg {
   setContractMetadata(request: MsgSetContractMetadata): Promise<MsgSetContractMetadataResponse> {
     const data = MsgSetContractMetadata.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Msg", "SetContractMetadata", data);
-    return promise.then(data => MsgSetContractMetadataResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => MsgSetContractMetadataResponse.decode(new BinaryReader(data)));
   }
   withdrawRewards(request: MsgWithdrawRewards): Promise<MsgWithdrawRewardsResponse> {
     const data = MsgWithdrawRewards.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Msg", "WithdrawRewards", data);
-    return promise.then(data => MsgWithdrawRewardsResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => MsgWithdrawRewardsResponse.decode(new BinaryReader(data)));
   }
   setFlatFee(request: MsgSetFlatFee): Promise<MsgSetFlatFeeResponse> {
     const data = MsgSetFlatFee.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Msg", "SetFlatFee", data);
-    return promise.then(data => MsgSetFlatFeeResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => MsgSetFlatFeeResponse.decode(new BinaryReader(data)));
   }
   updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
     const data = MsgUpdateParams.encode(request).finish();
     const promise = this.rpc.request("archway.rewards.v1.Msg", "UpdateParams", data);
-    return promise.then(data => MsgUpdateParamsResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => MsgUpdateParamsResponse.decode(new BinaryReader(data)));
   }
 }

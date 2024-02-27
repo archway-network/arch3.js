@@ -1,7 +1,8 @@
 /* eslint-disable */
-import { GeneratedType, Registry } from "@cosmjs/proto-signing";
+import { TelescopeGeneratedType } from "../../../types";
+import { Registry } from "@cosmjs/proto-signing";
 import { MsgSetContractMetadata, MsgWithdrawRewards, MsgSetFlatFee, MsgUpdateParams } from "./tx";
-export const registry: ReadonlyArray<[string, GeneratedType]> = [["/archway.rewards.v1.MsgSetContractMetadata", MsgSetContractMetadata], ["/archway.rewards.v1.MsgWithdrawRewards", MsgWithdrawRewards], ["/archway.rewards.v1.MsgSetFlatFee", MsgSetFlatFee], ["/archway.rewards.v1.MsgUpdateParams", MsgUpdateParams]];
+export const registry: ReadonlyArray<[string, TelescopeGeneratedType<any, any, any>]> = [["/archway.rewards.v1.MsgSetContractMetadata", MsgSetContractMetadata], ["/archway.rewards.v1.MsgWithdrawRewards", MsgWithdrawRewards], ["/archway.rewards.v1.MsgSetFlatFee", MsgSetFlatFee], ["/archway.rewards.v1.MsgUpdateParams", MsgUpdateParams]];
 export const load = (protoRegistry: Registry) => {
   registry.forEach(([typeUrl, mod]) => {
     protoRegistry.register(typeUrl, mod);

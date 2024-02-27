@@ -50,7 +50,8 @@ telescope({
         useDeepPartial: false,
         useExact: false,
         timestamp: 'timestamp',
-        duration: 'duration'
+        duration: 'duration',
+        useTelescopeGeneratedType: true
       },
       methods: {
         toJSON: true,

@@ -1,12 +1,12 @@
 import { Coin } from '@cosmjs/amino';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import {
-  Tendermint37Client,
-  TendermintClient,
   HttpEndpoint,
   RpcClient,
   HttpBatchClient,
-  HttpBatchClientOptions
+  HttpBatchClientOptions,
+  CometClient,
+  connectComet,
 } from '@cosmjs/tendermint-rpc';
 
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
@@ -19,6 +19,7 @@ import {
   RewardsPool,
   RewardsRecord
 } from './types';
+import { connectToRpcClient } from './utils';
 
 /**
  * Extension to the {@link CosmWasmClient } with queries for Archway's modules.
@@ -26,26 +27,26 @@ import {
 export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient {
   private readonly archwayQueryClient: IArchwayQueryClient;
 
-  protected constructor(tmClient: TendermintClient | undefined) {
-    super(tmClient);
-    this.archwayQueryClient = createArchwayQueryClient(tmClient);
+  protected constructor(cometClient: CometClient | undefined) {
+    super(cometClient);
+    this.archwayQueryClient = createArchwayQueryClient(cometClient);
   }
 
   /**
-   * Creates an instance by connecting to the given Tendermint RPC endpoint.
+   * Creates an instance by connecting to the given Tendermint/Comet RPC endpoint.
    *
    * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
    * @returns An {@link ArchwayClient} connected to the endpoint.
    *
-   * @see Use {@link ArchwayClient.create} if you need Tendermint 0.37 support.
+   * @see Use {@link ArchwayClient.create} if you need to support a specific CometBFT version.
    */
   public static override async connect(endpoint: string | HttpEndpoint): Promise<ArchwayClient> {
-    const tmClient = await Tendermint37Client.connect(endpoint);
-    return ArchwayClient.create(tmClient);
+    const cometClient = await connectComet(endpoint);
+    return ArchwayClient.create(cometClient);
   }
 
   /**
-   * Creates an instance by connecting to the given Tendermint RPC endpoint using an {@link HttpBatchClient} to batch
+   * Creates an instance by connecting to the given Tendermint/CometBFT RPC endpoint using an {@link HttpBatchClient} to batch
    * multiple requests and reduce queries to the server.
    *
    * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
@@ -56,19 +57,19 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    */
   public static async connectWithBatchClient(endpoint: string | HttpEndpoint, options?: Partial<HttpBatchClientOptions>): Promise<ArchwayClient> {
     const rpcClient: RpcClient = new HttpBatchClient(endpoint, options);
-    const tmClient = await Tendermint37Client.create(rpcClient);
-    return ArchwayClient.create(tmClient);
+    const cometBatchClient = await connectToRpcClient(rpcClient);
+    return ArchwayClient.create(cometBatchClient);
   }
 
   /**
-   * Creates an instance from a manually created Tendermint client.
+   * Creates an instance from a manually created Comet client.
    *
-   * @param tmClient - A Tendermint client for a given endpoint.
+   * @param cometClient - A Comet client for a given endpoint.
    * @returns An {@link ArchwayClient} connected to the endpoint.
    */
   /* eslint-disable-next-line @typescript-eslint/require-await */
-  public static override async create(tmClient: TendermintClient): Promise<ArchwayClient> {
-    return new ArchwayClient(tmClient);
+  public static override async create(cometClient: CometClient): Promise<ArchwayClient> {
+    return new ArchwayClient(cometClient);
   }
 
   public async getBlockRewardsTracking(): Promise<BlockTracking> {
