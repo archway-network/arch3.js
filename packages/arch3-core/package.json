@@ -1,6 +1,6 @@
 {
   "name": "@archwayhq/arch3-core",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Core library to interact with Archway Network",
   "homepage": "https://docs.archway.io",
   "repository": "github:archway-network/arch3.js",
