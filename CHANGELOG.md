@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## v0.7.0 (Unreleased)
+## v0.7.0 (2024-02-28)
 
 ### BREAKING CHANGES
 
@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   of `@cosmology/telescope` (#115)
 - update codegen script and compile proto files (#115)
 
-## v0.6.0 (2023-02-06)
+## v0.6.0 (2024-02-06)
 
 ### BREAKING CHANGES
 
