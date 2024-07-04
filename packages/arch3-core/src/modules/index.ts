@@ -1,2 +1,2 @@
-export * from './rewards/queries';
-export * from './rewards/tx';
+export * from './rewards';
+export * from './tx';
