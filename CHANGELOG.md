@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added
+
+#### **arch3-core**
+
+- add `granter` and `payer` arguments to the `SigningArchwayClient`'s `simulate` method ([#119])
+- add `simulateTx` method to the `ArchwayClient` and `SigningArchwayClient` classes ([#119])
+
+### Changed
+
+#### **arch3-core**
+
+- use `granter` and `payer` args in the `simulate` call inside the `SigningArchwayClient`'s `calculateFee` method ([#119])
+
 ## v0.7.0 (2024-02-28)
 
 ### BREAKING CHANGES
