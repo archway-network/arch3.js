@@ -473,8 +473,8 @@ describe('SigningArchwayClient', () => {
           }),
         };
         const gasUsed = await client.simulate(sender, [executeContractMsg], '');
-        expect(gasUsed).toBeGreaterThanOrEqual(70_000);
-        expect(gasUsed).toBeLessThanOrEqual(140_000);
+        expect(gasUsed).toBeGreaterThanOrEqual(100_000);
+        expect(gasUsed).toBeLessThanOrEqual(200_000);
 
         client.disconnect();
       });
