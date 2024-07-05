@@ -1,6 +1,7 @@
 import { Coin, addCoins, coin, coins } from '@cosmjs/amino';
 import { AccountData, DirectSecp256k1HdWallet, decodeTxRaw, makeCosmoshubPath } from '@cosmjs/proto-signing';
 import { GasPrice, StdFee, calculateFee } from '@cosmjs/stargate';
+import { Fee } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 
 import { ContractMetadata, SigningArchwayClient, SigningArchwayClientOptions } from '.';
 
@@ -438,6 +439,44 @@ describe('SigningArchwayClient', () => {
         });
         expect(result.logs).not.toHaveLength(0);
         expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
+    });
+
+    describe('simulation', () => {
+      it('granter and payer are passed to the `simulate` call', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+        // Setup spy function; spy on `Fee` constructor to be called within the `simulate` instead of `simulate` itself
+        // to be able to verify fee params used in the simulation tx instead of just number of gas
+        const feeSpy = jest.spyOn(Fee, 'fromPartial');
+
+        const sender = accounts[2].address;
+        const granter = accounts[4].address;
+        const payer = accounts[5].address;
+        const msgs = [];
+        const memo = '';
+
+        try {
+          await client.calculateFee(
+            sender,
+            msgs,
+            memo,
+            1.5,
+            granter,
+            payer,
+          );
+        } catch (e) {
+          // Don't panic even if failed, as we want to check the arguments used
+          // inside the simulation rather than the final result
+        }
+
+        expect(feeSpy).toHaveBeenCalledWith({
+          granter,
+          payer,
+        });
 
         client.disconnect();
       });
