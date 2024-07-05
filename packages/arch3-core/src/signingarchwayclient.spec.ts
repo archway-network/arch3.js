@@ -469,7 +469,7 @@ describe('SigningArchwayClient', () => {
             sender,
             contract: contractAddress,
             msg: toUtf8(JSON.stringify(msg)),
-            funds: [],
+            funds: coins(10, archwayd.denom),
           }),
         };
         const gasUsed = await client.simulate(sender, [executeContractMsg], '');
