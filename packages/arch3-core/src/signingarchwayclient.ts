@@ -1,11 +1,12 @@
-import { Coin, addCoins } from '@cosmjs/amino';
+import { Coin, Pubkey, addCoins, encodeSecp256k1Pubkey } from '@cosmjs/amino';
 import {
   createWasmAminoConverters,
   HttpEndpoint,
   SigningCosmWasmClient,
-  SigningCosmWasmClientOptions
+  SigningCosmWasmClientOptions,
 } from '@cosmjs/cosmwasm-stargate';
 import { wasmTypes } from '@cosmjs/cosmwasm-stargate/build/modules';
+import { Uint53 } from '@cosmjs/math';
 import { EncodeObject, OfflineSigner, Registry } from '@cosmjs/proto-signing';
 import {
   AminoTypes,
@@ -16,15 +17,11 @@ import {
   Event,
   GasPrice,
   logs,
-  StdFee
+  StdFee,
 } from '@cosmjs/stargate';
-import {
-  CometClient,
-  HttpBatchClient,
-  HttpBatchClientOptions,
-  RpcClient,
-  connectComet,
-} from '@cosmjs/tendermint-rpc';
+import { CometClient, HttpBatchClient, HttpBatchClientOptions, RpcClient, connectComet } from '@cosmjs/tendermint-rpc';
+import { assertDefined } from '@cosmjs/utils';
+import { SimulateResponse } from 'cosmjs-types/cosmos/tx/v1beta1/service';
 import _ from 'lodash';
 
 import { createRewardsAminoConverters, RewardsMsgEncoder, rewardsTypes } from './modules';
@@ -36,7 +33,7 @@ import {
   EstimateTxFees,
   OutstandingRewards,
   RewardsPool,
-  RewardsRecord
+  RewardsRecord,
 } from './types';
 import { connectToRpcClient } from './utils';
 
@@ -128,10 +125,16 @@ const flatFeeRequiredTypes: readonly string[] = [
  * Extension to the {@link SigningCosmWasmClient} for transacting with Archway's modules.
  */
 export class SigningArchwayClient extends SigningCosmWasmClient implements IArchwayQueryClient {
+  // Duplicate `signer` into a local property since `SigningCosmWasmClient` keeps it private
+  private readonly archwaySigner: OfflineSigner;
   private readonly archwayQueryClient: IArchwayQueryClient;
   private readonly gasAdjustment: number;
 
-  protected constructor(cometClient: CometClient | undefined, signer: OfflineSigner, options: SigningArchwayClientOptions) {
+  protected constructor(
+    cometClient: CometClient | undefined,
+    signer: OfflineSigner,
+    options: SigningArchwayClientOptions,
+  ) {
     const {
       registry = new Registry([...defaultRegistryTypes, ...wasmTypes, ...rewardsTypes]),
       aminoTypes = new AminoTypes({
@@ -144,6 +147,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
 
     super(cometClient, signer, { ...options, registry, aminoTypes });
 
+    this.archwaySigner = signer;
     this.archwayQueryClient = createArchwayQueryClient(cometClient);
     this.gasAdjustment = gasAdjustment;
   }
@@ -181,7 +185,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     endpoint: string | HttpEndpoint,
     signer: OfflineSigner,
     options?: SigningArchwayClientOptions,
-    batchClientOptions?: Partial<HttpBatchClientOptions>
+    batchClientOptions?: Partial<HttpBatchClientOptions>,
   ): Promise<SigningArchwayClient> {
     const rpcClient: RpcClient = new HttpBatchClient(endpoint, batchClientOptions);
     const cometBatchClient = await connectToRpcClient(rpcClient);
@@ -255,16 +259,20 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         ownerAddress: metadata.ownerAddress ?? '',
         rewardsAddress: metadata.rewardsAddress ?? '',
         withdrawToWallet: metadata.withdrawToWallet ?? false,
-      }
+      },
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
-    const metadataAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.ContractMetadataSetEvent', 'metadata');
+    const metadataAttr = logs.findAttribute(
+      response.parsedLogs,
+      'archway.rewards.v1.ContractMetadataSetEvent',
+      'metadata',
+    );
     /* eslint-disable @typescript-eslint/naming-convention */
     const contractMetadata = JSON.parse(metadataAttr.value) as {
-      contract_address: string,
-      owner_address?: string,
-      rewards_address?: string,
-      withdraw_to_wallet?: boolean,
+      contract_address: string;
+      owner_address?: string;
+      rewards_address?: string;
+      withdraw_to_wallet?: boolean;
     };
     /* eslint-enable */
     return {
@@ -307,13 +315,17 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       flatFeeAmount: flatFee,
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
-    const flatFeeAttr = logs.findAttribute(response.parsedLogs, 'archway.rewards.v1.ContractFlatFeeSetEvent', 'flat_fee');
+    const flatFeeAttr = logs.findAttribute(
+      response.parsedLogs,
+      'archway.rewards.v1.ContractFlatFeeSetEvent',
+      'flat_fee',
+    );
     return {
       ...buildResult(response),
       premium: {
         contractAddress,
         flatFee: JSON.parse(flatFeeAttr.value) as Coin,
-      }
+      },
     };
   }
 
@@ -348,16 +360,15 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       rewardsAddress,
       recordsLimit: {
         limit: BigInt(limit),
-      }
+      },
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
 
     const firstLogs = response.parsedLogs.find(() => true);
     const rewardsAttr = firstLogs?.events
       .find(event => event.type === 'archway.rewards.v1.RewardsWithdrawEvent')
-      ?.attributes.find(attr => attr.key === 'rewards')
-      ?.value;
-    const rewards: Coin[] = rewardsAttr ? JSON.parse(rewardsAttr) as Coin[] : [];
+      ?.attributes.find(attr => attr.key === 'rewards')?.value;
+    const rewards: Coin[] = rewardsAttr ? (JSON.parse(rewardsAttr) as Coin[]) : [];
 
     return {
       ...buildResult(response),
@@ -388,7 +399,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     signerAddress: string,
     messages: readonly EncodeObject[],
     fee: number | StdFee | 'auto',
-    memo?: string
+    memo?: string,
   ): Promise<DeliverTxResponse> {
     let usedFee: StdFee;
     if (fee === 'auto' || typeof fee === 'number') {
@@ -417,7 +428,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
    * @param payer - The fee payer address. The payer must have signed the transaction.
    * @returns A {@link StdFee} with the estimated fee for the transaction.
    *
-   * @see {@link SigningCosmWasmClient.simulate} for simulating the execution of a transaction.
+   * @see {@link SigningArchwayClient.simulate} for simulating the execution of a transaction.
    * @see {@link SigningArchwayClient.getEstimateTxFees} for getting the minimum price of gas (mPoG) and the minimum
    * consensus fee of the network.
    */
@@ -429,14 +440,14 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     granter?: string,
     payer?: string,
   ): Promise<StdFee> {
-    const gasEstimation = await this.simulate(signerAddress, messages, memo);
+    const gasEstimation = await this.simulate(signerAddress, messages, memo, granter, payer);
     const gas = Math.round(gasEstimation * gasAdjustment);
     const { estimatedFee } = await this.getEstimateTxFees(gas);
     const fee = await this.includeFlatFees(messages, estimatedFee);
     return {
       ...fee,
       granter,
-      payer
+      payer,
     };
   }
 
@@ -450,13 +461,13 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
           const contractAddress = _.get(value, 'contract') as string;
           const { flatFee } = await _getContractPremium(contractAddress);
           return flatFee;
-        })
+        }),
     ).then(_.compact); // eslint-disable-line @typescript-eslint/unbound-method
 
     const amount = [...fee.amount, ...flatFees].reduce(addCoins);
     return {
       ...fee,
-      amount: [amount]
+      amount: [amount],
     };
   }
 
@@ -464,7 +475,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     signerAddress: string,
     messages: readonly EncodeObject[],
     fee: StdFee | 'auto' | number,
-    memo?: string
+    memo?: string,
   ): Promise<DeliverTxResponseWithLogs> {
     const response = await this.signAndBroadcast(signerAddress, messages, fee, memo);
     assertIsDeliverTxSuccess(response);
@@ -491,9 +502,49 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     delegatorAddress: string,
     validatorAddress: string,
     fee: number | StdFee | 'auto',
-    memo?: string
+    memo?: string,
   ): Promise<DeliverTxResponse> {
     return await super.withdrawRewards(delegatorAddress, validatorAddress, fee, memo);
+  }
+
+  /**
+   * Simulates the transaction and estimates the gas it uses.
+   * Unlike {@link SigningCosmWasmClient.simulate}, it uses `payer` and `granter`
+   * arguments during the simulation, to support Archway-specific `cw-fees` mechanics
+   * and include gas the `SudoMsg::CwGrant` message consumes into the estimation.
+   *
+   * @param signerAddress - Address used in the gas simulation that will sign transactions.
+   *                        The signer must be able to sign with this address.
+   * @param messages - The messages to include in the transaction for simulating the gas wanted.
+   *                   The messages types should be registered in the {@link SigningArchwayClient.registry}
+   *                   when the client is instantiated.
+   * @param memo - Optional memo to add to the transaction.
+   * @param granter - The granter address that is used for paying with feegrants.
+   * @param payer - The fee payer address. The payer must have signed the transaction.
+   * @returns A number of gas the tx used during the simulation.
+   *
+   * @see https://docs.archway.io/developers/guides/cw-fees/introduction
+   */
+  public override async simulate(
+    signerAddress: string,
+    messages: readonly EncodeObject[],
+    memo?: string,
+    granter?: string,
+    payer?: string,
+  ): Promise<number> {
+    const anyMsgs = messages.map(m => this.registry.encodeAsAny(m));
+    const accountFromSigner = (await this.archwaySigner.getAccounts()).find(
+      account => account.address === signerAddress,
+    );
+    if (!accountFromSigner) {
+      throw new Error('Failed to retrieve account from signer');
+    }
+    const pubkey = encodeSecp256k1Pubkey(accountFromSigner.pubkey);
+    const { sequence } = await this.getSequence(signerAddress);
+
+    const { gasInfo } = await this.archwayQueryClient.simulateTx(anyMsgs, memo, pubkey, sequence, granter, payer);
+    assertDefined(gasInfo);
+    return Uint53.fromString(gasInfo.gasUsed.toString()).toNumber();
   }
 
   /* istanbul ignore next */
@@ -529,5 +580,17 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   /* istanbul ignore next */
   public async getAllRewardsRecords(rewardsAddress: string): Promise<readonly RewardsRecord[]> {
     return await this.archwayQueryClient.getAllRewardsRecords(rewardsAddress);
+  }
+
+  /* istanbul ignore next */
+  public async simulateTx(
+    messages: readonly EncodeObject[],
+    memo: string | undefined,
+    signer: Pubkey,
+    sequence: number,
+    granter?: string,
+    payer?: string,
+  ): Promise<SimulateResponse> {
+    return await this.archwayQueryClient.simulateTx(messages, memo, signer, sequence, granter, payer);
   }
 }

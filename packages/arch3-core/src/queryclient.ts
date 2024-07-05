@@ -1,4 +1,7 @@
+import { Any } from '@archwayhq/arch3-proto/build/google/protobuf/any';
+import { Pubkey } from '@cosmjs/amino';
 import { setupWasmExtension, WasmExtension } from '@cosmjs/cosmwasm-stargate';
+import { EncodeObject } from '@cosmjs/proto-signing';
 import {
   AuthExtension,
   BankExtension,
@@ -7,12 +10,11 @@ import {
   QueryClient,
   setupAuthExtension,
   setupBankExtension,
-  setupTxExtension,
-  TxExtension
 } from '@cosmjs/stargate';
 import { fromSeconds, CometClient, toRfc3339WithNanoseconds } from '@cosmjs/tendermint-rpc';
+import { SimulateResponse } from 'cosmjs-types/cosmos/tx/v1beta1/service';
 
-import { RewardsExtension, setupRewardsExtension } from './modules';
+import { RewardsExtension, TxExtension, setupRewardsExtension, setupTxExtension } from './modules';
 import {
   BlockTracking,
   ContractMetadata,
@@ -20,7 +22,7 @@ import {
   EstimateTxFees,
   OutstandingRewards,
   RewardsPool,
-  RewardsRecord
+  RewardsRecord,
 } from './types';
 
 type ExtendedQueryClient = QueryClient & AuthExtension & BankExtension & TxExtension & WasmExtension & RewardsExtension;
@@ -86,6 +88,32 @@ export interface IArchwayQueryClient {
    * @see {@link IArchwayQueryClient.getContractMetadata}
    */
   getAllRewardsRecords(rewardsAddress: string): Promise<readonly RewardsRecord[]>;
+
+  /**
+   * Simulates the transaction.
+   * It uses `payer` and `granter` arguments during the simulation,
+   * to support Archway-specific `cw-fees` mechanics and include gas
+   * the `SudoMsg::CwGrant` message consumes into the estimation.
+   *
+   * @param messages - The messages to include in the transaction for simulating the gas wanted.
+   *                   The messages types should be registered in the {@link SigningArchwayClient.registry}
+   *                   when the client is instantiated.
+   * @param memo - Optional memo to add to the transaction.
+   * @param signer - Public key of the account to be used as the signer in the gas simulation.
+   *                 The signer must be able to sign with this address.
+   * @param sequence - Number of transactions sent from the signer.
+   * @param granter - The granter address that is used for paying with feegrants.
+   * @param payer - The fee payer address. The payer must have signed the transaction.
+   * @returns A {@link SimulateResponse}.
+   */
+  simulateTx(
+    messages: readonly EncodeObject[],
+    memo: string | undefined,
+    signer: Pubkey,
+    sequence: number,
+    granter?: string,
+    payer?: string,
+  ): Promise<SimulateResponse>;
 }
 
 class ArchwayQueryClientImpl implements IArchwayQueryClient {
@@ -118,7 +146,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
   public async getBlockRewardsTracking(): Promise<BlockTracking> {
     const client = this.forceGetQueryClient();
     const {
-      block: { txRewards: txRewardsResponse, inflationRewards }
+      block: { txRewards: txRewardsResponse, inflationRewards },
     } = await client.rewards.blockRewardsTracking();
 
     const txRewards = txRewardsResponse.map(txReward => {
@@ -142,13 +170,13 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
   public async getContractMetadata(contractAddress: string): Promise<ContractMetadata | undefined> {
     const client = this.forceGetQueryClient();
     const {
-      metadata: { ownerAddress, rewardsAddress }
+      metadata: { ownerAddress, rewardsAddress },
     } = await client.rewards.contractMetadata(contractAddress);
 
     return {
       contractAddress,
       ownerAddress,
-      rewardsAddress
+      rewardsAddress,
     };
   }
 
@@ -171,7 +199,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
     const client = this.forceGetQueryClient();
     const {
       estimatedFee,
-      gasUnitPrice: { amount: gasPriceAmount, denom: gasPriceDenom }
+      gasUnitPrice: { amount: gasPriceAmount, denom: gasPriceDenom },
     } = await client.rewards.estimateTxFees(gasLimit, contractAddress ?? '');
 
     // The RPC queries do not include the decimal precision fot types.Dec,
@@ -187,7 +215,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
       estimatedFee: {
         amount: estimatedFee,
         gas: gasLimit.toString(),
-      }
+      },
     };
   }
 
@@ -208,7 +236,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
 
     return {
       undistributedFunds,
-      treasuryFunds
+      treasuryFunds,
     };
   }
 
@@ -223,10 +251,7 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
       const { records, pagination } = await client.rewards.rewardsRecords(rewardsAddress, startAtKey);
 
       const rewardsRecords = records.map(record => {
-        const calculatedTime = fromSeconds(
-          Number(record.calculatedTime.seconds),
-          record.calculatedTime.nanos
-        );
+        const calculatedTime = fromSeconds(Number(record.calculatedTime.seconds), record.calculatedTime.nanos);
         return {
           id: Number(record.id),
           rewardsAddress: record.rewardsAddress,
@@ -242,6 +267,18 @@ class ArchwayQueryClientImpl implements IArchwayQueryClient {
     } while (startAtKey?.length !== 0);
 
     return allRewardsRecords;
+  }
+
+  public async simulateTx(
+    messages: readonly Any[],
+    memo: string | undefined,
+    signer: Pubkey,
+    sequence: number,
+    granter?: string,
+    payer?: string,
+  ): Promise<SimulateResponse> {
+    const client = this.forceGetQueryClient();
+    return await client.tx.simulate(messages, memo, signer, sequence, granter, payer);
   }
 }
 

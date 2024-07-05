@@ -1,5 +1,6 @@
-import { Coin } from '@cosmjs/amino';
+import { Coin, Pubkey } from '@cosmjs/amino';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { EncodeObject } from '@cosmjs/proto-signing';
 import {
   HttpEndpoint,
   RpcClient,
@@ -8,6 +9,7 @@ import {
   CometClient,
   connectComet,
 } from '@cosmjs/tendermint-rpc';
+import { SimulateResponse } from 'cosmjs-types/cosmos/tx/v1beta1/service';
 
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
 import {
@@ -98,6 +100,17 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
 
   public async getAllRewardsRecords(rewardsAddress: string): Promise<readonly RewardsRecord[]> {
     return await this.archwayQueryClient.getAllRewardsRecords(rewardsAddress);
+  }
+
+  public async simulateTx(
+    messages: readonly EncodeObject[],
+    memo: string | undefined,
+    signer: Pubkey,
+    sequence: number,
+    granter?: string,
+    payer?: string,
+  ): Promise<SimulateResponse> {
+    return await this.archwayQueryClient.simulateTx(messages, memo, signer, sequence, granter, payer);
   }
 
   /**

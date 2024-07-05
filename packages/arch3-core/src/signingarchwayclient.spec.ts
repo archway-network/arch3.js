@@ -1,6 +1,10 @@
 import { Coin, addCoins, coin, coins } from '@cosmjs/amino';
+import { MsgExecuteContractEncodeObject } from '@cosmjs/cosmwasm-stargate';
+import { toUtf8 } from '@cosmjs/encoding';
 import { AccountData, DirectSecp256k1HdWallet, decodeTxRaw, makeCosmoshubPath } from '@cosmjs/proto-signing';
 import { GasPrice, StdFee, calculateFee } from '@cosmjs/stargate';
+import { Fee } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
+import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 
 import { ContractMetadata, SigningArchwayClient, SigningArchwayClientOptions } from '.';
 
@@ -438,6 +442,75 @@ describe('SigningArchwayClient', () => {
         });
         expect(result.logs).not.toHaveLength(0);
         expect(result.events).not.toHaveLength(0);
+
+        client.disconnect();
+      });
+    });
+
+    describe('simulate', () => {
+      it('works', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+        const sender = accounts[2].address;
+        const contractAddress = contracts.voter.addresses[3];
+
+        /* eslint-disable camelcase, @typescript-eslint/naming-convention */
+        const msg = {
+          new_voting: {
+            name: 'test_voting_rewards',
+            vote_options: ['yes', 'no'],
+            duration: 10000000000,
+          }
+        };
+        const executeContractMsg: MsgExecuteContractEncodeObject = {
+          typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+          value: MsgExecuteContract.fromPartial({
+            sender,
+            contract: contractAddress,
+            msg: toUtf8(JSON.stringify(msg)),
+            funds: coins(10, archwayd.denom),
+          }),
+        };
+        const gasUsed = await client.simulate(sender, [executeContractMsg], '');
+        expect(gasUsed).toBeGreaterThanOrEqual(100_000);
+        expect(gasUsed).toBeLessThanOrEqual(200_000);
+
+        client.disconnect();
+      });
+
+      it('granter and payer are passed to the `simulate` call', async () => {
+        const [wallet, accounts] = await getWalletWithAccounts();
+        const client = await SigningArchwayClient.connectWithSigner(archwayd.endpoint, wallet, clientOptions);
+
+        // Setup spy function; spy on `Fee` constructor to be called within the `simulate` instead of `simulate` itself
+        // to be able to verify fee params used in the simulation tx instead of just number of gas
+        const feeSpy = jest.spyOn(Fee, 'fromPartial');
+
+        const sender = accounts[2].address;
+        const granter = accounts[4].address;
+        const payer = accounts[5].address;
+        const msgs = [];
+        const memo = '';
+
+        try {
+          await client.calculateFee(
+            sender,
+            msgs,
+            memo,
+            1.5,
+            granter,
+            payer,
+          );
+        } catch (e) {
+          // Don't panic even if failed, as we want to check the arguments used
+          // inside the simulation rather than the final result
+        }
+
+        expect(feeSpy).toHaveBeenCalledWith({
+          granter,
+          payer,
+        });
 
         client.disconnect();
       });

@@ -4,8 +4,10 @@ export {
   createRewardsAminoConverters,
   RewardsExtension,
   RewardsMsgEncoder,
+  TxExtension,
   rewardsTypes,
   setupRewardsExtension,
+  setupTxExtension,
 } from './modules';
 
 export * from './queryclient';

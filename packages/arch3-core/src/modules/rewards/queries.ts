@@ -7,7 +7,7 @@ import {
   QueryOutstandingRewardsResponse,
   QueryParamsResponse,
   QueryRewardsPoolResponse,
-  QueryRewardsRecordsResponse
+  QueryRewardsRecordsResponse,
 } from '@archwayhq/arch3-proto/build/archway/rewards/v1/query';
 import { createPagination, QueryClient } from '@cosmjs/stargate';
 
@@ -18,10 +18,13 @@ export interface RewardsExtension {
     readonly blockRewardsTracking: () => Promise<QueryBlockRewardsTrackingResponse>;
     readonly rewardsPool: () => Promise<QueryRewardsPoolResponse>;
     readonly estimateTxFees: (gasLimit: number, contractAddress: string) => Promise<QueryEstimateTxFeesResponse>;
-    readonly rewardsRecords: (rewardsAddress: string, paginationKey?: Uint8Array) => Promise<QueryRewardsRecordsResponse>;
+    readonly rewardsRecords: (
+      rewardsAddress: string,
+      paginationKey?: Uint8Array,
+    ) => Promise<QueryRewardsRecordsResponse>;
     readonly outstandingRewards: (rewardsAddress: string) => Promise<QueryOutstandingRewardsResponse>;
     readonly flatFee: (contractAddress: string) => Promise<QueryFlatFeeResponse>;
-  }
+  };
 }
 
 /**
@@ -49,6 +52,6 @@ export function setupRewardsExtension(base: QueryClient): RewardsExtension {
       }),
       outstandingRewards: (rewardsAddress: string) => queryService.outstandingRewards({ rewardsAddress }),
       flatFee: (contractAddress: string) => queryService.flatFee({ contractAddress }),
-    }
+    },
   };
 }
