@@ -20,8 +20,8 @@ export interface TxExtension {
       memo: string | undefined,
       signer: Pubkey,
       sequence: number,
-      granter: string,
-      payer: string,
+      granter?: string,
+      payer?: string,
     ) => Promise<SimulateResponse>;
   };
 }
