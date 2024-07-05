@@ -38,6 +38,7 @@ __metadata:
     "@archwayhq/arch3-proto": "workspace:^"
     "@cosmjs/amino": "npm:^0.32.2"
     "@cosmjs/cosmwasm-stargate": "npm:^0.32.2"
+    "@cosmjs/encoding": "npm:^0.32.2"
     "@cosmjs/math": "npm:^0.32.2"
     "@cosmjs/proto-signing": "npm:^0.32.2"
     "@cosmjs/stargate": "npm:^0.32.2"
