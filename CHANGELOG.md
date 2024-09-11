@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.7.2 (Unreleased)
+
+### Fixed
+
+#### **arch3-core**
+
+- make `connectToRpcClient` use 0.37.x version of Tendermint for both 0.37.x
+and 0.38.x RPC Clients as a workaround for a bug in batching requests in
+Archway V9 ([#121])
+
 ## v0.7.1 (2024-07-08)
 
 ### Added
