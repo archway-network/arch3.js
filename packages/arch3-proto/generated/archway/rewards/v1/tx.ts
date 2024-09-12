@@ -3,6 +3,7 @@ import { ContractMetadata, ContractMetadataAmino, Params, ParamsAmino } from "./
 import { Coin, CoinAmino } from "../../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet } from "../../../helpers";
+import { JsonSafe } from "../../../json-safe";
 /** MsgSetContractMetadata is the request for Msg.SetContractMetadata. */
 export interface MsgSetContractMetadata {
   /** sender_address is the msg sender address (bech32 encoded). */
@@ -266,7 +267,7 @@ export const MsgSetContractMetadata = {
       metadata: isSet(object.metadata) ? ContractMetadata.fromJSON(object.metadata) : undefined
     };
   },
-  toJSON(message: MsgSetContractMetadata): unknown {
+  toJSON(message: MsgSetContractMetadata): JsonSafe<MsgSetContractMetadata> {
     const obj: any = {};
     message.senderAddress !== undefined && (obj.senderAddress = message.senderAddress);
     message.metadata !== undefined && (obj.metadata = message.metadata ? ContractMetadata.toJSON(message.metadata) : undefined);
@@ -290,7 +291,7 @@ export const MsgSetContractMetadata = {
   },
   toAmino(message: MsgSetContractMetadata): MsgSetContractMetadataAmino {
     const obj: any = {};
-    obj.sender_address = message.senderAddress;
+    obj.sender_address = message.senderAddress === "" ? undefined : message.senderAddress;
     obj.metadata = message.metadata ? ContractMetadata.toAmino(message.metadata) : undefined;
     return obj;
   },
@@ -335,7 +336,7 @@ export const MsgSetContractMetadataResponse = {
   fromJSON(_: any): MsgSetContractMetadataResponse {
     return {};
   },
-  toJSON(_: MsgSetContractMetadataResponse): unknown {
+  toJSON(_: MsgSetContractMetadataResponse): JsonSafe<MsgSetContractMetadataResponse> {
     const obj: any = {};
     return obj;
   },
@@ -418,7 +419,7 @@ export const MsgWithdrawRewards = {
       recordIds: isSet(object.recordIds) ? MsgWithdrawRewards_RecordIDs.fromJSON(object.recordIds) : undefined
     };
   },
-  toJSON(message: MsgWithdrawRewards): unknown {
+  toJSON(message: MsgWithdrawRewards): JsonSafe<MsgWithdrawRewards> {
     const obj: any = {};
     message.rewardsAddress !== undefined && (obj.rewardsAddress = message.rewardsAddress);
     message.recordsLimit !== undefined && (obj.recordsLimit = message.recordsLimit ? MsgWithdrawRewards_RecordsLimit.toJSON(message.recordsLimit) : undefined);
@@ -447,7 +448,7 @@ export const MsgWithdrawRewards = {
   },
   toAmino(message: MsgWithdrawRewards): MsgWithdrawRewardsAmino {
     const obj: any = {};
-    obj.rewards_address = message.rewardsAddress;
+    obj.rewards_address = message.rewardsAddress === "" ? undefined : message.rewardsAddress;
     obj.records_limit = message.recordsLimit ? MsgWithdrawRewards_RecordsLimit.toAmino(message.recordsLimit) : undefined;
     obj.record_ids = message.recordIds ? MsgWithdrawRewards_RecordIDs.toAmino(message.recordIds) : undefined;
     return obj;
@@ -503,7 +504,7 @@ export const MsgWithdrawRewards_RecordsLimit = {
       limit: isSet(object.limit) ? BigInt(object.limit.toString()) : BigInt(0)
     };
   },
-  toJSON(message: MsgWithdrawRewards_RecordsLimit): unknown {
+  toJSON(message: MsgWithdrawRewards_RecordsLimit): JsonSafe<MsgWithdrawRewards_RecordsLimit> {
     const obj: any = {};
     message.limit !== undefined && (obj.limit = (message.limit || BigInt(0)).toString());
     return obj;
@@ -522,7 +523,7 @@ export const MsgWithdrawRewards_RecordsLimit = {
   },
   toAmino(message: MsgWithdrawRewards_RecordsLimit): MsgWithdrawRewards_RecordsLimitAmino {
     const obj: any = {};
-    obj.limit = message.limit ? message.limit.toString() : undefined;
+    obj.limit = message.limit !== BigInt(0) ? message.limit.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: MsgWithdrawRewards_RecordsLimitAminoMsg): MsgWithdrawRewards_RecordsLimit {
@@ -585,7 +586,7 @@ export const MsgWithdrawRewards_RecordIDs = {
       ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => BigInt(e.toString())) : []
     };
   },
-  toJSON(message: MsgWithdrawRewards_RecordIDs): unknown {
+  toJSON(message: MsgWithdrawRewards_RecordIDs): JsonSafe<MsgWithdrawRewards_RecordIDs> {
     const obj: any = {};
     if (message.ids) {
       obj.ids = message.ids.map(e => (e || BigInt(0)).toString());
@@ -609,7 +610,7 @@ export const MsgWithdrawRewards_RecordIDs = {
     if (message.ids) {
       obj.ids = message.ids.map(e => e.toString());
     } else {
-      obj.ids = [];
+      obj.ids = message.ids;
     }
     return obj;
   },
@@ -672,7 +673,7 @@ export const MsgWithdrawRewardsResponse = {
       totalRewards: Array.isArray(object?.totalRewards) ? object.totalRewards.map((e: any) => Coin.fromJSON(e)) : []
     };
   },
-  toJSON(message: MsgWithdrawRewardsResponse): unknown {
+  toJSON(message: MsgWithdrawRewardsResponse): JsonSafe<MsgWithdrawRewardsResponse> {
     const obj: any = {};
     message.recordsNum !== undefined && (obj.recordsNum = (message.recordsNum || BigInt(0)).toString());
     if (message.totalRewards) {
@@ -698,11 +699,11 @@ export const MsgWithdrawRewardsResponse = {
   },
   toAmino(message: MsgWithdrawRewardsResponse): MsgWithdrawRewardsResponseAmino {
     const obj: any = {};
-    obj.records_num = message.recordsNum ? message.recordsNum.toString() : undefined;
+    obj.records_num = message.recordsNum !== BigInt(0) ? message.recordsNum.toString() : undefined;
     if (message.totalRewards) {
       obj.total_rewards = message.totalRewards.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.total_rewards = [];
+      obj.total_rewards = message.totalRewards;
     }
     return obj;
   },
@@ -773,7 +774,7 @@ export const MsgSetFlatFee = {
       flatFeeAmount: isSet(object.flatFeeAmount) ? Coin.fromJSON(object.flatFeeAmount) : undefined
     };
   },
-  toJSON(message: MsgSetFlatFee): unknown {
+  toJSON(message: MsgSetFlatFee): JsonSafe<MsgSetFlatFee> {
     const obj: any = {};
     message.senderAddress !== undefined && (obj.senderAddress = message.senderAddress);
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
@@ -802,8 +803,8 @@ export const MsgSetFlatFee = {
   },
   toAmino(message: MsgSetFlatFee): MsgSetFlatFeeAmino {
     const obj: any = {};
-    obj.sender_address = message.senderAddress;
-    obj.contract_address = message.contractAddress;
+    obj.sender_address = message.senderAddress === "" ? undefined : message.senderAddress;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
     obj.flat_fee_amount = message.flatFeeAmount ? Coin.toAmino(message.flatFeeAmount) : undefined;
     return obj;
   },
@@ -848,7 +849,7 @@ export const MsgSetFlatFeeResponse = {
   fromJSON(_: any): MsgSetFlatFeeResponse {
     return {};
   },
-  toJSON(_: MsgSetFlatFeeResponse): unknown {
+  toJSON(_: MsgSetFlatFeeResponse): JsonSafe<MsgSetFlatFeeResponse> {
     const obj: any = {};
     return obj;
   },
@@ -923,7 +924,7 @@ export const MsgUpdateParams = {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined
     };
   },
-  toJSON(message: MsgUpdateParams): unknown {
+  toJSON(message: MsgUpdateParams): JsonSafe<MsgUpdateParams> {
     const obj: any = {};
     message.authority !== undefined && (obj.authority = message.authority);
     message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
@@ -947,7 +948,7 @@ export const MsgUpdateParams = {
   },
   toAmino(message: MsgUpdateParams): MsgUpdateParamsAmino {
     const obj: any = {};
-    obj.authority = message.authority;
+    obj.authority = message.authority === "" ? undefined : message.authority;
     obj.params = message.params ? Params.toAmino(message.params) : undefined;
     return obj;
   },
@@ -992,7 +993,7 @@ export const MsgUpdateParamsResponse = {
   fromJSON(_: any): MsgUpdateParamsResponse {
     return {};
   },
-  toJSON(_: MsgUpdateParamsResponse): unknown {
+  toJSON(_: MsgUpdateParamsResponse): JsonSafe<MsgUpdateParamsResponse> {
     const obj: any = {};
     return obj;
   },

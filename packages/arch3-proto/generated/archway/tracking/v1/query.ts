@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { BlockTracking, BlockTrackingAmino } from "./tracking";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { JsonSafe } from "../../../json-safe";
 import { isSet } from "../../../helpers";
 /** QueryBlockGasTrackingRequest is the request for Query.BlockGasTracking. */
 export interface QueryBlockGasTrackingRequest {}
@@ -55,7 +56,7 @@ export const QueryBlockGasTrackingRequest = {
   fromJSON(_: any): QueryBlockGasTrackingRequest {
     return {};
   },
-  toJSON(_: QueryBlockGasTrackingRequest): unknown {
+  toJSON(_: QueryBlockGasTrackingRequest): JsonSafe<QueryBlockGasTrackingRequest> {
     const obj: any = {};
     return obj;
   },
@@ -122,7 +123,7 @@ export const QueryBlockGasTrackingResponse = {
       block: isSet(object.block) ? BlockTracking.fromJSON(object.block) : undefined
     };
   },
-  toJSON(message: QueryBlockGasTrackingResponse): unknown {
+  toJSON(message: QueryBlockGasTrackingResponse): JsonSafe<QueryBlockGasTrackingResponse> {
     const obj: any = {};
     message.block !== undefined && (obj.block = message.block ? BlockTracking.toJSON(message.block) : undefined);
     return obj;

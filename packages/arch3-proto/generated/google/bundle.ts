@@ -1,11 +1,11 @@
 /* eslint-disable */
-import * as _13 from "./protobuf/descriptor";
-import * as _14 from "./protobuf/any";
-import * as _15 from "./protobuf/timestamp";
+import * as _34 from "./protobuf/descriptor";
+import * as _35 from "./protobuf/any";
+import * as _36 from "./protobuf/timestamp";
 export namespace google {
   export const protobuf = {
-    ..._13,
-    ..._14,
-    ..._15
+    ..._34,
+    ..._35,
+    ..._36
   };
 }

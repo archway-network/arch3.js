@@ -79,7 +79,7 @@ __metadata:
     "@cosmjs/proto-signing": "npm:^0.32.4"
     "@cosmjs/stargate": "npm:^0.32.4"
     "@cosmjs/tendermint-rpc": "npm:^0.32.4"
-    "@cosmology/telescope": "npm:^1.4.12"
+    "@cosmology/telescope": "npm:^1.8.3"
     "@types/jest": "npm:^29.5.7"
     "@types/node": "npm:^20.8.10"
     "@types/webgl2": "npm:^0.0.9"
@@ -95,8 +95,8 @@ __metadata:
     jest: "npm:^29.7.0"
     prettier: "npm:^3.0.3"
     prettier-eslint: "npm:^16.1.2"
-    protobufjs: "npm:^7.2.5"
-    regenerator-runtime: "npm:^0.14.0"
+    protobufjs: "npm:^7.4.0"
+    regenerator-runtime: "npm:^0.14.1"
     rimraf: "npm:^5.0.5"
     ts-jest: "npm:^29.1.1"
     ts-node: "npm:^10.9.1"
@@ -2071,38 +2071,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cosmology/ast@npm:^1.4.8":
-  version: 1.4.8
-  resolution: "@cosmology/ast@npm:1.4.8"
+"@cosmology/ast@npm:^1.8.1":
+  version: 1.8.1
+  resolution: "@cosmology/ast@npm:1.8.1"
   dependencies:
-    "@babel/parser": "npm:^7.23.6"
     "@babel/types": "npm:7.23.6"
-    "@cosmology/types": "npm:^1.4.2"
-    "@cosmology/utils": "npm:^1.4.2"
+    "@cosmology/types": "npm:^1.8.1"
+    "@cosmology/utils": "npm:^1.8.1"
     case: "npm:1.6.3"
     dotty: "npm:0.1.2"
-  checksum: 693da42a8c313dd1cb8eccac5d24012d78cd9cbdcec9f6f2bfe454bb292e1e88dc2fbb213591f683183175be45d19674a9dc7459fd5bd083f91768c6d19c318e
+  checksum: 54abd734d60c6bd2d41944be6712f8e18fda439a16ee249acd653fc4b9400c91f16e3947df5f925f11134deeecbd5779bebff8981b786752706d2e8a04ae4148
   languageName: node
   linkType: hard
 
-"@cosmology/proto-parser@npm:^1.4.4":
-  version: 1.4.4
-  resolution: "@cosmology/proto-parser@npm:1.4.4"
+"@cosmology/proto-parser@npm:^1.8.1":
+  version: 1.8.1
+  resolution: "@cosmology/proto-parser@npm:1.8.1"
   dependencies:
-    "@cosmology/protobufjs": "npm:6.11.6"
-    "@cosmology/types": "npm:^1.4.2"
-    "@cosmology/utils": "npm:^1.4.2"
+    "@cosmology/protobufjs": "npm:7.3.2"
+    "@cosmology/types": "npm:^1.8.1"
+    "@cosmology/utils": "npm:^1.8.1"
     dotty: "npm:0.1.2"
+    fast-json-patch: "npm:3.1.1"
     glob: "npm:8.0.3"
     minimatch: "npm:5.1.0"
     mkdirp: "npm:3.0.0"
-  checksum: 58c38573197c16f45aa0c58c875d938ffd9b498cfc318bf998cf6ce88d29d1c404dec266b5c67c75120d515ca304333b922006b395b12b352b238e9d695aef7b
+  checksum: 1ddd1d6fdfbef2ebb2af2c1aa7155c62a662dccb294995c313a007871de9aca1991d3be768f1fcb2540e0ff396c62d25fd479949356fe0117b2102ad3d4dcb3b
   languageName: node
   linkType: hard
 
-"@cosmology/protobufjs@npm:6.11.6":
-  version: 6.11.6
-  resolution: "@cosmology/protobufjs@npm:6.11.6"
+"@cosmology/protobufjs@npm:7.3.2":
+  version: 7.3.2
+  resolution: "@cosmology/protobufjs@npm:7.3.2"
   dependencies:
     "@protobufjs/aspromise": "npm:^1.1.2"
     "@protobufjs/base64": "npm:^1.1.2"
@@ -2114,29 +2114,26 @@ __metadata:
     "@protobufjs/path": "npm:^1.1.2"
     "@protobufjs/pool": "npm:^1.1.0"
     "@protobufjs/utf8": "npm:^1.1.0"
-    "@types/long": "npm:^4.0.1"
+    "@types/long": "npm:^5.0.0"
     "@types/node": "npm:>=13.7.0"
-    long: "npm:^4.0.0"
-  bin:
-    pbjs: bin/pbjs
-    pbts: bin/pbts
-  checksum: 893a1cd63df04852ddf37c5912f36ea1f5f7f60b7d81faa1403421d68c310c337103ddba5d595681128c8eb5119aea42fb0499ae1f1d20dc85df3f2953faa67d
+    long: "npm:^5.0.0"
+  checksum: 91cb5a8eb2436d8492f0f92951246f86815d171de8f749fb12e3e5980805bdd88e94148a683a95a061d42e07c1205cc285b4ea25a795547f836d80eb8d9032c4
   languageName: node
   linkType: hard
 
-"@cosmology/telescope@npm:^1.4.12":
-  version: 1.4.12
-  resolution: "@cosmology/telescope@npm:1.4.12"
+"@cosmology/telescope@npm:^1.8.3":
+  version: 1.8.3
+  resolution: "@cosmology/telescope@npm:1.8.3"
   dependencies:
     "@babel/generator": "npm:^7.23.6"
     "@babel/parser": "npm:^7.23.6"
     "@babel/traverse": "npm:7.23.6"
     "@babel/types": "npm:7.23.6"
-    "@cosmology/ast": "npm:^1.4.8"
-    "@cosmology/proto-parser": "npm:^1.4.4"
-    "@cosmology/types": "npm:^1.4.2"
-    "@cosmology/utils": "npm:^1.4.2"
-    "@cosmwasm/ts-codegen": "npm:0.34.0"
+    "@cosmology/ast": "npm:^1.8.1"
+    "@cosmology/proto-parser": "npm:^1.8.1"
+    "@cosmology/types": "npm:^1.8.1"
+    "@cosmology/utils": "npm:^1.8.1"
+    "@cosmwasm/ts-codegen": "npm:0.35.7"
     "@types/parse-package-name": "npm:0.1.0"
     case: "npm:1.6.3"
     dargs: "npm:7.0.0"
@@ -2151,35 +2148,36 @@ __metadata:
     mkdirp: "npm:3.0.0"
     parse-package-name: "npm:1.0.0"
     rimraf: "npm:5.0.0"
-    shelljs: "npm:0.8.5"
+    yaml: "npm:^2.3.4"
   bin:
     telescope: main/telescope.js
-  checksum: 540f55e7c7abbf9b5ab0fd42a43188772f84fde11aa9a811c8409f96fed4f412e193790d5b852ff6a55a715ff64ad8e0a7dece768890e3d7b42c4975cbd6876e
+  checksum: f0d153242315dcf6c201b4cc931c57314b9729a9f2508d220f46abe39f5ab87658a536ceacd29ac2cb5fb6ed5e98fa6a63836efe0c399505e3c5ee58bcab7d11
   languageName: node
   linkType: hard
 
-"@cosmology/types@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@cosmology/types@npm:1.4.2"
+"@cosmology/types@npm:^1.8.1":
+  version: 1.8.1
+  resolution: "@cosmology/types@npm:1.8.1"
   dependencies:
     case: "npm:1.6.3"
-  checksum: 9a3363373d2d622a844178162868bfc559d58770e8e927ce9d9cc21698cdaeae86d31e888680ad08162fa4a5be5a0b1bb614eee32d5522c52b13e7fcc03f2b46
+    fast-json-patch: "npm:3.1.1"
+  checksum: e10b43421420b8e49d8d85221535e9aa54754e0d3b7b719f5efdc188335c266bab3d7c4731ce2f0976c275b82e0c851584d80fad773ad1840e0ea706b73d791c
   languageName: node
   linkType: hard
 
-"@cosmology/utils@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@cosmology/utils@npm:1.4.2"
+"@cosmology/utils@npm:^1.8.1":
+  version: 1.8.1
+  resolution: "@cosmology/utils@npm:1.8.1"
   dependencies:
-    "@cosmology/types": "npm:^1.4.2"
+    "@cosmology/types": "npm:^1.8.1"
     dotty: "npm:0.1.2"
-  checksum: d51d1f62e6c0458081fbbf3833725e5f717d8bd3bd21ec7706df67763d141dc95cee473203ad580b592991774f67613982b6699775a396e5cdeff4629734fb70
+  checksum: 2cdb7dc67b63336493da35a03bba6a2b83f439a81c44ac0b81c5ce44c96578d7f187fb9f27ab4302a18cffe26c0ef3d056d8af41ff560609c197665cfa0e86cc
   languageName: node
   linkType: hard
 
-"@cosmwasm/ts-codegen@npm:0.34.0":
-  version: 0.34.0
-  resolution: "@cosmwasm/ts-codegen@npm:0.34.0"
+"@cosmwasm/ts-codegen@npm:0.35.7":
+  version: 0.35.7
+  resolution: "@cosmwasm/ts-codegen@npm:0.35.7"
   dependencies:
     "@babel/core": "npm:7.18.10"
     "@babel/generator": "npm:7.18.12"
@@ -2207,10 +2205,10 @@ __metadata:
     parse-package-name: "npm:1.0.0"
     rimraf: "npm:3.0.2"
     shelljs: "npm:0.8.5"
-    wasm-ast-types: "npm:^0.25.0"
+    wasm-ast-types: "npm:^0.26.4"
   bin:
     cosmwasm-ts-codegen: main/ts-codegen.js
-  checksum: 6bc4ba773448be52fdf4a39d7e7ead5443a571ae33d4f129a772db44c001efc068a7e542f308bd1de2f85ad7eb4264b8a51b211d6e613d2de8efb67a6d272888
+  checksum: a0bad6d3115d35286afb4df732318a25d4ce489132b77349edac459d848fa8dfdcb2dabb2d0ac45b7affe03cae73bdaae7c09eca2a7f6aa3e76930538dffe601
   languageName: node
   linkType: hard
 
@@ -3134,6 +3132,15 @@ __metadata:
   version: 4.0.2
   resolution: "@types/long@npm:4.0.2"
   checksum: 68afa05fb20949d88345876148a76f6ccff5433310e720db51ac5ca21cb8cc6714286dbe04713840ddbd25a8b56b7a23aa87d08472fabf06463a6f2ed4967707
+  languageName: node
+  linkType: hard
+
+"@types/long@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@types/long@npm:5.0.0"
+  dependencies:
+    long: "npm:*"
+  checksum: 1483b703bd6257cff1c9921cdc80e36f83985bed1f7bf9a64919e29df0038c3eb5acc82b70cd0cf15e4fdd639f79976eed5f7f9053e8db152b21b9e5d202845c
   languageName: node
   linkType: hard
 
@@ -5850,6 +5857,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-json-patch@npm:3.1.1":
+  version: 3.1.1
+  resolution: "fast-json-patch@npm:3.1.1"
+  checksum: 3e56304e1c95ad1862a50e5b3f557a74c65c0ff2ba5b15caab983b43e70e86ddbc5bc887e9f7064f0aacfd0f0435a29ab2f000fe463379e72b906486345e6671
+  languageName: node
+  linkType: hard
+
 "fast-json-stable-stringify@npm:2.x, fast-json-stable-stringify@npm:^2.0.0, fast-json-stable-stringify@npm:^2.1.0":
   version: 2.1.0
   resolution: "fast-json-stable-stringify@npm:2.1.0"
@@ -8119,17 +8133,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"long@npm:*, long@npm:^5.0.0, long@npm:^5.2.0, long@npm:^5.2.1":
+  version: 5.2.3
+  resolution: "long@npm:5.2.3"
+  checksum: 9167ec6947a825b827c30da169a7384eec6c0c9ec2f0b9c74da2e93d81159bbe39fb09c3f13dae9721d4b807ccfa09797a7dd1012f5d478e3e33ca3c78b608e6
+  languageName: node
+  linkType: hard
+
 "long@npm:^4.0.0":
   version: 4.0.0
   resolution: "long@npm:4.0.0"
   checksum: 8296e2ba7bab30f9cfabb81ebccff89c819af6a7a78b4bb5a70ea411aa764ee0532f7441381549dfa6a1a98d72abe9138bfcf99f4fa41238629849bc035b845b
-  languageName: node
-  linkType: hard
-
-"long@npm:^5.0.0, long@npm:^5.2.0, long@npm:^5.2.1":
-  version: 5.2.3
-  resolution: "long@npm:5.2.3"
-  checksum: 9167ec6947a825b827c30da169a7384eec6c0c9ec2f0b9c74da2e93d81159bbe39fb09c3f13dae9721d4b807ccfa09797a7dd1012f5d478e3e33ca3c78b608e6
   languageName: node
   linkType: hard
 
@@ -9213,9 +9227,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:^7.2.5":
-  version: 7.2.5
-  resolution: "protobufjs@npm:7.2.5"
+"protobufjs@npm:^7.4.0":
+  version: 7.4.0
+  resolution: "protobufjs@npm:7.4.0"
   dependencies:
     "@protobufjs/aspromise": "npm:^1.1.2"
     "@protobufjs/base64": "npm:^1.1.2"
@@ -9229,7 +9243,7 @@ __metadata:
     "@protobufjs/utf8": "npm:^1.1.0"
     "@types/node": "npm:>=13.7.0"
     long: "npm:^5.0.0"
-  checksum: 6c5aa62b61dff843f585f3acd9cb7a82d566de2dbf167a300b39afee91b04298c4b4aec61354b7c00308b40596f5f3f4b07d6246cfb4ee0abeaea25101033315
+  checksum: 408423506610f70858d7593632f4a6aa4f05796c90fd632be9b9252457c795acc71aa6d3b54bb7f48a890141728fee4ca3906723ccea6c202ad71f21b3879b8b
   languageName: node
   linkType: hard
 
@@ -9398,10 +9412,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "regenerator-runtime@npm:0.14.0"
-  checksum: 6c19495baefcf5fbb18a281b56a97f0197b5f219f42e571e80877f095320afac0bdb31dab8f8186858e6126950068c3f17a1226437881e3e70446ea66751897c
+"regenerator-runtime@npm:^0.14.1":
+  version: 0.14.1
+  resolution: "regenerator-runtime@npm:0.14.1"
+  checksum: 5db3161abb311eef8c45bcf6565f4f378f785900ed3945acf740a9888c792f75b98ecb77f0775f3bf95502ff423529d23e94f41d80c8256e8fa05ed4b07cf471
   languageName: node
   linkType: hard
 
@@ -10899,9 +10913,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wasm-ast-types@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "wasm-ast-types@npm:0.25.0"
+"wasm-ast-types@npm:^0.26.4":
+  version: 0.26.4
+  resolution: "wasm-ast-types@npm:0.26.4"
   dependencies:
     "@babel/runtime": "npm:^7.18.9"
     "@babel/types": "npm:7.18.10"
@@ -10909,7 +10923,7 @@ __metadata:
     ast-stringify: "npm:0.1.0"
     case: "npm:1.6.3"
     deepmerge: "npm:4.2.2"
-  checksum: b4bf95152c61281b9c1b1ca1edc8f69671217e1e7b0a1f5c1d1766ac34e172db3f4c40e9a0db2508a4b7988b0703ad987f9fafaab63104e256e30051e4cff90c
+  checksum: e4bf09ea97dbdc5c8aa8a6c4fb616add674a9993fd805a985188149e3f04d825c6ae9cabe1fee2d8bfb1cdcd95733cb582f1cfec6661e2292cef75dd565b6736
   languageName: node
   linkType: hard
 
@@ -11055,6 +11069,15 @@ __metadata:
   version: 2.3.3
   resolution: "yaml@npm:2.3.3"
   checksum: 3b1a974b9d3672c671d47099a41c0de77b7ff978d0849aa55a095587486e82cd072321d19f2b4c791a367f766310b5a82dff098839b0f4ddcbbbe477f82dfb07
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.3.4":
+  version: 2.5.1
+  resolution: "yaml@npm:2.5.1"
+  bin:
+    yaml: bin.mjs
+  checksum: 0eecb679db75ea6a989ad97715a9fa5d946972945aa6aa7d2175bca66c213b5564502ccb1cdd04b1bf816ee38b5c43e4e2fda3ff6f5e09da24dabb51ae92c57d
   languageName: node
   linkType: hard
 

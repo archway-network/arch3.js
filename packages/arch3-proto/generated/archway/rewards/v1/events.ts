@@ -3,6 +3,7 @@ import { ContractMetadata, ContractMetadataAmino } from "./rewards";
 import { Coin, CoinAmino, DecCoin, DecCoinAmino } from "../../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet } from "../../../helpers";
+import { JsonSafe } from "../../../json-safe";
 /**
  * ContractMetadataSetEvent is emitted when the contract metadata is created or
  * updated.
@@ -202,7 +203,7 @@ export const ContractMetadataSetEvent = {
       metadata: isSet(object.metadata) ? ContractMetadata.fromJSON(object.metadata) : undefined
     };
   },
-  toJSON(message: ContractMetadataSetEvent): unknown {
+  toJSON(message: ContractMetadataSetEvent): JsonSafe<ContractMetadataSetEvent> {
     const obj: any = {};
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     message.metadata !== undefined && (obj.metadata = message.metadata ? ContractMetadata.toJSON(message.metadata) : undefined);
@@ -226,7 +227,7 @@ export const ContractMetadataSetEvent = {
   },
   toAmino(message: ContractMetadataSetEvent): ContractMetadataSetEventAmino {
     const obj: any = {};
-    obj.contract_address = message.contractAddress;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
     obj.metadata = message.metadata ? ContractMetadata.toAmino(message.metadata) : undefined;
     return obj;
   },
@@ -313,7 +314,7 @@ export const ContractRewardCalculationEvent = {
       metadata: isSet(object.metadata) ? ContractMetadata.fromJSON(object.metadata) : undefined
     };
   },
-  toJSON(message: ContractRewardCalculationEvent): unknown {
+  toJSON(message: ContractRewardCalculationEvent): JsonSafe<ContractRewardCalculationEvent> {
     const obj: any = {};
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     message.gasConsumed !== undefined && (obj.gasConsumed = (message.gasConsumed || BigInt(0)).toString());
@@ -354,13 +355,13 @@ export const ContractRewardCalculationEvent = {
   },
   toAmino(message: ContractRewardCalculationEvent): ContractRewardCalculationEventAmino {
     const obj: any = {};
-    obj.contract_address = message.contractAddress;
-    obj.gas_consumed = message.gasConsumed ? message.gasConsumed.toString() : undefined;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
+    obj.gas_consumed = message.gasConsumed !== BigInt(0) ? message.gasConsumed.toString() : undefined;
     obj.inflation_rewards = message.inflationRewards ? Coin.toAmino(message.inflationRewards) : undefined;
     if (message.feeRebateRewards) {
       obj.fee_rebate_rewards = message.feeRebateRewards.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.fee_rebate_rewards = [];
+      obj.fee_rebate_rewards = message.feeRebateRewards;
     }
     obj.metadata = message.metadata ? ContractMetadata.toAmino(message.metadata) : undefined;
     return obj;
@@ -424,7 +425,7 @@ export const RewardsWithdrawEvent = {
       rewards: Array.isArray(object?.rewards) ? object.rewards.map((e: any) => Coin.fromJSON(e)) : []
     };
   },
-  toJSON(message: RewardsWithdrawEvent): unknown {
+  toJSON(message: RewardsWithdrawEvent): JsonSafe<RewardsWithdrawEvent> {
     const obj: any = {};
     message.rewardAddress !== undefined && (obj.rewardAddress = message.rewardAddress);
     if (message.rewards) {
@@ -450,11 +451,11 @@ export const RewardsWithdrawEvent = {
   },
   toAmino(message: RewardsWithdrawEvent): RewardsWithdrawEventAmino {
     const obj: any = {};
-    obj.reward_address = message.rewardAddress;
+    obj.reward_address = message.rewardAddress === "" ? undefined : message.rewardAddress;
     if (message.rewards) {
       obj.rewards = message.rewards.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.rewards = [];
+      obj.rewards = message.rewards;
     }
     return obj;
   },
@@ -509,7 +510,7 @@ export const MinConsensusFeeSetEvent = {
       fee: isSet(object.fee) ? DecCoin.fromJSON(object.fee) : undefined
     };
   },
-  toJSON(message: MinConsensusFeeSetEvent): unknown {
+  toJSON(message: MinConsensusFeeSetEvent): JsonSafe<MinConsensusFeeSetEvent> {
     const obj: any = {};
     message.fee !== undefined && (obj.fee = message.fee ? DecCoin.toJSON(message.fee) : undefined);
     return obj;
@@ -590,7 +591,7 @@ export const ContractFlatFeeSetEvent = {
       flatFee: isSet(object.flatFee) ? Coin.fromJSON(object.flatFee) : undefined
     };
   },
-  toJSON(message: ContractFlatFeeSetEvent): unknown {
+  toJSON(message: ContractFlatFeeSetEvent): JsonSafe<ContractFlatFeeSetEvent> {
     const obj: any = {};
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     message.flatFee !== undefined && (obj.flatFee = message.flatFee ? Coin.toJSON(message.flatFee) : undefined);
@@ -614,7 +615,7 @@ export const ContractFlatFeeSetEvent = {
   },
   toAmino(message: ContractFlatFeeSetEvent): ContractFlatFeeSetEventAmino {
     const obj: any = {};
-    obj.contract_address = message.contractAddress;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
     obj.flat_fee = message.flatFee ? Coin.toAmino(message.flatFee) : undefined;
     return obj;
   },
