@@ -21,7 +21,7 @@ import {
   RewardsPool,
   RewardsRecord
 } from './types';
-import { connectToRpcClient } from './utils';
+import { connectCometWithBatchClient } from './utils';
 
 /**
  * Extension to the {@link CosmWasmClient } with queries for Archway's modules.
@@ -57,9 +57,11 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
    *
    * @remarks This factory method doesn't support WebSocket endpoints.
    */
-  public static async connectWithBatchClient(endpoint: string | HttpEndpoint, options?: Partial<HttpBatchClientOptions>): Promise<ArchwayClient> {
-    const rpcClient: RpcClient = new HttpBatchClient(endpoint, options);
-    const cometBatchClient = await connectToRpcClient(rpcClient);
+  public static async connectWithBatchClient(
+    endpoint: string | HttpEndpoint,
+    options?: Partial<HttpBatchClientOptions>,
+  ): Promise<ArchwayClient> {
+    const cometBatchClient = await connectCometWithBatchClient(endpoint, options);
     return ArchwayClient.create(cometBatchClient);
   }
 
