@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.7.3 (Unreleased)
+
+### Fixed
+
+#### **arch3-core**
+
+- refactor `connectToRpcClient` into `connectCometWithBatchClient`, adding
+back support for using `Comet38Client` with 0.38.x RPC Clients ([#123])
+
 ## v0.7.2 (2024-09-11)
 
 ### Fixed

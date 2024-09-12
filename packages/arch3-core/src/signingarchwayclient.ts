@@ -35,7 +35,7 @@ import {
   RewardsPool,
   RewardsRecord,
 } from './types';
-import { connectToRpcClient } from './utils';
+import { connectCometWithBatchClient } from './utils';
 
 export interface SigningArchwayClientOptions extends SigningCosmWasmClientOptions {
   /**
@@ -187,8 +187,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     options?: SigningArchwayClientOptions,
     batchClientOptions?: Partial<HttpBatchClientOptions>,
   ): Promise<SigningArchwayClient> {
-    const rpcClient: RpcClient = new HttpBatchClient(endpoint, batchClientOptions);
-    const cometBatchClient = await connectToRpcClient(rpcClient);
+    const cometBatchClient = await connectCometWithBatchClient(endpoint, batchClientOptions);
     return SigningArchwayClient.createWithSigner(cometBatchClient, signer, options);
   }
 
