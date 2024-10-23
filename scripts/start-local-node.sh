@@ -29,7 +29,7 @@ function store-contract() {
   if [[ -z "${code_id}" ]]; then
     tx_result="$(archwayd-tx --from validator wasm store /"${wasm}")"
     tx_hash="$(jq -r '.txhash' <<<"${tx_result}")"
-    code_id="$(jq -r '.logs[].events[] | select(.type == "store_code") | .attributes[] | select(.key == "code_id") | .value' <<<"${tx_result}")"
+    code_id="$(jq -r '.events[] | select(.type == "store_code") | .attributes[] | select(.key == "code_id") | .value' <<<"${tx_result}")"
   fi
 
   jq --null-input \
@@ -95,7 +95,7 @@ function instantiate-contract() {
         "${salt}"
     )"
     tx_hash="$(jq -r '.txhash' <<<"${tx_result}")"
-    tx_contract_address="$(jq -r '.logs[].events[] | select(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") | .value' <<<"${tx_result}")"
+    tx_contract_address="$(jq -r '.events[] | select(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") | .value' <<<"${tx_result}")"
     [[ "${contract_address}" == "${tx_contract_address}" ]] || error "contract address mismatch: expected ${contract_address}, got ${tx_contract_address}"
   fi
 
@@ -206,7 +206,7 @@ done
 topic "Deploying voter contract"
 # Source: https://github.com/archway-network/archway/tree/main/contracts/go/voter
 
-denom="$(archwayd q staking params | jq -r '.bond_denom')"
+denom="$(archwayd q staking params | jq -r '.params.bond_denom')"
 dotenv-add DENOM "${denom}"
 
 action "storing"

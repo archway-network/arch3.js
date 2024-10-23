@@ -4,7 +4,7 @@
 # It will initialize the node if it's not configured yet.
 #
 
-set -eu
+set -eux
 
 ARCHWAY_HOME="${ARCHWAY_HOME:-$HOME/.archway}"
 
@@ -42,10 +42,10 @@ if [ ! -f "${GENESIS_FILE}" ]; then
   echo "Initializing the node ${MONIKER} on chain ${CHAIN_ID}..."
   archwayd init --chain-id "${CHAIN_ID}" "${MONIKER}" | jq .
 
-  archwayd config chain-id "${CHAIN_ID}"
-  archwayd config node "tcp://node:26657"
-  archwayd config keyring-backend test
-  archwayd config output json
+  archwayd config set client chain-id "${CHAIN_ID}"
+  archwayd config set client node "tcp://node:26657"
+  archwayd config set client keyring-backend test
+  archwayd config set client output json
 
   echo "Creating validator key..."
   echo "${VALIDATOR_MNEMONIC}" | archwayd keys add validator --recover

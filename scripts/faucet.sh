@@ -18,7 +18,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 source "${SCRIPT_DIR}/_shared.sh"
 
 amount="${2:-10}$(printf "%018d" 0)"
-denom="$(archwayd q staking params | jq -r '.bond_denom')"
+denom="$(archwayd q staking params | jq -r '.params.bond_denom')"
 
 echo "Requesting ${amount}${denom} for ${ADDRESS}..."
 
