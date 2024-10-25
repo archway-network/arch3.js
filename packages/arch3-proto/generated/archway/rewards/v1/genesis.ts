@@ -3,6 +3,7 @@ import { Params, ParamsAmino, ContractMetadata, ContractMetadataAmino, BlockRewa
 import { DecCoin, DecCoinAmino } from "../../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet } from "../../../helpers";
+import { JsonSafe } from "../../../json-safe";
 /** GenesisState defines the initial state of the tracking module. */
 export interface GenesisState {
   /** params defines all the module parameters. */
@@ -146,7 +147,7 @@ export const GenesisState = {
       flatFees: Array.isArray(object?.flatFees) ? object.flatFees.map((e: any) => FlatFee.fromJSON(e)) : []
     };
   },
-  toJSON(message: GenesisState): unknown {
+  toJSON(message: GenesisState): JsonSafe<GenesisState> {
     const obj: any = {};
     message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
     if (message.contractsMetadata) {
@@ -214,29 +215,29 @@ export const GenesisState = {
     if (message.contractsMetadata) {
       obj.contracts_metadata = message.contractsMetadata.map(e => e ? ContractMetadata.toAmino(e) : undefined);
     } else {
-      obj.contracts_metadata = [];
+      obj.contracts_metadata = message.contractsMetadata;
     }
     if (message.blockRewards) {
       obj.block_rewards = message.blockRewards.map(e => e ? BlockRewards.toAmino(e) : undefined);
     } else {
-      obj.block_rewards = [];
+      obj.block_rewards = message.blockRewards;
     }
     if (message.txRewards) {
       obj.tx_rewards = message.txRewards.map(e => e ? TxRewards.toAmino(e) : undefined);
     } else {
-      obj.tx_rewards = [];
+      obj.tx_rewards = message.txRewards;
     }
     obj.min_consensus_fee = message.minConsensusFee ? DecCoin.toAmino(message.minConsensusFee) : undefined;
-    obj.rewards_record_last_id = message.rewardsRecordLastId ? message.rewardsRecordLastId.toString() : undefined;
+    obj.rewards_record_last_id = message.rewardsRecordLastId !== BigInt(0) ? message.rewardsRecordLastId.toString() : undefined;
     if (message.rewardsRecords) {
       obj.rewards_records = message.rewardsRecords.map(e => e ? RewardsRecord.toAmino(e) : undefined);
     } else {
-      obj.rewards_records = [];
+      obj.rewards_records = message.rewardsRecords;
     }
     if (message.flatFees) {
       obj.flat_fees = message.flatFees.map(e => e ? FlatFee.toAmino(e) : undefined);
     } else {
-      obj.flat_fees = [];
+      obj.flat_fees = message.flatFees;
     }
     return obj;
   },

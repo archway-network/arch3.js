@@ -2,6 +2,7 @@
 import { TxInfo, TxInfoAmino, ContractOperationInfo, ContractOperationInfoAmino } from "./tracking";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet } from "../../../helpers";
+import { JsonSafe } from "../../../json-safe";
 /** GenesisState defines the initial state of the tracking module. */
 export interface GenesisState {
   /** tx_info_last_id defines the last unique ID for a TxInfo objs. */
@@ -97,7 +98,7 @@ export const GenesisState = {
       contractOpInfos: Array.isArray(object?.contractOpInfos) ? object.contractOpInfos.map((e: any) => ContractOperationInfo.fromJSON(e)) : []
     };
   },
-  toJSON(message: GenesisState): unknown {
+  toJSON(message: GenesisState): JsonSafe<GenesisState> {
     const obj: any = {};
     message.txInfoLastId !== undefined && (obj.txInfoLastId = (message.txInfoLastId || BigInt(0)).toString());
     if (message.txInfos) {
@@ -135,17 +136,17 @@ export const GenesisState = {
   },
   toAmino(message: GenesisState): GenesisStateAmino {
     const obj: any = {};
-    obj.tx_info_last_id = message.txInfoLastId ? message.txInfoLastId.toString() : undefined;
+    obj.tx_info_last_id = message.txInfoLastId !== BigInt(0) ? message.txInfoLastId.toString() : undefined;
     if (message.txInfos) {
       obj.tx_infos = message.txInfos.map(e => e ? TxInfo.toAmino(e) : undefined);
     } else {
-      obj.tx_infos = [];
+      obj.tx_infos = message.txInfos;
     }
-    obj.contract_op_info_last_id = message.contractOpInfoLastId ? message.contractOpInfoLastId.toString() : undefined;
+    obj.contract_op_info_last_id = message.contractOpInfoLastId !== BigInt(0) ? message.contractOpInfoLastId.toString() : undefined;
     if (message.contractOpInfos) {
       obj.contract_op_infos = message.contractOpInfos.map(e => e ? ContractOperationInfo.toAmino(e) : undefined);
     } else {
-      obj.contract_op_infos = [];
+      obj.contract_op_infos = message.contractOpInfos;
     }
     return obj;
   },

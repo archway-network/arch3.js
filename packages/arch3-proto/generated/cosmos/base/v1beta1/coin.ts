@@ -1,6 +1,8 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet } from "../../../helpers";
+import { JsonSafe } from "../../../json-safe";
+import { Decimal } from "@cosmjs/math";
 /**
  * Coin defines a token with a denomination and an amount.
  * 
@@ -57,7 +59,10 @@ export interface DecCoinAminoMsg {
   type: "cosmos-sdk/DecCoin";
   value: DecCoinAmino;
 }
-/** IntProto defines a Protobuf wrapper around an Int object. */
+/**
+ * IntProto defines a Protobuf wrapper around an Int object.
+ * Deprecated: Prefer to use math.Int directly. It supports binary Marshal and Unmarshal.
+ */
 export interface IntProto {
   int: string;
 }
@@ -65,7 +70,10 @@ export interface IntProtoProtoMsg {
   typeUrl: "/cosmos.base.v1beta1.IntProto";
   value: Uint8Array;
 }
-/** IntProto defines a Protobuf wrapper around an Int object. */
+/**
+ * IntProto defines a Protobuf wrapper around an Int object.
+ * Deprecated: Prefer to use math.Int directly. It supports binary Marshal and Unmarshal.
+ */
 export interface IntProtoAmino {
   int?: string;
 }
@@ -73,7 +81,10 @@ export interface IntProtoAminoMsg {
   type: "cosmos-sdk/IntProto";
   value: IntProtoAmino;
 }
-/** DecProto defines a Protobuf wrapper around a Dec object. */
+/**
+ * DecProto defines a Protobuf wrapper around a Dec object.
+ * Deprecated: Prefer to use math.LegacyDec directly. It supports binary Marshal and Unmarshal.
+ */
 export interface DecProto {
   dec: string;
 }
@@ -81,7 +92,10 @@ export interface DecProtoProtoMsg {
   typeUrl: "/cosmos.base.v1beta1.DecProto";
   value: Uint8Array;
 }
-/** DecProto defines a Protobuf wrapper around a Dec object. */
+/**
+ * DecProto defines a Protobuf wrapper around a Dec object.
+ * Deprecated: Prefer to use math.LegacyDec directly. It supports binary Marshal and Unmarshal.
+ */
 export interface DecProtoAmino {
   dec?: string;
 }
@@ -132,7 +146,7 @@ export const Coin = {
       amount: isSet(object.amount) ? String(object.amount) : ""
     };
   },
-  toJSON(message: Coin): unknown {
+  toJSON(message: Coin): JsonSafe<Coin> {
     const obj: any = {};
     message.denom !== undefined && (obj.denom = message.denom);
     message.amount !== undefined && (obj.amount = message.amount);
@@ -156,7 +170,7 @@ export const Coin = {
   },
   toAmino(message: Coin): CoinAmino {
     const obj: any = {};
-    obj.denom = message.denom;
+    obj.denom = message.denom === "" ? undefined : message.denom;
     obj.amount = message.amount ?? "";
     return obj;
   },
@@ -195,7 +209,7 @@ export const DecCoin = {
       writer.uint32(10).string(message.denom);
     }
     if (message.amount !== "") {
-      writer.uint32(18).string(message.amount);
+      writer.uint32(18).string(Decimal.fromUserInput(message.amount, 18).atomics);
     }
     return writer;
   },
@@ -210,7 +224,7 @@ export const DecCoin = {
           message.denom = reader.string();
           break;
         case 2:
-          message.amount = reader.string();
+          message.amount = Decimal.fromAtomics(reader.string(), 18).toString();
           break;
         default:
           reader.skipType(tag & 7);
@@ -225,7 +239,7 @@ export const DecCoin = {
       amount: isSet(object.amount) ? String(object.amount) : ""
     };
   },
-  toJSON(message: DecCoin): unknown {
+  toJSON(message: DecCoin): JsonSafe<DecCoin> {
     const obj: any = {};
     message.denom !== undefined && (obj.denom = message.denom);
     message.amount !== undefined && (obj.amount = message.amount);
@@ -249,8 +263,8 @@ export const DecCoin = {
   },
   toAmino(message: DecCoin): DecCoinAmino {
     const obj: any = {};
-    obj.denom = message.denom;
-    obj.amount = message.amount;
+    obj.denom = message.denom === "" ? undefined : message.denom;
+    obj.amount = message.amount === "" ? undefined : message.amount;
     return obj;
   },
   fromAminoMsg(object: DecCoinAminoMsg): DecCoin {
@@ -310,7 +324,7 @@ export const IntProto = {
       int: isSet(object.int) ? String(object.int) : ""
     };
   },
-  toJSON(message: IntProto): unknown {
+  toJSON(message: IntProto): JsonSafe<IntProto> {
     const obj: any = {};
     message.int !== undefined && (obj.int = message.int);
     return obj;
@@ -329,7 +343,7 @@ export const IntProto = {
   },
   toAmino(message: IntProto): IntProtoAmino {
     const obj: any = {};
-    obj.int = message.int;
+    obj.int = message.int === "" ? undefined : message.int;
     return obj;
   },
   fromAminoMsg(object: IntProtoAminoMsg): IntProto {
@@ -363,7 +377,7 @@ export const DecProto = {
   typeUrl: "/cosmos.base.v1beta1.DecProto",
   encode(message: DecProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.dec !== "") {
-      writer.uint32(10).string(message.dec);
+      writer.uint32(10).string(Decimal.fromUserInput(message.dec, 18).atomics);
     }
     return writer;
   },
@@ -375,7 +389,7 @@ export const DecProto = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.dec = reader.string();
+          message.dec = Decimal.fromAtomics(reader.string(), 18).toString();
           break;
         default:
           reader.skipType(tag & 7);
@@ -389,7 +403,7 @@ export const DecProto = {
       dec: isSet(object.dec) ? String(object.dec) : ""
     };
   },
-  toJSON(message: DecProto): unknown {
+  toJSON(message: DecProto): JsonSafe<DecProto> {
     const obj: any = {};
     message.dec !== undefined && (obj.dec = message.dec);
     return obj;
@@ -408,7 +422,7 @@ export const DecProto = {
   },
   toAmino(message: DecProto): DecProtoAmino {
     const obj: any = {};
-    obj.dec = message.dec;
+    obj.dec = message.dec === "" ? undefined : message.dec;
     return obj;
   },
   fromAminoMsg(object: DecProtoAminoMsg): DecProto {

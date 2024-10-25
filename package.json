@@ -71,12 +71,12 @@
     ]
   },
   "resolutions": {
-    "@cosmjs/amino": "^0.32.2",
-    "@cosmjs/cosmwasm-stargate": "^0.32.2",
-    "@cosmjs/math": "^0.32.2",
-    "@cosmjs/proto-signing": "^0.32.2",
-    "@cosmjs/stargate": "^0.32.2",
-    "@cosmjs/tendermint-rpc": "^0.32.2"
+    "@cosmjs/amino": "^0.32.4",
+    "@cosmjs/cosmwasm-stargate": "^0.32.4",
+    "@cosmjs/math": "^0.32.4",
+    "@cosmjs/proto-signing": "^0.32.4",
+    "@cosmjs/stargate": "^0.32.4",
+    "@cosmjs/tendermint-rpc": "^0.32.4"
   },
   "dependencies": {
     "@archwayhq/arch3-core": "workspace:^",

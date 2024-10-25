@@ -4,6 +4,7 @@ import { Timestamp } from "../../../google/protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { Decimal } from "@cosmjs/math";
 import { isSet, fromJsonTimestamp, fromTimestamp } from "../../../helpers";
+import { JsonSafe } from "../../../json-safe";
 /** Params defines the module parameters. */
 export interface Params {
   /**
@@ -319,7 +320,7 @@ export const Params = {
       minPriceOfGas: isSet(object.minPriceOfGas) ? DecCoin.fromJSON(object.minPriceOfGas) : undefined
     };
   },
-  toJSON(message: Params): unknown {
+  toJSON(message: Params): JsonSafe<Params> {
     const obj: any = {};
     message.inflationRewardsRatio !== undefined && (obj.inflationRewardsRatio = message.inflationRewardsRatio);
     message.txFeeRebateRatio !== undefined && (obj.txFeeRebateRatio = message.txFeeRebateRatio);
@@ -353,9 +354,9 @@ export const Params = {
   },
   toAmino(message: Params): ParamsAmino {
     const obj: any = {};
-    obj.inflation_rewards_ratio = message.inflationRewardsRatio;
-    obj.tx_fee_rebate_ratio = message.txFeeRebateRatio;
-    obj.max_withdraw_records = message.maxWithdrawRecords ? message.maxWithdrawRecords.toString() : undefined;
+    obj.inflation_rewards_ratio = message.inflationRewardsRatio === "" ? undefined : message.inflationRewardsRatio;
+    obj.tx_fee_rebate_ratio = message.txFeeRebateRatio === "" ? undefined : message.txFeeRebateRatio;
+    obj.max_withdraw_records = message.maxWithdrawRecords !== BigInt(0) ? message.maxWithdrawRecords.toString() : undefined;
     obj.min_price_of_gas = message.minPriceOfGas ? DecCoin.toAmino(message.minPriceOfGas) : undefined;
     return obj;
   },
@@ -434,7 +435,7 @@ export const ContractMetadata = {
       withdrawToWallet: isSet(object.withdrawToWallet) ? Boolean(object.withdrawToWallet) : false
     };
   },
-  toJSON(message: ContractMetadata): unknown {
+  toJSON(message: ContractMetadata): JsonSafe<ContractMetadata> {
     const obj: any = {};
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     message.ownerAddress !== undefined && (obj.ownerAddress = message.ownerAddress);
@@ -468,10 +469,10 @@ export const ContractMetadata = {
   },
   toAmino(message: ContractMetadata): ContractMetadataAmino {
     const obj: any = {};
-    obj.contract_address = message.contractAddress;
-    obj.owner_address = message.ownerAddress;
-    obj.rewards_address = message.rewardsAddress;
-    obj.withdraw_to_wallet = message.withdrawToWallet;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
+    obj.owner_address = message.ownerAddress === "" ? undefined : message.ownerAddress;
+    obj.rewards_address = message.rewardsAddress === "" ? undefined : message.rewardsAddress;
+    obj.withdraw_to_wallet = message.withdrawToWallet === false ? undefined : message.withdrawToWallet;
     return obj;
   },
   fromAminoMsg(object: ContractMetadataAminoMsg): ContractMetadata {
@@ -541,7 +542,7 @@ export const BlockRewards = {
       maxGas: isSet(object.maxGas) ? BigInt(object.maxGas.toString()) : BigInt(0)
     };
   },
-  toJSON(message: BlockRewards): unknown {
+  toJSON(message: BlockRewards): JsonSafe<BlockRewards> {
     const obj: any = {};
     message.height !== undefined && (obj.height = (message.height || BigInt(0)).toString());
     message.inflationRewards !== undefined && (obj.inflationRewards = message.inflationRewards ? Coin.toJSON(message.inflationRewards) : undefined);
@@ -570,9 +571,9 @@ export const BlockRewards = {
   },
   toAmino(message: BlockRewards): BlockRewardsAmino {
     const obj: any = {};
-    obj.height = message.height ? message.height.toString() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height.toString() : undefined;
     obj.inflation_rewards = message.inflationRewards ? Coin.toAmino(message.inflationRewards) : undefined;
-    obj.max_gas = message.maxGas ? message.maxGas.toString() : undefined;
+    obj.max_gas = message.maxGas !== BigInt(0) ? message.maxGas.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: BlockRewardsAminoMsg): BlockRewards {
@@ -642,7 +643,7 @@ export const TxRewards = {
       feeRewards: Array.isArray(object?.feeRewards) ? object.feeRewards.map((e: any) => Coin.fromJSON(e)) : []
     };
   },
-  toJSON(message: TxRewards): unknown {
+  toJSON(message: TxRewards): JsonSafe<TxRewards> {
     const obj: any = {};
     message.txId !== undefined && (obj.txId = (message.txId || BigInt(0)).toString());
     message.height !== undefined && (obj.height = (message.height || BigInt(0)).toString());
@@ -673,12 +674,12 @@ export const TxRewards = {
   },
   toAmino(message: TxRewards): TxRewardsAmino {
     const obj: any = {};
-    obj.tx_id = message.txId ? message.txId.toString() : undefined;
-    obj.height = message.height ? message.height.toString() : undefined;
+    obj.tx_id = message.txId !== BigInt(0) ? message.txId.toString() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height.toString() : undefined;
     if (message.feeRewards) {
       obj.fee_rewards = message.feeRewards.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.fee_rewards = [];
+      obj.fee_rewards = message.feeRewards;
     }
     return obj;
   },
@@ -765,7 +766,7 @@ export const RewardsRecord = {
       calculatedTime: isSet(object.calculatedTime) ? fromJsonTimestamp(object.calculatedTime) : undefined
     };
   },
-  toJSON(message: RewardsRecord): unknown {
+  toJSON(message: RewardsRecord): JsonSafe<RewardsRecord> {
     const obj: any = {};
     message.id !== undefined && (obj.id = (message.id || BigInt(0)).toString());
     message.rewardsAddress !== undefined && (obj.rewardsAddress = message.rewardsAddress);
@@ -806,14 +807,14 @@ export const RewardsRecord = {
   },
   toAmino(message: RewardsRecord): RewardsRecordAmino {
     const obj: any = {};
-    obj.id = message.id ? message.id.toString() : undefined;
-    obj.rewards_address = message.rewardsAddress;
+    obj.id = message.id !== BigInt(0) ? message.id.toString() : undefined;
+    obj.rewards_address = message.rewardsAddress === "" ? undefined : message.rewardsAddress;
     if (message.rewards) {
       obj.rewards = message.rewards.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.rewards = [];
+      obj.rewards = message.rewards;
     }
-    obj.calculated_height = message.calculatedHeight ? message.calculatedHeight.toString() : undefined;
+    obj.calculated_height = message.calculatedHeight !== BigInt(0) ? message.calculatedHeight.toString() : undefined;
     obj.calculated_time = message.calculatedTime ? Timestamp.toAmino(message.calculatedTime) : undefined;
     return obj;
   },
@@ -876,7 +877,7 @@ export const FlatFee = {
       flatFee: isSet(object.flatFee) ? Coin.fromJSON(object.flatFee) : undefined
     };
   },
-  toJSON(message: FlatFee): unknown {
+  toJSON(message: FlatFee): JsonSafe<FlatFee> {
     const obj: any = {};
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     message.flatFee !== undefined && (obj.flatFee = message.flatFee ? Coin.toJSON(message.flatFee) : undefined);
@@ -900,7 +901,7 @@ export const FlatFee = {
   },
   toAmino(message: FlatFee): FlatFeeAmino {
     const obj: any = {};
-    obj.contract_address = message.contractAddress;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
     obj.flat_fee = message.flatFee ? Coin.toAmino(message.flatFee) : undefined;
     return obj;
   },

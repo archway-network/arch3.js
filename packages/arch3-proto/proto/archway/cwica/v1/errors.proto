@@ -1,0 +1,16 @@
+syntax = "proto3";
+package archway.cwica.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/archway-network/archway/x/cwica/types";
+
+// ModuleErrors defines the module level error codes
+enum ModuleErrors {
+  // ERR_UNKNOWN is the default error code
+  ERR_UNKNOWN = 0;
+  // ERR_PACKET_TIMEOUT is the error code for packet timeout
+  ERR_PACKET_TIMEOUT = 1;
+  // ERR_EXEC_FAILURE is the error code for tx execution failure
+  ERR_EXEC_FAILURE = 2;
+}

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { isSet } from "../../helpers";
+import { JsonSafe } from "../../json-safe";
 /**
  * Defines the HTTP configuration for an API service. It contains a list of
  * [HttpRule][google.api.HttpRule], each specifying the mapping of an RPC method
@@ -780,7 +781,7 @@ export const Http = {
       fullyDecodeReservedExpansion: isSet(object.fullyDecodeReservedExpansion) ? Boolean(object.fullyDecodeReservedExpansion) : false
     };
   },
-  toJSON(message: Http): unknown {
+  toJSON(message: Http): JsonSafe<Http> {
     const obj: any = {};
     if (message.rules) {
       obj.rules = message.rules.map(e => e ? HttpRule.toJSON(e) : undefined);
@@ -809,9 +810,9 @@ export const Http = {
     if (message.rules) {
       obj.rules = message.rules.map(e => e ? HttpRule.toAmino(e) : undefined);
     } else {
-      obj.rules = [];
+      obj.rules = message.rules;
     }
-    obj.fully_decode_reserved_expansion = message.fullyDecodeReservedExpansion;
+    obj.fully_decode_reserved_expansion = message.fullyDecodeReservedExpansion === false ? undefined : message.fullyDecodeReservedExpansion;
     return obj;
   },
   fromAminoMsg(object: HttpAminoMsg): Http {
@@ -937,7 +938,7 @@ export const HttpRule = {
       additionalBindings: Array.isArray(object?.additionalBindings) ? object.additionalBindings.map((e: any) => HttpRule.fromJSON(e)) : []
     };
   },
-  toJSON(message: HttpRule): unknown {
+  toJSON(message: HttpRule): JsonSafe<HttpRule> {
     const obj: any = {};
     message.selector !== undefined && (obj.selector = message.selector);
     message.get !== undefined && (obj.get = message.get);
@@ -1003,19 +1004,19 @@ export const HttpRule = {
   },
   toAmino(message: HttpRule): HttpRuleAmino {
     const obj: any = {};
-    obj.selector = message.selector;
-    obj.get = message.get;
-    obj.put = message.put;
-    obj.post = message.post;
-    obj.delete = message.delete;
-    obj.patch = message.patch;
+    obj.selector = message.selector === "" ? undefined : message.selector;
+    obj.get = message.get === null ? undefined : message.get;
+    obj.put = message.put === null ? undefined : message.put;
+    obj.post = message.post === null ? undefined : message.post;
+    obj.delete = message.delete === null ? undefined : message.delete;
+    obj.patch = message.patch === null ? undefined : message.patch;
     obj.custom = message.custom ? CustomHttpPattern.toAmino(message.custom) : undefined;
-    obj.body = message.body;
-    obj.response_body = message.responseBody;
+    obj.body = message.body === "" ? undefined : message.body;
+    obj.response_body = message.responseBody === "" ? undefined : message.responseBody;
     if (message.additionalBindings) {
       obj.additional_bindings = message.additionalBindings.map(e => e ? HttpRule.toAmino(e) : undefined);
     } else {
-      obj.additional_bindings = [];
+      obj.additional_bindings = message.additionalBindings;
     }
     return obj;
   },
@@ -1078,7 +1079,7 @@ export const CustomHttpPattern = {
       path: isSet(object.path) ? String(object.path) : ""
     };
   },
-  toJSON(message: CustomHttpPattern): unknown {
+  toJSON(message: CustomHttpPattern): JsonSafe<CustomHttpPattern> {
     const obj: any = {};
     message.kind !== undefined && (obj.kind = message.kind);
     message.path !== undefined && (obj.path = message.path);
@@ -1102,8 +1103,8 @@ export const CustomHttpPattern = {
   },
   toAmino(message: CustomHttpPattern): CustomHttpPatternAmino {
     const obj: any = {};
-    obj.kind = message.kind;
-    obj.path = message.path;
+    obj.kind = message.kind === "" ? undefined : message.kind;
+    obj.path = message.path === "" ? undefined : message.path;
     return obj;
   },
   fromAminoMsg(object: CustomHttpPatternAminoMsg): CustomHttpPattern {

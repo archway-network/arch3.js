@@ -3,6 +3,7 @@ import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "
 import { Params, ParamsAmino, ContractMetadata, ContractMetadataAmino, BlockRewards, BlockRewardsAmino, TxRewards, TxRewardsAmino, RewardsRecord, RewardsRecordAmino } from "./rewards";
 import { Coin, CoinAmino, DecCoin, DecCoinAmino } from "../../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { JsonSafe } from "../../../json-safe";
 import { isSet } from "../../../helpers";
 /** QueryParamsRequest is the request for Query.Params. */
 export interface QueryParamsRequest {}
@@ -383,7 +384,7 @@ export const QueryParamsRequest = {
   fromJSON(_: any): QueryParamsRequest {
     return {};
   },
-  toJSON(_: QueryParamsRequest): unknown {
+  toJSON(_: QueryParamsRequest): JsonSafe<QueryParamsRequest> {
     const obj: any = {};
     return obj;
   },
@@ -450,7 +451,7 @@ export const QueryParamsResponse = {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined
     };
   },
-  toJSON(message: QueryParamsResponse): unknown {
+  toJSON(message: QueryParamsResponse): JsonSafe<QueryParamsResponse> {
     const obj: any = {};
     message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
     return obj;
@@ -523,7 +524,7 @@ export const QueryContractMetadataRequest = {
       contractAddress: isSet(object.contractAddress) ? String(object.contractAddress) : ""
     };
   },
-  toJSON(message: QueryContractMetadataRequest): unknown {
+  toJSON(message: QueryContractMetadataRequest): JsonSafe<QueryContractMetadataRequest> {
     const obj: any = {};
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     return obj;
@@ -542,7 +543,7 @@ export const QueryContractMetadataRequest = {
   },
   toAmino(message: QueryContractMetadataRequest): QueryContractMetadataRequestAmino {
     const obj: any = {};
-    obj.contract_address = message.contractAddress;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
     return obj;
   },
   fromAminoMsg(object: QueryContractMetadataRequestAminoMsg): QueryContractMetadataRequest {
@@ -596,7 +597,7 @@ export const QueryContractMetadataResponse = {
       metadata: isSet(object.metadata) ? ContractMetadata.fromJSON(object.metadata) : undefined
     };
   },
-  toJSON(message: QueryContractMetadataResponse): unknown {
+  toJSON(message: QueryContractMetadataResponse): JsonSafe<QueryContractMetadataResponse> {
     const obj: any = {};
     message.metadata !== undefined && (obj.metadata = message.metadata ? ContractMetadata.toJSON(message.metadata) : undefined);
     return obj;
@@ -659,7 +660,7 @@ export const QueryBlockRewardsTrackingRequest = {
   fromJSON(_: any): QueryBlockRewardsTrackingRequest {
     return {};
   },
-  toJSON(_: QueryBlockRewardsTrackingRequest): unknown {
+  toJSON(_: QueryBlockRewardsTrackingRequest): JsonSafe<QueryBlockRewardsTrackingRequest> {
     const obj: any = {};
     return obj;
   },
@@ -726,7 +727,7 @@ export const QueryBlockRewardsTrackingResponse = {
       block: isSet(object.block) ? BlockTracking.fromJSON(object.block) : undefined
     };
   },
-  toJSON(message: QueryBlockRewardsTrackingResponse): unknown {
+  toJSON(message: QueryBlockRewardsTrackingResponse): JsonSafe<QueryBlockRewardsTrackingResponse> {
     const obj: any = {};
     message.block !== undefined && (obj.block = message.block ? BlockTracking.toJSON(message.block) : undefined);
     return obj;
@@ -789,7 +790,7 @@ export const QueryRewardsPoolRequest = {
   fromJSON(_: any): QueryRewardsPoolRequest {
     return {};
   },
-  toJSON(_: QueryRewardsPoolRequest): unknown {
+  toJSON(_: QueryRewardsPoolRequest): JsonSafe<QueryRewardsPoolRequest> {
     const obj: any = {};
     return obj;
   },
@@ -864,7 +865,7 @@ export const QueryRewardsPoolResponse = {
       treasuryFunds: Array.isArray(object?.treasuryFunds) ? object.treasuryFunds.map((e: any) => Coin.fromJSON(e)) : []
     };
   },
-  toJSON(message: QueryRewardsPoolResponse): unknown {
+  toJSON(message: QueryRewardsPoolResponse): JsonSafe<QueryRewardsPoolResponse> {
     const obj: any = {};
     if (message.undistributedFunds) {
       obj.undistributedFunds = message.undistributedFunds.map(e => e ? Coin.toJSON(e) : undefined);
@@ -895,12 +896,12 @@ export const QueryRewardsPoolResponse = {
     if (message.undistributedFunds) {
       obj.undistributed_funds = message.undistributedFunds.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.undistributed_funds = [];
+      obj.undistributed_funds = message.undistributedFunds;
     }
     if (message.treasuryFunds) {
       obj.treasury_funds = message.treasuryFunds.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.treasury_funds = [];
+      obj.treasury_funds = message.treasuryFunds;
     }
     return obj;
   },
@@ -963,7 +964,7 @@ export const QueryEstimateTxFeesRequest = {
       contractAddress: isSet(object.contractAddress) ? String(object.contractAddress) : ""
     };
   },
-  toJSON(message: QueryEstimateTxFeesRequest): unknown {
+  toJSON(message: QueryEstimateTxFeesRequest): JsonSafe<QueryEstimateTxFeesRequest> {
     const obj: any = {};
     message.gasLimit !== undefined && (obj.gasLimit = (message.gasLimit || BigInt(0)).toString());
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
@@ -987,8 +988,8 @@ export const QueryEstimateTxFeesRequest = {
   },
   toAmino(message: QueryEstimateTxFeesRequest): QueryEstimateTxFeesRequestAmino {
     const obj: any = {};
-    obj.gas_limit = message.gasLimit ? message.gasLimit.toString() : undefined;
-    obj.contract_address = message.contractAddress;
+    obj.gas_limit = message.gasLimit !== BigInt(0) ? message.gasLimit.toString() : undefined;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
     return obj;
   },
   fromAminoMsg(object: QueryEstimateTxFeesRequestAminoMsg): QueryEstimateTxFeesRequest {
@@ -1050,7 +1051,7 @@ export const QueryEstimateTxFeesResponse = {
       estimatedFee: Array.isArray(object?.estimatedFee) ? object.estimatedFee.map((e: any) => Coin.fromJSON(e)) : []
     };
   },
-  toJSON(message: QueryEstimateTxFeesResponse): unknown {
+  toJSON(message: QueryEstimateTxFeesResponse): JsonSafe<QueryEstimateTxFeesResponse> {
     const obj: any = {};
     message.gasUnitPrice !== undefined && (obj.gasUnitPrice = message.gasUnitPrice ? DecCoin.toJSON(message.gasUnitPrice) : undefined);
     if (message.estimatedFee) {
@@ -1080,7 +1081,7 @@ export const QueryEstimateTxFeesResponse = {
     if (message.estimatedFee) {
       obj.estimated_fee = message.estimatedFee.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.estimated_fee = [];
+      obj.estimated_fee = message.estimatedFee;
     }
     return obj;
   },
@@ -1143,7 +1144,7 @@ export const BlockTracking = {
       txRewards: Array.isArray(object?.txRewards) ? object.txRewards.map((e: any) => TxRewards.fromJSON(e)) : []
     };
   },
-  toJSON(message: BlockTracking): unknown {
+  toJSON(message: BlockTracking): JsonSafe<BlockTracking> {
     const obj: any = {};
     message.inflationRewards !== undefined && (obj.inflationRewards = message.inflationRewards ? BlockRewards.toJSON(message.inflationRewards) : undefined);
     if (message.txRewards) {
@@ -1173,7 +1174,7 @@ export const BlockTracking = {
     if (message.txRewards) {
       obj.tx_rewards = message.txRewards.map(e => e ? TxRewards.toAmino(e) : undefined);
     } else {
-      obj.tx_rewards = [];
+      obj.tx_rewards = message.txRewards;
     }
     return obj;
   },
@@ -1236,7 +1237,7 @@ export const QueryRewardsRecordsRequest = {
       pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined
     };
   },
-  toJSON(message: QueryRewardsRecordsRequest): unknown {
+  toJSON(message: QueryRewardsRecordsRequest): JsonSafe<QueryRewardsRecordsRequest> {
     const obj: any = {};
     message.rewardsAddress !== undefined && (obj.rewardsAddress = message.rewardsAddress);
     message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
@@ -1260,7 +1261,7 @@ export const QueryRewardsRecordsRequest = {
   },
   toAmino(message: QueryRewardsRecordsRequest): QueryRewardsRecordsRequestAmino {
     const obj: any = {};
-    obj.rewards_address = message.rewardsAddress;
+    obj.rewards_address = message.rewardsAddress === "" ? undefined : message.rewardsAddress;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
   },
@@ -1323,7 +1324,7 @@ export const QueryRewardsRecordsResponse = {
       pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined
     };
   },
-  toJSON(message: QueryRewardsRecordsResponse): unknown {
+  toJSON(message: QueryRewardsRecordsResponse): JsonSafe<QueryRewardsRecordsResponse> {
     const obj: any = {};
     if (message.records) {
       obj.records = message.records.map(e => e ? RewardsRecord.toJSON(e) : undefined);
@@ -1352,7 +1353,7 @@ export const QueryRewardsRecordsResponse = {
     if (message.records) {
       obj.records = message.records.map(e => e ? RewardsRecord.toAmino(e) : undefined);
     } else {
-      obj.records = [];
+      obj.records = message.records;
     }
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
     return obj;
@@ -1408,7 +1409,7 @@ export const QueryOutstandingRewardsRequest = {
       rewardsAddress: isSet(object.rewardsAddress) ? String(object.rewardsAddress) : ""
     };
   },
-  toJSON(message: QueryOutstandingRewardsRequest): unknown {
+  toJSON(message: QueryOutstandingRewardsRequest): JsonSafe<QueryOutstandingRewardsRequest> {
     const obj: any = {};
     message.rewardsAddress !== undefined && (obj.rewardsAddress = message.rewardsAddress);
     return obj;
@@ -1427,7 +1428,7 @@ export const QueryOutstandingRewardsRequest = {
   },
   toAmino(message: QueryOutstandingRewardsRequest): QueryOutstandingRewardsRequestAmino {
     const obj: any = {};
-    obj.rewards_address = message.rewardsAddress;
+    obj.rewards_address = message.rewardsAddress === "" ? undefined : message.rewardsAddress;
     return obj;
   },
   fromAminoMsg(object: QueryOutstandingRewardsRequestAminoMsg): QueryOutstandingRewardsRequest {
@@ -1489,7 +1490,7 @@ export const QueryOutstandingRewardsResponse = {
       recordsNum: isSet(object.recordsNum) ? BigInt(object.recordsNum.toString()) : BigInt(0)
     };
   },
-  toJSON(message: QueryOutstandingRewardsResponse): unknown {
+  toJSON(message: QueryOutstandingRewardsResponse): JsonSafe<QueryOutstandingRewardsResponse> {
     const obj: any = {};
     if (message.totalRewards) {
       obj.totalRewards = message.totalRewards.map(e => e ? Coin.toJSON(e) : undefined);
@@ -1518,9 +1519,9 @@ export const QueryOutstandingRewardsResponse = {
     if (message.totalRewards) {
       obj.total_rewards = message.totalRewards.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
-      obj.total_rewards = [];
+      obj.total_rewards = message.totalRewards;
     }
-    obj.records_num = message.recordsNum ? message.recordsNum.toString() : undefined;
+    obj.records_num = message.recordsNum !== BigInt(0) ? message.recordsNum.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: QueryOutstandingRewardsResponseAminoMsg): QueryOutstandingRewardsResponse {
@@ -1574,7 +1575,7 @@ export const QueryFlatFeeRequest = {
       contractAddress: isSet(object.contractAddress) ? String(object.contractAddress) : ""
     };
   },
-  toJSON(message: QueryFlatFeeRequest): unknown {
+  toJSON(message: QueryFlatFeeRequest): JsonSafe<QueryFlatFeeRequest> {
     const obj: any = {};
     message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     return obj;
@@ -1593,7 +1594,7 @@ export const QueryFlatFeeRequest = {
   },
   toAmino(message: QueryFlatFeeRequest): QueryFlatFeeRequestAmino {
     const obj: any = {};
-    obj.contract_address = message.contractAddress;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
     return obj;
   },
   fromAminoMsg(object: QueryFlatFeeRequestAminoMsg): QueryFlatFeeRequest {
@@ -1647,7 +1648,7 @@ export const QueryFlatFeeResponse = {
       flatFeeAmount: isSet(object.flatFeeAmount) ? Coin.fromJSON(object.flatFeeAmount) : undefined
     };
   },
-  toJSON(message: QueryFlatFeeResponse): unknown {
+  toJSON(message: QueryFlatFeeResponse): JsonSafe<QueryFlatFeeResponse> {
     const obj: any = {};
     message.flatFeeAmount !== undefined && (obj.flatFeeAmount = message.flatFeeAmount ? Coin.toJSON(message.flatFeeAmount) : undefined);
     return obj;

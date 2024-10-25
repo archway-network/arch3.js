@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet } from "../../../helpers";
+import { JsonSafe } from "../../../json-safe";
 /** ContractOperation denotes which operation consumed gas. */
 export enum ContractOperation {
   /** CONTRACT_OPERATION_UNSPECIFIED - Invalid or unknown operation */
@@ -270,7 +271,7 @@ export const TxInfo = {
       totalGas: isSet(object.totalGas) ? BigInt(object.totalGas.toString()) : BigInt(0)
     };
   },
-  toJSON(message: TxInfo): unknown {
+  toJSON(message: TxInfo): JsonSafe<TxInfo> {
     const obj: any = {};
     message.id !== undefined && (obj.id = (message.id || BigInt(0)).toString());
     message.height !== undefined && (obj.height = (message.height || BigInt(0)).toString());
@@ -299,9 +300,9 @@ export const TxInfo = {
   },
   toAmino(message: TxInfo): TxInfoAmino {
     const obj: any = {};
-    obj.id = message.id ? message.id.toString() : undefined;
-    obj.height = message.height ? message.height.toString() : undefined;
-    obj.total_gas = message.totalGas ? message.totalGas.toString() : undefined;
+    obj.id = message.id !== BigInt(0) ? message.id.toString() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height.toString() : undefined;
+    obj.total_gas = message.totalGas !== BigInt(0) ? message.totalGas.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: TxInfoAminoMsg): TxInfo {
@@ -395,7 +396,7 @@ export const ContractOperationInfo = {
       sdkGas: isSet(object.sdkGas) ? BigInt(object.sdkGas.toString()) : BigInt(0)
     };
   },
-  toJSON(message: ContractOperationInfo): unknown {
+  toJSON(message: ContractOperationInfo): JsonSafe<ContractOperationInfo> {
     const obj: any = {};
     message.id !== undefined && (obj.id = (message.id || BigInt(0)).toString());
     message.txId !== undefined && (obj.txId = (message.txId || BigInt(0)).toString());
@@ -427,7 +428,7 @@ export const ContractOperationInfo = {
       message.contractAddress = object.contract_address;
     }
     if (object.operation_type !== undefined && object.operation_type !== null) {
-      message.operationType = contractOperationFromJSON(object.operation_type);
+      message.operationType = object.operation_type;
     }
     if (object.vm_gas !== undefined && object.vm_gas !== null) {
       message.vmGas = BigInt(object.vm_gas);
@@ -439,12 +440,12 @@ export const ContractOperationInfo = {
   },
   toAmino(message: ContractOperationInfo): ContractOperationInfoAmino {
     const obj: any = {};
-    obj.id = message.id ? message.id.toString() : undefined;
-    obj.tx_id = message.txId ? message.txId.toString() : undefined;
-    obj.contract_address = message.contractAddress;
-    obj.operation_type = message.operationType;
-    obj.vm_gas = message.vmGas ? message.vmGas.toString() : undefined;
-    obj.sdk_gas = message.sdkGas ? message.sdkGas.toString() : undefined;
+    obj.id = message.id !== BigInt(0) ? message.id.toString() : undefined;
+    obj.tx_id = message.txId !== BigInt(0) ? message.txId.toString() : undefined;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
+    obj.operation_type = message.operationType === 0 ? undefined : message.operationType;
+    obj.vm_gas = message.vmGas !== BigInt(0) ? message.vmGas.toString() : undefined;
+    obj.sdk_gas = message.sdkGas !== BigInt(0) ? message.sdkGas.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ContractOperationInfoAminoMsg): ContractOperationInfo {
@@ -498,7 +499,7 @@ export const BlockTracking = {
       txs: Array.isArray(object?.txs) ? object.txs.map((e: any) => TxTracking.fromJSON(e)) : []
     };
   },
-  toJSON(message: BlockTracking): unknown {
+  toJSON(message: BlockTracking): JsonSafe<BlockTracking> {
     const obj: any = {};
     if (message.txs) {
       obj.txs = message.txs.map(e => e ? TxTracking.toJSON(e) : undefined);
@@ -522,7 +523,7 @@ export const BlockTracking = {
     if (message.txs) {
       obj.txs = message.txs.map(e => e ? TxTracking.toAmino(e) : undefined);
     } else {
-      obj.txs = [];
+      obj.txs = message.txs;
     }
     return obj;
   },
@@ -585,7 +586,7 @@ export const TxTracking = {
       contractOperations: Array.isArray(object?.contractOperations) ? object.contractOperations.map((e: any) => ContractOperationInfo.fromJSON(e)) : []
     };
   },
-  toJSON(message: TxTracking): unknown {
+  toJSON(message: TxTracking): JsonSafe<TxTracking> {
     const obj: any = {};
     message.info !== undefined && (obj.info = message.info ? TxInfo.toJSON(message.info) : undefined);
     if (message.contractOperations) {
@@ -615,7 +616,7 @@ export const TxTracking = {
     if (message.contractOperations) {
       obj.contract_operations = message.contractOperations.map(e => e ? ContractOperationInfo.toAmino(e) : undefined);
     } else {
-      obj.contract_operations = [];
+      obj.contract_operations = message.contractOperations;
     }
     return obj;
   },
