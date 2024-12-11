@@ -19,7 +19,7 @@ import {
   logs,
   StdFee,
 } from '@cosmjs/stargate';
-import { CometClient, HttpBatchClient, HttpBatchClientOptions, RpcClient, connectComet } from '@cosmjs/tendermint-rpc';
+import { CometClient, HttpBatchClient, HttpBatchClientOptions, connectComet } from '@cosmjs/tendermint-rpc';
 import { assertDefined } from '@cosmjs/utils';
 import { SimulateResponse } from 'cosmjs-types/cosmos/tx/v1beta1/service';
 import _ from 'lodash';

@@ -1,44 +1,48 @@
-import { AminoConverters } from "@cosmjs/stargate";
-import { GenericAuthorization } from "cosmjs-types/cosmos/authz/v1beta1/authz";
-import { MsgGrant, MsgRevoke } from "cosmjs-types/cosmos/authz/v1beta1/tx";
-import { SendAuthorization } from "cosmjs-types/cosmos/bank/v1beta1/authz";
-import { Timestamp } from "cosmjs-types/google/protobuf/timestamp";
-import { fromJsonTimestamp, fromTimestamp } from "cosmjs-types/helpers";
+import { AminoConverters } from '@cosmjs/stargate';
+import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
+import { MsgGrant, MsgRevoke } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
+import { SendAuthorization } from 'cosmjs-types/cosmos/bank/v1beta1/authz';
+import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
+import { fromJsonTimestamp, fromTimestamp } from 'cosmjs-types/helpers';
 
-export function createAuthzAminoConverters(): AminoConverters {
+/**
+ * Creates the Amino converters for the Authz tx messages
+ *
+ * @returns to be used in a client
+ */
+export const createAuthzAminoConverters = (): AminoConverters => {
   return {
     [MsgGrant.typeUrl]: {
-      aminoType: "cosmos-sdk/MsgGrant",
+      aminoType: 'cosmos-sdk/MsgGrant',
       toAmino: ({ granter, grantee, grant }) => {
         if (!grant || !grant.authorization) {
           throw new Error(`Unsupported grant type: '${grant?.authorization?.typeUrl}'`);
         }
         let authorizationValue;
         switch (grant?.authorization?.typeUrl) {
-          case GenericAuthorization.typeUrl: {
-            const generic = GenericAuthorization.decode(grant.authorization.value);
-            authorizationValue = {
-              type: "cosmos-sdk/GenericAuthorization",
-              value: {
-                msg: generic.msg,
-              },
-            };
-            break;
-          }
-          case SendAuthorization.typeUrl: {
-            const spend = SendAuthorization.decode(grant.authorization.value);
-            authorizationValue = {
-              type: "cosmos-sdk/SendAuthorization",
-              value: {
-                spend_limit: spend.spendLimit,
-              },
-            };
-            break;
-          }
-          default:
-            throw new Error(`Unsupported grant type: '${grant.authorization.typeUrl}'`);
+        case GenericAuthorization.typeUrl: {
+          const generic = GenericAuthorization.decode(grant.authorization.value);
+          authorizationValue = {
+            type: 'cosmos-sdk/GenericAuthorization',
+            value: {
+              msg: generic.msg,
+            },
+          };
+          break;
         }
-        const expiration = grant.expiration?.seconds;
+        case SendAuthorization.typeUrl: {
+          const spend = SendAuthorization.decode(grant.authorization.value);
+          authorizationValue = {
+            type: 'cosmos-sdk/SendAuthorization',
+            value: {
+              spend_limit: spend.spendLimit,
+            },
+          };
+          break;
+        }
+        default:
+          throw new Error(`Unsupported grant type: '${grant.authorization.typeUrl}'`);
+        }
 
         return {
           granter,
@@ -47,8 +51,8 @@ export function createAuthzAminoConverters(): AminoConverters {
             authorization: authorizationValue,
             expiration: grant.expiration
               ? fromTimestamp(grant.expiration)
-                  .toISOString()
-                  .replace(/\.\d{3}Z$/, "Z")
+                .toISOString()
+                .replace(/\.\d{3}Z$/, 'Z')
               : undefined,
           },
         };
@@ -57,28 +61,28 @@ export function createAuthzAminoConverters(): AminoConverters {
         const authorizationType = grant?.authorization?.type;
         let authorizationValue;
         switch (authorizationType) {
-          case "cosmos-sdk/GenericAuthorization": {
-            authorizationValue = {
-              typeUrl: GenericAuthorization.typeUrl,
-              value: GenericAuthorization.encode({
-                msg: grant.authorization.value.msg,
-              }).finish(),
-            };
-            break;
-          }
-          case "cosmos-sdk/SendAuthorization": {
-            authorizationValue = {
-              typeUrl: SendAuthorization.typeUrl,
-              value: SendAuthorization.encode(
-                SendAuthorization.fromPartial({
-                  spendLimit: grant.authorization.value.spend_limit,
-                }),
-              ).finish(),
-            };
-            break;
-          }
-          default:
-            throw new Error(`Unsupported grant type: '${grant?.authorization?.type}'`);
+        case 'cosmos-sdk/GenericAuthorization': {
+          authorizationValue = {
+            typeUrl: GenericAuthorization.typeUrl,
+            value: GenericAuthorization.encode({
+              msg: grant.authorization.value.msg,
+            }).finish(),
+          };
+          break;
+        }
+        case 'cosmos-sdk/SendAuthorization': {
+          authorizationValue = {
+            typeUrl: SendAuthorization.typeUrl,
+            value: SendAuthorization.encode(
+              SendAuthorization.fromPartial({
+                spendLimit: grant.authorization.value.spend_limit,
+              }),
+            ).finish(),
+          };
+          break;
+        }
+        default:
+          throw new Error(`Unsupported grant type: '${grant?.authorization?.type}'`);
         }
         return MsgGrant.fromPartial({
           granter,
@@ -91,18 +95,19 @@ export function createAuthzAminoConverters(): AminoConverters {
       },
     },
     [MsgRevoke.typeUrl]: {
-      aminoType: "cosmos-sdk/MsgRevoke",
-      toAmino: ({ granter, grantee, msgTypeUrl }) => ({
-        granter,
-        grantee,
-        msg_type_url: msgTypeUrl,
-      }),
-      fromAmino: ({ granter, grantee, msg_type_url }) =>
-        MsgRevoke.fromPartial({
+      aminoType: 'cosmos-sdk/MsgRevoke',
+      toAmino: ({ granter, grantee, msgTypeUrl }) => {
+        return {
           granter,
           grantee,
-          msgTypeUrl: msg_type_url,
-        }),
+          msg_type_url: msgTypeUrl,
+        };
+      },
+      fromAmino: ({ granter, grantee, msg_type_url }) => MsgRevoke.fromPartial({
+        granter,
+        grantee,
+        msgTypeUrl: msg_type_url,
+      }),
     },
   };
-}
+};

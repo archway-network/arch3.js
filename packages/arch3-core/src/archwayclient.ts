@@ -3,7 +3,6 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import {
   HttpEndpoint,
-  RpcClient,
   HttpBatchClient,
   HttpBatchClientOptions,
   CometClient,
