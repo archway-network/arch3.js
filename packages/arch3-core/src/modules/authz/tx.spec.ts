@@ -52,6 +52,7 @@ describe('Amino converter for /cosmos.authz.v1beta1.MsgGrant', () => {
             value: SendAuthorization.encode(
               SendAuthorization.fromPartial({
                 spendLimit: [{ denom: archwayd.denom, amount: '1' }],
+                allowList: [granteeAddress],
               }),
             ).finish(),
           },
