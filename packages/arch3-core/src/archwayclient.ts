@@ -3,7 +3,6 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import {
   HttpEndpoint,
-  HttpBatchClient,
   HttpBatchClientOptions,
   CometClient,
   connectComet,
@@ -47,11 +46,11 @@ export class ArchwayClient extends CosmWasmClient implements IArchwayQueryClient
   }
 
   /**
-   * Creates an instance by connecting to the given Tendermint/CometBFT RPC endpoint using an {@link HttpBatchClient} to batch
+   * Creates an instance by connecting to the given Tendermint/CometBFT RPC endpoint using an HttpBatchClient to batch
    * multiple requests and reduce queries to the server.
    *
    * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
-   * @param options - Optional configuration to control how the {@link HttpBatchClient} will batch requests.
+   * @param options - Optional configuration to control how the HttpBatchClient will batch requests.
    * @returns An {@link ArchwayClient} connected to the endpoint.
    *
    * @remarks This factory method doesn't support WebSocket endpoints.

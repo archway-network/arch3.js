@@ -14,6 +14,8 @@ import {
  *
  * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
  * @param options - Optional configuration to control how the {@link HttpBatchClient} will batch requests.
+ *
+ * @returns A connected {@link CometClient}
  */
 export async function connectCometWithBatchClient(
   endpoint: string | HttpEndpoint,

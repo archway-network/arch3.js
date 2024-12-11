@@ -41,7 +41,7 @@ describe('Amino converter for /cosmos.authz.v1beta1.MsgGrant', () => {
       expect(message).toStrictEqual(result);
     });
   });
-  describe('Grants generic authorization with /cosmos.authz.v1beta1.SendAuthorization', () => {
+  describe('Grants send authorization with /cosmos.authz.v1beta1.SendAuthorization', () => {
     it('encodes and decodes back to the same value', () => {
       const message = {
         granter: granterAddress,
