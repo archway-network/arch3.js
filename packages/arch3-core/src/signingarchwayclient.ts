@@ -1,13 +1,13 @@
-import { Coin, Pubkey, addCoins, encodeSecp256k1Pubkey } from '@cosmjs/amino';
+import { Coin, Pubkey, addCoins, encodeSecp256k1Pubkey } from "@cosmjs/amino";
 import {
   createWasmAminoConverters,
   HttpEndpoint,
   SigningCosmWasmClient,
   SigningCosmWasmClientOptions,
-} from '@cosmjs/cosmwasm-stargate';
-import { wasmTypes } from '@cosmjs/cosmwasm-stargate/build/modules';
-import { Uint53 } from '@cosmjs/math';
-import { EncodeObject, OfflineSigner, Registry } from '@cosmjs/proto-signing';
+} from "@cosmjs/cosmwasm-stargate";
+import { wasmTypes } from "@cosmjs/cosmwasm-stargate/build/modules";
+import { Uint53 } from "@cosmjs/math";
+import { EncodeObject, OfflineSigner, Registry } from "@cosmjs/proto-signing";
 import {
   AminoTypes,
   assertIsDeliverTxSuccess,
@@ -18,14 +18,14 @@ import {
   GasPrice,
   logs,
   StdFee,
-} from '@cosmjs/stargate';
-import { CometClient, HttpBatchClient, HttpBatchClientOptions, RpcClient, connectComet } from '@cosmjs/tendermint-rpc';
-import { assertDefined } from '@cosmjs/utils';
-import { SimulateResponse } from 'cosmjs-types/cosmos/tx/v1beta1/service';
-import _ from 'lodash';
+} from "@cosmjs/stargate";
+import { CometClient, HttpBatchClient, HttpBatchClientOptions, RpcClient, connectComet } from "@cosmjs/tendermint-rpc";
+import { assertDefined } from "@cosmjs/utils";
+import { SimulateResponse } from "cosmjs-types/cosmos/tx/v1beta1/service";
+import _ from "lodash";
 
-import { createRewardsAminoConverters, RewardsMsgEncoder, rewardsTypes } from './modules';
-import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
+import { createAuthzAminoConverters, createRewardsAminoConverters, RewardsMsgEncoder, rewardsTypes } from "./modules";
+import { IArchwayQueryClient, createArchwayQueryClient } from "./queryclient";
 import {
   BlockTracking,
   ContractMetadata,
@@ -34,8 +34,8 @@ import {
   OutstandingRewards,
   RewardsPool,
   RewardsRecord,
-} from './types';
-import { connectCometWithBatchClient } from './utils';
+} from "./types";
+import { connectCometWithBatchClient } from "./utils";
 
 export interface SigningArchwayClientOptions extends SigningCosmWasmClientOptions {
   /**
@@ -117,8 +117,8 @@ function buildResult(response: DeliverTxResponseWithLogs): TxResult {
 }
 
 const flatFeeRequiredTypes: readonly string[] = [
-  '/cosmwasm.wasm.v1.MsgExecuteContract',
-  '/cosmwasm.wasm.v1.MsgMigrateContract',
+  "/cosmwasm.wasm.v1.MsgExecuteContract",
+  "/cosmwasm.wasm.v1.MsgMigrateContract",
 ];
 
 /**
@@ -141,6 +141,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         ...createDefaultAminoConverters(),
         ...createWasmAminoConverters(),
         ...createRewardsAminoConverters(),
+        ...createAuthzAminoConverters(),
       }),
       gasAdjustment = defaultGasAdjustment,
     } = options;
@@ -248,23 +249,23 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   public async setContractMetadata(
     senderAddress: string,
     metadata: ContractMetadata,
-    fee: StdFee | 'auto' | number,
+    fee: StdFee | "auto" | number,
     memo?: string,
   ): Promise<SetContractMetadataResult> {
     const message = RewardsMsgEncoder.setContractMetadata({
       senderAddress,
       metadata: {
         contractAddress: metadata.contractAddress,
-        ownerAddress: metadata.ownerAddress ?? '',
-        rewardsAddress: metadata.rewardsAddress ?? '',
+        ownerAddress: metadata.ownerAddress ?? "",
+        rewardsAddress: metadata.rewardsAddress ?? "",
         withdrawToWallet: metadata.withdrawToWallet ?? false,
       },
     });
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
     const metadataAttr = logs.findAttribute(
       response.parsedLogs,
-      'archway.rewards.v1.ContractMetadataSetEvent',
-      'metadata',
+      "archway.rewards.v1.ContractMetadataSetEvent",
+      "metadata",
     );
     /* eslint-disable @typescript-eslint/naming-convention */
     const contractMetadata = JSON.parse(metadataAttr.value) as {
@@ -305,7 +306,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     senderAddress: string,
     contractAddress: string,
     flatFee: Coin,
-    fee: StdFee | 'auto' | number,
+    fee: StdFee | "auto" | number,
     memo?: string,
   ): Promise<SetContractPremiumResult> {
     const message = RewardsMsgEncoder.setFlatFee({
@@ -316,8 +317,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
     const response = await this.assertSignAndBroadcast(senderAddress, [message], fee, memo);
     const flatFeeAttr = logs.findAttribute(
       response.parsedLogs,
-      'archway.rewards.v1.ContractFlatFeeSetEvent',
-      'flat_fee',
+      "archway.rewards.v1.ContractFlatFeeSetEvent",
+      "flat_fee",
     );
     return {
       ...buildResult(response),
@@ -351,7 +352,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   public async withdrawContractRewards(
     senderAddress: string,
     limit: number,
-    fee: StdFee | 'auto' | number,
+    fee: StdFee | "auto" | number,
     memo?: string,
   ): Promise<WithdrawContractRewardsResult> {
     const rewardsAddress = senderAddress;
@@ -365,8 +366,8 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
 
     const firstLogs = response.parsedLogs.find(() => true);
     const rewardsAttr = firstLogs?.events
-      .find(event => event.type === 'archway.rewards.v1.RewardsWithdrawEvent')
-      ?.attributes.find(attr => attr.key === 'rewards')?.value;
+      .find(event => event.type === "archway.rewards.v1.RewardsWithdrawEvent")
+      ?.attributes.find(attr => attr.key === "rewards")?.value;
     const rewards: Coin[] = rewardsAttr ? (JSON.parse(rewardsAttr) as Coin[]) : [];
 
     return {
@@ -397,12 +398,12 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   public override async signAndBroadcast(
     signerAddress: string,
     messages: readonly EncodeObject[],
-    fee: number | StdFee | 'auto',
+    fee: number | StdFee | "auto",
     memo?: string,
   ): Promise<DeliverTxResponse> {
     let usedFee: StdFee;
-    if (fee === 'auto' || typeof fee === 'number') {
-      const gasAdjustment = typeof fee === 'number' ? fee : this.gasAdjustment;
+    if (fee === "auto" || typeof fee === "number") {
+      const gasAdjustment = typeof fee === "number" ? fee : this.gasAdjustment;
       usedFee = await this.calculateFee(signerAddress, messages, memo, gasAdjustment);
     } else {
       usedFee = fee;
@@ -457,7 +458,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       messages
         .filter(({ typeUrl }) => flatFeeRequiredTypes.includes(typeUrl))
         .map(async ({ value }) => {
-          const contractAddress = _.get(value, 'contract') as string;
+          const contractAddress = _.get(value, "contract") as string;
           const { flatFee } = await _getContractPremium(contractAddress);
           return flatFee;
         }),
@@ -473,7 +474,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   private async assertSignAndBroadcast(
     signerAddress: string,
     messages: readonly EncodeObject[],
-    fee: StdFee | 'auto' | number,
+    fee: StdFee | "auto" | number,
     memo?: string,
   ): Promise<DeliverTxResponseWithLogs> {
     const response = await this.signAndBroadcast(signerAddress, messages, fee, memo);
@@ -500,7 +501,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   public override async withdrawRewards(
     delegatorAddress: string,
     validatorAddress: string,
-    fee: number | StdFee | 'auto',
+    fee: number | StdFee | "auto",
     memo?: string,
   ): Promise<DeliverTxResponse> {
     return await super.withdrawRewards(delegatorAddress, validatorAddress, fee, memo);
@@ -536,7 +537,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
       account => account.address === signerAddress,
     );
     if (!accountFromSigner) {
-      throw new Error('Failed to retrieve account from signer');
+      throw new Error("Failed to retrieve account from signer");
     }
     const pubkey = encodeSecp256k1Pubkey(accountFromSigner.pubkey);
     const { sequence } = await this.getSequence(signerAddress);

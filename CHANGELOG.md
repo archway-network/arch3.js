@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.7.4 (2024-12-11)
+
+### Added
+
+#### **arch3-core**
+
+- new `createAuthzAminoConverters` that allows Amino/Ledger support for
+`/cosmos.authz.v1beta1.MsgGrant` with inner `/cosmos.authz.v1beta1.GenericAuthorization`
+or `/cosmos.bank.v1beta1.SendAuthorization` authorization,
+and also support for `/cosmos.authz.v1beta1.MsgRevoke` ([#123])
+
 ## v0.7.3 (2024-09-12)
 
 ### Fixed
