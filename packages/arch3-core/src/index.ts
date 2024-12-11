@@ -1,6 +1,7 @@
 export { ArchwayClient } from './archwayclient';
 
 export {
+  createAuthzAminoConverters,
   createRewardsAminoConverters,
   RewardsExtension,
   RewardsMsgEncoder,

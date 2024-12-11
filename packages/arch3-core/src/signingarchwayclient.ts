@@ -19,12 +19,12 @@ import {
   logs,
   StdFee,
 } from '@cosmjs/stargate';
-import { CometClient, HttpBatchClient, HttpBatchClientOptions, RpcClient, connectComet } from '@cosmjs/tendermint-rpc';
+import { CometClient, HttpBatchClientOptions, connectComet } from '@cosmjs/tendermint-rpc';
 import { assertDefined } from '@cosmjs/utils';
 import { SimulateResponse } from 'cosmjs-types/cosmos/tx/v1beta1/service';
 import _ from 'lodash';
 
-import { createRewardsAminoConverters, RewardsMsgEncoder, rewardsTypes } from './modules';
+import { createAuthzAminoConverters, createRewardsAminoConverters, RewardsMsgEncoder, rewardsTypes } from './modules';
 import { IArchwayQueryClient, createArchwayQueryClient } from './queryclient';
 import {
   BlockTracking,
@@ -141,6 +141,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
         ...createDefaultAminoConverters(),
         ...createWasmAminoConverters(),
         ...createRewardsAminoConverters(),
+        ...createAuthzAminoConverters(),
       }),
       gasAdjustment = defaultGasAdjustment,
     } = options;
@@ -155,7 +156,7 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   /**
    * Creates an instance by connecting to the given Tendermint RPC endpoint.
    *
-   * @param endpoint - String URL of the RPC endpoint to connect or an `HttpEndpoint` object.
+   * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
    * @param signer - The transaction signer configuration.
    * @param options - Options for the signing client.
    * @returns A {@link SigningArchwayClient} connected to the endpoint.
@@ -170,13 +171,13 @@ export class SigningArchwayClient extends SigningCosmWasmClient implements IArch
   }
 
   /**
-   * Creates an instance by connecting to the given Tendermint RPC endpoint using an {@link HttpBatchClient} to batch
+   * Creates an instance by connecting to the given Tendermint RPC endpoint using an HttpBatchClient to batch
    * multiple requests and reduce queries to the server.
    *
    * @param endpoint - String URL of the RPC endpoint to connect or an {@link HttpEndpoint} object.
    * @param signer - The transaction signer configuration.
    * @param options - Options for the signing client.
-   * @param batchClientOptions - Optional configuration to control how the {@link HttpBatchClient} will batch requests.
+   * @param batchClientOptions - Optional configuration to control how the HttpBatchClient will batch requests.
    * @returns A {@link SigningArchwayClient} connected to the endpoint.
    *
    * @remarks This factory method doesn't support WebSocket endpoints.
