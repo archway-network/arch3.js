@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.7.5 (2024-12-12)
+
+### Fixed
+
+#### **arch3-core**
+
+- Fixed Authz Amino converter support for `/cosmos.authz.v1beta1.MsgGrant`
+with inner `/cosmos.bank.v1beta1.SendAuthorization` authorization,
+without an `allowList`. ([#124])
+
 ## v0.7.4 (2024-12-11)
 
 ### Added

@@ -38,7 +38,7 @@ export const createAuthzAminoConverters = (): AminoConverters => {
               // eslint-disable-next-line camelcase, @typescript-eslint/naming-convention
               spend_limit: spend.spendLimit,
               // eslint-disable-next-line camelcase, @typescript-eslint/naming-convention
-              allow_list: spend.allowList,
+              allow_list: spend.allowList?.length ? spend.allowList : undefined,
             },
           };
           break;
