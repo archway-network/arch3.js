@@ -42,7 +42,7 @@ describe('Amino converter for /cosmos.authz.v1beta1.MsgGrant', () => {
     });
   });
   describe('Grants send authorization with /cosmos.authz.v1beta1.SendAuthorization', () => {
-    it('encodes and decodes back to the same value', () => {
+    it('encodes and decodes back to the same value with an allowList', () => {
       const message = {
         granter: granterAddress,
         grantee: granteeAddress,
@@ -53,6 +53,27 @@ describe('Amino converter for /cosmos.authz.v1beta1.MsgGrant', () => {
               SendAuthorization.fromPartial({
                 spendLimit: [{ denom: archwayd.denom, amount: '1' }],
                 allowList: [granteeAddress],
+              }),
+            ).finish(),
+          },
+          expiration: undefined,
+        },
+      };
+      const toAmino = aminoConverters[MsgGrant.typeUrl].toAmino(message);
+      const result = aminoConverters[MsgGrant.typeUrl].fromAmino(toAmino);
+
+      expect(message).toStrictEqual(result);
+    });
+    it('encodes and decodes back to the same value without an allowList', () => {
+      const message = {
+        granter: granterAddress,
+        grantee: granteeAddress,
+        grant: {
+          authorization: {
+            typeUrl: SendAuthorization.typeUrl,
+            value: SendAuthorization.encode(
+              SendAuthorization.fromPartial({
+                spendLimit: [{ denom: archwayd.denom, amount: '1' }],
               }),
             ).finish(),
           },
